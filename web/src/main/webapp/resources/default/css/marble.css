@@ -1,0 +1,23 @@
+@CHARSET "UTF-8";
+
+.marble-logo {
+    background: url(#{resource['default/gfx:marble.logo.1.jpg']}) no-repeat right top;
+}
+
+ul.messages {
+    padding-left: 0px;
+}
+
+.navbar-top-links .dropdown-menu li div {
+    padding: 3px 20px;
+    min-height: 0;
+}
+.flot-chart-overview {
+    height:150px;
+}
+
+/* Statistics related */
+ .statistics {
+    display: none;
+    margin-top: 10px;
+}

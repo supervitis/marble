@@ -1,0 +1,47 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:p="http://primefaces.org/ui">
+<h:body>
+	<ui:composition template="/WEB-INF/templates/layout.xhtml">
+		<ui:define name="content">
+			<div class="row">
+				<div class="col-lg-12">
+					<h1 class="page-header">
+						Test Drive Sandbox
+						<h:outputText value="#{param['name']}" />
+					</h1>
+				</div>
+				<!-- /.col-lg-12 -->
+
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">Test Panel</div>
+						<!-- /.panel-heading -->
+						<div class="panel-body">
+							<h:form id="test" role="form">
+								<div class="form-group global-messages">
+									<h:messages styleClass="messages" errorClass="center-block alert alert-warning"
+										infoClass="center-block alert alert-success" warnClass="center-block alert alert-warning" globalOnly="true" />
+								</div>
+								<div class="form-group">
+									<h:commandButton id="Run" action="#{processorController.process}" value="Run process"
+										styleClass="btn btn-default disabled" />
+									<h:commandButton id="Register" action="#{globalConfigurationController.register}" value="Update/Insert"
+										styleClass="btn btn-default disabled" />
+									<h:commandButton id="Delete" action="#{globalConfigurationController.delete}" value="Delete"
+										styleClass="btn btn-default disabled" />
+								</div>
+							</h:form>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+					<!-- /.panel -->
+				</div>
+
+			</div>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

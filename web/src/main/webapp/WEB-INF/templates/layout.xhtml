@@ -1,0 +1,176 @@
+<!DOCTYPE html [
+    <!ENTITY ldquo  "&#147;"> <!-- Left Double Quote --> 
+    <!ENTITY laquo "&#171;"> <!-- left pointing guillemet -->
+    <!ENTITY raquo "&#187;"> <!-- right pointing guillemet -->
+    <!ENTITY rdquo  "&#148;"> <!-- Right Double Quote -->
+    <!ENTITY trade  "&#153;"> <!-- Trademark Symbol (TM) -->
+    <!ENTITY rtrade "&#174;"> <!-- Registered Trademark (R) -->
+    <!ENTITY copy  "&#169;"> <!-- Copyright Symbol --> 
+]>
+<html xmlns:h="http://xmlns.jcp.org/jsf/html" xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:t="http://xmlns.jcp.org/jsf/passthrough">
+<h:head>
+    <title>Marble Initiative</title>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Core CSS - Include with every page -->
+    <h:outputStylesheet library="default" name="css/bootstrap.min.css" />
+    <h:outputStylesheet library="font-awesome" name="css/font-awesome.css" />
+
+    <!-- Page-Level Plugin CSS - Blank -->
+
+    <!-- SB Admin CSS - Include with every page -->
+    <h:outputStylesheet library="default" name="css/sb-admin.css" />
+    <h:outputStylesheet library="default" name="css/plugins/morris/morris-0.4.3.min.css" />
+    <h:outputStylesheet library="default" name="css/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css" />
+    
+    <!-- Marble Specific CSS -->
+    <h:outputStylesheet library="default" name="css/marble.css" />
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+</h:head>
+
+<h:body>
+
+    <div id="wrapper">
+
+        <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                    <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span
+                        class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">Marble Initiative</a>
+            </div>
+            <!-- /.navbar-header -->
+
+            <ul class="nav navbar-top-links navbar-right">
+                <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#"> <i
+                        class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+                </a> <h:panelGroup rendered="#{true}">
+                        <ul class="dropdown-menu dropdown-user">
+                            <li><a href="#"><i class="fa fa-user fa-fw"></i> User Profile</a></li>
+                            <li><a href="#"><i class="fa fa-gear fa-fw"></i> Settings</a></li>
+                            <li class="divider"></li>
+                            <li><a href="login.html"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
+                        </ul>
+                        <!-- /.dropdown-user -->
+                    </h:panelGroup> <h:panelGroup rendered="#{false}">
+
+                        <ul class="dropdown-menu dropdown-user">
+                            <h:form id="loginForm" role="form">
+                                <li><div class="form-group">
+                                        <h:inputText styleClass="form-control" id="usernameLogin" value=""
+                                            t:placeholder="Username" />
+                                    </div></li>
+                                <li><div class="form-group">
+                                        <h:inputText styleClass="form-control" id="passwordLogin" value=""
+                                            t:placeholder="Password" />
+                                    </div></li>
+                                <li class="divider"></li>
+                                <li><div class="form-group">
+                                        <h:commandButton id="login" action="#" value="Login"
+                                            styleClass="btn btn-default" />
+                                    </div></li>
+                            </h:form>
+                        </ul>
+
+                        <!-- /.dropdown-user -->
+                    </h:panelGroup> <!--  panel group --> <h:panelGroup rendered="#{false}">
+
+                        <ul class="dropdown-menu dropdown-user">
+                            <form action="j_security_check" method="POST">
+                                <!-- Form authentication -->
+                                <li><div class="form-group">
+                                        <input type="text" name="j_username" class="form-control" placeholder="Username" />
+                                    </div></li>
+                                <li><div class="form-group">
+                                        <input type="password" name="j_password" class="form-control" placeholder="Password" />
+                                    </div></li>
+                                <li><div class="form-group">
+                                        <input type="submit" value="Login" class="btn btn-default"></input>
+                                    </div></li>
+                            </form>
+                        </ul>
+
+
+                        <!-- /.dropdown-user -->
+                    </h:panelGroup> <!--  panel group --></li>
+
+                <!-- Logged user -->
+                <!-- /.dropdown -->
+            </ul>
+            <!-- /.navbar-top-links -->
+
+        </nav>
+        <!-- /.navbar-static-top -->
+
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li class="sidebar-search">
+                        <div class="input-group custom-search-form">
+                            <input type="text" class="form-control" placeholder="Search..." /> <span class="input-group-btn">
+                                <button class="btn btn-default" type="button">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                        </div> <!-- /input-group -->
+                    </li>
+                    <li><a href="controlPanel.xhtml"><i class="fa fa-wrench fa-fw"></i> Control Panel</a></li>
+                    <li><a href="topicsPanel.xhtml"><i class="fa fa-tasks fa-fw"></i> Topics</a></li>
+                    <li><a href="testDrive.xhtml"><i class="fa fa-dashboard fa-fw"></i> Test Drive</a></li>
+
+                </ul>
+                <!-- /#side-menu -->
+            </div>
+            <!-- /.sidebar-collapse -->
+        </nav>
+        <!-- /.navbar-static-side -->
+
+        <div id="page-wrapper">
+            <ui:insert name="content">
+            </ui:insert>
+
+
+            <hr />
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>&copy; Marble Initiative</p>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- Core Scripts - Include with every page -->
+    <h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
+    <h:outputScript library="default" name="js/bootstrap.min.js" />
+    <h:outputScript library="default" name="js/plugins/metisMenu/jquery.metisMenu.js" />
+
+    <ui:insert name="scripts">
+    </ui:insert>
+    <!-- Page-Level Plugin Scripts - Blank -->
+
+    <!-- SB Admin Scripts - Include with every page -->
+    <h:outputScript library="default" name="js/sb-admin.js" />
+    <h:outputScript library="default" name="js/plugins/morris/raphael-2.1.0.min.js" />
+    <h:outputScript library="default" name="js/plugins/morris/morris.js" />
+    <h:outputScript library="default" name="js/plugins/flot/jquery.flot.js" />
+    <h:outputScript library="default" name="js/plugins/flot/jquery.flot.tooltip.min.js" />
+    <h:outputScript library="default" name="js/plugins/flot/jquery.flot.resize.js" />
+    <h:outputScript library="default" name="js/plugins/flot/jquery.flot.selection.js" />
+    
+    <h:outputScript library="default" name="js/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js" />
+</h:body>
+</html>

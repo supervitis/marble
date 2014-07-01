@@ -1,0 +1,89 @@
+<!DOCTYPE html [
+    <!ENTITY ldquo  "&#147;"> <!-- Left Double Quote --> 
+    <!ENTITY laquo "&#171;"> <!-- left pointing guillemet -->
+    <!ENTITY raquo "&#187;"> <!-- right pointing guillemet -->
+    <!ENTITY rdquo  "&#148;"> <!-- Right Double Quote -->
+    <!ENTITY trade  "&#153;"> <!-- Trademark Symbol (TM) -->
+    <!ENTITY rtrade "&#174;"> <!-- Registered Trademark (R) -->
+    <!ENTITY copy  "&#169;"> <!-- Copyright Symbol --> 
+]>
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    template="/WEB-INF/templates/layout.xhtml"
+    xmlns:p="http://primefaces.org/ui">
+    <ui:define name="content">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Welcome to the Marble
+                    Initiative!</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="jumbotron marble-logo">
+                    <h1>The Project</h1>
+                    <p>This is the starting point of the Marble
+                        Initiative. This project is being developed by
+                        Miguel Fernandes from the University of Vigo,
+                        under the supervision of Ana Fernández Vilas and
+                        Rebeca Díaz Redondo.</p>
+                    <p>
+                        <a class="btn btn-primary btn-lg" role="button">Learn
+                            more &raquo;</a>
+                    </p>
+                </div>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="panel panel-info">
+                    <div class="panel-heading">Tweet Extractor</div>
+                    <div class="panel-body">
+                        <p>This component is in charge of the
+                            extraction of tweets from the Twitter Search
+                            API.</p>
+                    </div>
+                    <div class="panel-footer">
+                        <a class="btn" href="#">View details &raquo;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /.col-lg-4 -->
+            <div class="col-lg-4">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Processor</div>
+                    <div class="panel-body">
+                        <p>All the tagging, polarity analysis and
+                            relevance processing is done by this
+                            component.</p>
+                    </div>
+                    <div class="panel-footer">
+                        <a class="btn" href="#">View details &raquo;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /.col-lg-4 -->
+            <div class="col-lg-4">
+                <div class="panel panel-info">
+                    <div class="panel-heading">Plotter</div>
+                    <div class="panel-body">
+                        <p>In order to provide visibility of the
+                            data, the plotter is in charge of presenting
+                            the information in a user friendly way.</p>
+                    </div>
+                    <div class="panel-footer">
+                        <a class="btn" href="#">View details &raquo;</a>
+                    </div>
+                </div>
+            </div>
+            <!-- /.col-lg-4 -->
+        </div>
+        <!-- /.row -->
+    </ui:define>
+</ui:composition>

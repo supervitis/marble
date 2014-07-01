@@ -1,0 +1,197 @@
+<!DOCTYPE html [
+    <!ENTITY ldquo  "&#147;"> <!-- Left Double Quote --> 
+    <!ENTITY laquo "&#171;"> <!-- left pointing guillemet -->
+    <!ENTITY raquo "&#187;"> <!-- right pointing guillemet -->
+    <!ENTITY rdquo  "&#148;"> <!-- Right Double Quote -->
+    <!ENTITY trade  "&#153;"> <!-- Trademark Symbol (TM) -->
+    <!ENTITY rtrade "&#174;"> <!-- Registered Trademark (R) -->
+    <!ENTITY copy  "&#169;"> <!-- Copyright Symbol --> 
+]>
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+	template="/WEB-INF/templates/layout.xhtml" xmlns:p="http://primefaces.org/ui"
+	xmlns:t="http://xmlns.jcp.org/jsf/passthrough">
+
+	<ui:define name="content">
+		<div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header">
+					Topic Plotter for
+					<h:outputText value="#{param['name']}" />
+				</h1>
+			</div>
+			<!-- /.col-lg-12 -->
+
+		</div>
+
+		<ui:param name="currentTopic" value="#{topicMap[param['name']]}" />
+
+		<h:panelGroup rendered="#{empty param['name']}">
+			<em class="alert alert-warning">No topic name provided.</em>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{not empty param['name'] and empty currentTopic}">
+			<em class="alert alert-warning">Invalid topic name provided.</em>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{not empty currentTopic}">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="panel panel-default">
+
+						<div class="panel-heading">Statuses Chart</div>
+						<!-- /.panel-heading -->
+
+						<div class="panel-body">
+							<div class="flot-chart-content">
+								<h:commandButton id="plotStatusesChart" styleClass="btn btn-default" value="Plot total"
+									onclick="return plotter.plotStatusesChart('total');" type="Submit" />
+								<h:commandButton id="plotStatusesChart" styleClass="btn btn-default" value="Plot only originals"
+									onclick="return plotter.plotStatusesChart('originals');" type="Submit" />
+								<h:commandButton id="plotStatusesChart" styleClass="btn btn-default" value="Plot only retweets"
+									onclick="return plotter.plotStatusesChart('retweets');" type="Submit" />
+								<h:commandButton id="plotStatusesChart" styleClass="btn btn-default" value="Plot both"
+									onclick="return plotter.plotStatusesChart('both');" type="Submit" />
+								<h:commandButton id="plotStatusesChart" styleClass="btn btn-default" value="Plot unique users"
+                                    onclick="return plotter.plotStatusesChart('total_unique_users');" type="Submit" />
+							</div>
+							<div class="flot-chart">
+								<div class="flot-chart-content" id="statuses-chart"></div>
+							</div>
+							<hr />
+							<div class="flot-chart flot-chart-overview">
+								<div class="flot-chart-content" id="statuses-chart-overview"></div>
+							</div>
+						</div>
+						<!-- /.panel-body -->
+
+					</div>
+					<!-- /.panel -->
+				</div>
+				<!-- col-lg-12 -->
+			</div>
+			<!-- /.row -->
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">Polarities Chart</div>
+						<!-- /.panel-heading -->
+
+						<div class="panel-body">
+							<div>
+								<h:commandButton id="plotPolaritiesChart" styleClass="btn btn-default" value="Plot total"
+									onclick="return plotter.plotPolaritiesChart('total');" type="Submit" />
+								<h:commandButton id="plotPolaritiesChart" styleClass="btn btn-default" value="Plot total ratio"
+									onclick="return plotter.plotPolaritiesChart('total_diff');" type="Submit" />
+									<h:commandButton id="plotPolaritiesChart" styleClass="btn btn-default" value="Plot total average"
+                                    onclick="return plotter.plotPolaritiesChart('total_avg');" type="Submit" />
+								<h:commandButton id="plotPolaritiesChart" styleClass="btn btn-default" value="Plot only originals"
+									onclick="return plotter.plotPolaritiesChart('originals');" type="Submit" />
+								<h:commandButton id="plotPolaritiesChart" styleClass="btn btn-default" value="Plot only retweets"
+									onclick="return plotter.plotPolaritiesChart('retweets');" type="Submit" />
+							</div>
+							<div class="flot-chart">
+								<div class="flot-chart-content" id="polarities-chart"></div>
+							</div>
+							<hr />
+							<div class="flot-chart flot-chart-overview">
+								<div class="flot-chart-content" id="polarities-chart-overview"></div>
+							</div>
+						</div>
+						<!-- /.panel-body -->
+
+					</div>
+					<!-- /.panel -->
+				</div>
+				<!-- col-lg-12 -->
+			</div>
+			<!-- /.row -->
+		</h:panelGroup>
+		<!-- panel group -->
+	</ui:define>
+
+	<ui:define name="scripts">
+		<h:outputScript type="text/javascript">
+            var plotter = (function() {
+			  return {
+                plotStatusesChart: function(statusTypes) {
+                    console.log("Drawing statuses chart...");
+                    $('#statuses-chart').parent().show();
+                    $('#statuses-chart').parent().parent().find(".flot-chart-overview").show();
+                    //<![CDATA[
+                        $('#statuses-chart').html("<div class='alert alert-info'><i class='fa fa-spinner fa-spin'></i> Loading the chart...</div>");
+                    //]]>
+                    $.getJSON( "rest/plotter/histogram/statuses?name=<h:outputText value="#{param['name']}" />&amp;statusTypes=" + statusTypes, function( data ) {
+                        
+                        var mainChartId = "#statuses-chart";
+                        var overviewChartId = "#statuses-chart-overview";
+                        var dataset = data.data;
+                        
+                        var mainChart = $.plot(mainChartId, dataset, data.mainOptions);
+                        var mainChartOverview = $.plot(overviewChartId, dataset, data.overviewOptions);
+                        
+                        // now connect the two
+                        $(mainChartId).bind("plotselected", function (event, ranges) {
+                
+                            // do the zooming
+                            mainChart = $.plot(mainChartId, dataset, $.extend(true, {}, data.mainOptions, {
+                                xaxis: {
+                                    min: ranges.xaxis.from,
+                                    max: ranges.xaxis.to
+                                }
+                            }));
+                
+                            // don't fire event on the overview to prevent eternal loop
+                            mainChartOverview.setSelection(ranges, true);
+                        });
+                
+                        $(overviewChartId).bind("plotselected", function (event, ranges) {
+                            mainChart.setSelection(ranges);
+                        });
+                        console.log("Statuses chart was drawn.");
+                    });
+                  },
+                  plotPolaritiesChart: function(statusTypes) {
+                    console.log("Drawing polarities chart...");
+                    $('#polarities-chart').parent().show();
+                    $('#polarities-chart').parent().parent().find(".flot-chart-overview").show();
+                    //<![CDATA[
+                        $('#polarities-chart').html("<div class='alert alert-info'><i class='fa fa-spinner fa-spin'></i> Loading the chart...</div>");
+                    //]]>
+                    $.getJSON( "rest/plotter/histogram/polarities?name=<h:outputText value="#{param['name']}" />&amp;statusTypes=" + statusTypes, function( data ) {
+                        
+                        var mainChartId = "#polarities-chart";
+                        var overviewChartId = "#polarities-chart-overview";
+                        var dataset = data.data;
+                        
+                        var mainChart = $.plot(mainChartId, dataset, data.mainOptions);
+                        var mainChartOverview = $.plot(overviewChartId, dataset, data.overviewOptions);
+                        console.log(data.data);
+                        // now connect the two
+                        $(mainChartId).bind("plotselected", function (event, ranges) {
+                
+                            // do the zooming
+                            mainChart = $.plot(mainChartId, dataset, $.extend(true, {}, data.mainOptions, {
+                                xaxis: {
+                                    min: ranges.xaxis.from,
+                                    max: ranges.xaxis.to
+                                }
+                            }));
+                
+                            // don't fire event on the overview to prevent eternal loop
+                            mainChartOverview.setSelection(ranges, true);
+                        });
+                
+                        $(overviewChartId).bind("plotselected", function (event, ranges) {
+                            mainChart.setSelection(ranges);
+                        });
+                        console.log("Polarities chart was drawn.");
+                    })
+                }
+			  };   
+			})();
+            $(document).ready(function(){
+            });
+        </h:outputScript>
+	</ui:define>
+</ui:composition>

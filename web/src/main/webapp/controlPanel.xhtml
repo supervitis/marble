@@ -1,0 +1,198 @@
+<!DOCTYPE html [
+    <!ENTITY ldquo  "&#147;"> <!-- Left Double Quote --> 
+    <!ENTITY laquo "&#171;"> <!-- left pointing guillemet -->
+    <!ENTITY raquo "&#187;"> <!-- right pointing guillemet -->
+    <!ENTITY rdquo  "&#148;"> <!-- Right Double Quote -->
+    <!ENTITY trade  "&#153;"> <!-- Trademark Symbol (TM) -->
+    <!ENTITY rtrade "&#174;"> <!-- Registered Trademark (R) -->
+    <!ENTITY copy  "&#169;"> <!-- Copyright Symbol --> 
+]>
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:f="http://xmlns.jcp.org/jsf/core"
+    xmlns:h="http://xmlns.jcp.org/jsf/html" template="/WEB-INF/templates/layout.xhtml" xmlns:p="http://primefaces.org/ui">
+    <ui:define name="content">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Configuration Panel</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+
+        <div class="row global-configuration-panel">
+            <div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Create/Modify/Delete Global Properties</div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <h:form id="global-configuration-mod" role="form">
+                            <div class="form-group global-messages">
+                                <h:messages styleClass="messages" errorClass="center-block alert alert-warning"
+                                    infoClass="center-block alert alert-success" warnClass="center-block alert alert-warning"
+                                    globalOnly="true" />
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel for="name" value="Property Name" />
+                                <h:message for="name" errorClass="center-block alert alert-warning" />
+                                <h:inputText styleClass="form-control" id="name" value="#{newGlobalConfiguration.name}" />
+                                <p class="help-block">Name of the property to modify.</p>
+                            </div>
+
+                            <div class="form-group">
+                                <h:outputLabel for="value" value="Property Value" />
+                                <h:message for="value" errorClass="center-block alert alert-warning" />
+                                <h:inputText styleClass="form-control" id="value" value="#{newGlobalConfiguration.value}" />
+                                <p class="help-block">Value to assign to the property.</p>
+                            </div>
+
+                            <div class="form-group">
+                                <h:commandButton id="Register" action="#{globalConfigurationController.register}"
+                                    value="Update/Insert" styleClass="btn btn-default" />
+                                <h:commandButton id="Delete" action="#{globalConfigurationController.delete}" value="Delete"
+                                    styleClass="btn btn-default" />
+                            </div>
+                        </h:form>
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-6 -->
+            <div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Current Global Properties</div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <h:panelGroup rendered="#{empty globalConfiguration}">
+                                <em class="alert alert-warning">No registered global properties.</em>
+                            </h:panelGroup>
+                            <h:dataTable var="_globalConfiguration" value="#{globalConfiguration}"
+                                rendered="#{not empty globalConfiguration}"
+                                styleClass="table data-table table-striped table-bordered table-hover">
+                                <h:column>
+                                    <f:facet name="header">Name</f:facet>
+                                    <h:outputText styleClass="name" value="#{_globalConfiguration.name}" />
+
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">Value</f:facet>
+                                    <h:outputText styleClass="value" value="#{_globalConfiguration.value}" />
+                                </h:column>
+                            </h:dataTable>
+
+                        </div>
+                        <!-- /.table-responsive -->
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-6 -->
+        </div>
+        <!-- /.row -->
+
+        <div class="row topics-panel">
+            <div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Create/Modify/Delete Topics</div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <h:form id="topic-mod" role="form">
+                            <div class="form-group global-messages">
+                                <h:messages styleClass="messages" errorClass="center-block alert alert-warning"
+                                    infoClass="center-block alert alert-success" warnClass="center-block alert alert-warning"
+                                    globalOnly="true" />
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel for="name" value="Name" />
+                                <h:message for="name" errorClass="center-block alert alert-warning" />
+                                <h:inputText styleClass="form-control" id="name" value="#{newTopic.name}" />
+                                <p class="help-block">Name of the Topic, must be unique.</p>
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel for="description" value="Description" />
+                                <h:message for="description" errorClass="center-block alert alert-warning" />
+                                <h:inputText styleClass="form-control" id="description" value="#{newTopic.description}" />
+                                <p class="help-block">Brief description (only informative).</p>
+                            </div>
+                            <div class="form-group">
+                                <h:outputLabel for="keywords" value="Keywords" />
+                                <h:message for="keywords" errorClass="center-block alert alert-warning" />
+                                <h:inputText styleClass="form-control" id="keywords" value="#{newTopic.keywords}" />
+                                <p class="help-block">Keywords to search in the status stream.</p>
+                            </div>
+
+                            <div class="form-group">
+                                <h:commandButton id="Register" action="#{topicController.update}" value="Update/Insert"
+                                    styleClass="btn btn-default" />
+                                <h:commandButton id="Delete" action="#{topicController.delete}" value="Delete"
+                                    styleClass="btn btn-default" />
+                            </div>
+                        </h:form>
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-6 -->
+            <div class="col-lg-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Current Topics</div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <h:panelGroup rendered="#{empty topicList}">
+                                <em class="alert alert-warning">No registered topics.</em>
+                            </h:panelGroup>
+                            <h:dataTable var="_topic" value="#{topicList}" rendered="#{not empty topicList}"
+                                styleClass="table data-table table-striped table-bordered table-hover">
+                                <h:column>
+                                    <f:facet name="header">Name</f:facet>
+                                    <h:outputText styleClass="name" value="#{_topic.name}" />
+
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">Description</f:facet>
+                                    <h:outputText styleClass="description" value="#{_topic.description}" />
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">Keywords</f:facet>
+                                    <h:outputText styleClass="keywords" value="#{_topic.keywords}" />
+                                </h:column>
+                            </h:dataTable>
+
+                        </div>
+                        <!-- /.table-responsive -->
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-6 -->
+        </div>
+        <!-- /.row -->
+
+
+        <div class="row">
+            <div class="col-lg-12"></div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+    </ui:define>
+
+    <ui:define name="scripts">
+        <h:outputScript type="text/javascript">
+            
+            $(document).ready(function(){
+                $(".global-configuration-panel .data-table tbody tr" ).on( "click", function() {
+                    $("#global-configuration-mod\\:name").val($(this).find(".name").text());
+                    $("#global-configuration-mod\\:value").val($(this).find(".value").text());
+                });
+                $(".topics-panel .data-table tbody tr" ).on( "click", function() {
+                    $("#topic-mod\\:name").val($(this).find(".name").text());
+                    $("#topic-mod\\:description").val($(this).find(".description").text());
+                    $("#topic-mod\\:keywords").val($(this).find(".keywords").text());
+                });
+        });
+        </h:outputScript>
+    </ui:define>
+</ui:composition>

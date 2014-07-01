@@ -1,0 +1,239 @@
+<!DOCTYPE html [
+    <!ENTITY ldquo  "&#147;"> <!-- Left Double Quote --> 
+    <!ENTITY laquo "&#171;"> <!-- left pointing guillemet -->
+    <!ENTITY raquo "&#187;"> <!-- right pointing guillemet -->
+    <!ENTITY rdquo  "&#148;"> <!-- Right Double Quote -->
+    <!ENTITY trade  "&#153;"> <!-- Trademark Symbol (TM) -->
+    <!ENTITY rtrade "&#174;"> <!-- Registered Trademark (R) -->
+    <!ENTITY copy  "&#169;"> <!-- Copyright Symbol --> 
+]>
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core" xmlns:h="http://xmlns.jcp.org/jsf/html"
+	template="/WEB-INF/templates/layout.xhtml" xmlns:p="http://primefaces.org/ui"
+	xmlns:t="http://xmlns.jcp.org/jsf/passthrough">
+
+	<ui:define name="content">
+		<div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header">
+					Topic
+					<h:outputText value="#{param['name']}" />
+				</h1>
+			</div>
+			<!-- /.col-lg-12 -->
+
+		</div>
+
+		<ui:param name="currentTopic" value="#{topicMap[param['name']]}" />
+
+		<h:panelGroup rendered="#{empty param['name']}">
+			<em class="alert alert-warning">No topic name provided.</em>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{not empty param['name'] and empty currentTopic}">
+			<em class="alert alert-warning">Invalid topic name provided.</em>
+		</h:panelGroup>
+
+		<h:panelGroup rendered="#{not empty currentTopic}">
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="panel panel-default">
+						<div class="panel-heading">Advanced Configuration</div>
+						<!-- /.panel-heading -->
+
+						<div class="panel-body">
+							<h:form id="extractor-mod" role="form">
+								<div class="form-group global-messages">
+									<h:messages styleClass="messages" errorClass="center-block alert alert-warning"
+										infoClass="center-block alert alert-success" warnClass="center-block alert alert-warning" globalOnly="true" />
+								</div>
+								<div class="form-group">
+									<h:outputLabel for="keywords" value="Keywords" />
+									<h:message for="keywords" errorClass="center-block alert alert-warning" />
+									<h:inputText styleClass="form-control" id="keywords" value="#{newTopic.keywords}"
+										t:placeholder="Keywords to search" />
+								</div>
+
+								<div class="form-group">
+									<h:outputLabel for="upperLimit" value="Upper Limit ID" />
+									<h:message for="upperLimit" errorClass="center-block alert alert-warning" />
+									<h:inputText styleClass="form-control" id="upperLimit" value="#{newTopic.upperLimit}"
+										t:placeholder="Newest status ID to extract" />
+								</div>
+
+								<div class="form-group">
+									<h:outputLabel for="lowerLimit" value="Lower Limit ID" />
+									<h:message for="lowerLimit" errorClass="center-block alert alert-warning" />
+									<h:inputText styleClass="form-control" id="lowerLimit" value="#{newTopic.lowerLimit}"
+										t:placeholder="Oldest status ID to extract" />
+								</div>
+
+								<div class="form-group">
+									<h:outputLabel for="language" value="Language" />
+									<h:message for="language" errorClass="center-block alert alert-warning" />
+									<h:inputText styleClass="form-control" id="language" value="#{newTopic.language}"
+										t:placeholder="Language of the statuses" />
+								</div>
+
+								<div class="form-group">
+									<h:outputLabel for="statusesPerCall" value="Statuses per Call" />
+									<h:message for="statusesPerCall" errorClass="center-block alert alert-warning" />
+									<h:inputText styleClass="form-control" id="statusesPerCall" value="#{newTopic.statusesPerCall}"
+										t:placeholder="Number of statuses per API call" />
+								</div>
+
+								<div class="form-group">
+									<h:outputLabel for="statusesPerFullExtraction" value="Statuses per Full Extraction" />
+									<h:message for="statusesPerFullExtraction" errorClass="center-block alert alert-warning" />
+									<h:inputText styleClass="form-control" id="statusesPerFullExtraction"
+										value="#{newTopic.statusesPerFullExtraction}" t:placeholder="Number of statuses per full extraction" />
+								</div>
+								
+								<div class="form-group">
+                                    <h:outputLabel for="processorPositiveBoundary" value="Processor Positive Boundary" />
+                                    <h:message for="processorPositiveBoundary" errorClass="center-block alert alert-warning" />
+                                    <h:inputText styleClass="form-control" id="processorPositiveBoundary"
+                                        value="#{newTopic.processorPositiveBoundary}" t:placeholder="Threshold value for a positive opinion." />
+                                </div>
+                                
+                                <div class="form-group">
+                                    <h:outputLabel for="processorNegativeBoundary" value="Processor Negative Boundary" />
+                                    <h:message for="processorNegativeBoundary" errorClass="center-block alert alert-warning" />
+                                    <h:inputText styleClass="form-control" id="processorNegativeBoundary"
+                                        value="#{newTopic.processorNegativeBoundary}" t:placeholder="Threshold value for a negative opinion." />
+                                </div>
+
+								<div class="form-group">
+									<div id="datetimepicker1" class="input-append date">
+										<h:outputLabel for="plotterLeftDateBoundary" value="Plotter Left Date Boundary" />
+										<h:message for="plotterLeftDateBoundary" errorClass="center-block alert alert-warning" />
+										<h:inputText styleClass="form-control" id="plotterLeftDateBoundary"
+											value="#{newTopic.plotterLeftDateBoundary}" />
+									</div>
+								</div>
+
+								<div class="form-group">
+									<h:outputLabel for="plotterRightDateBoundary" value="Plotter Right Date Boundary" />
+									<h:message for="plotterRightDateBoundary" errorClass="center-block alert alert-warning" />
+									<h:inputText styleClass="form-control" id="plotterRightDateBoundary"
+										value="#{newTopic.plotterRightDateBoundary}" />
+								</div>
+								
+								<div class="form-group">
+                                    <h:outputLabel for="plotterStepSize" value="Plotter Step Size" />
+                                    <h:message for="plotterStepSize" errorClass="center-block alert alert-warning" />
+                                    <h:inputText styleClass="form-control" id="plotterStepSize"
+                                        value="#{newTopic.plotterStepSize}" t:placeholder="Step size for histogram charts (in ms.)." />
+                                </div>
+
+								<div class="form-group">
+									<h:inputHidden value="#{newTopic.name}" id="name" />
+									<h:commandButton id="register" action="#{topicController.update}" value="Update Configuration"
+										styleClass="btn btn-default">
+										<f:param name="name" value="${param.name}" />
+									</h:commandButton>
+									<h:commandButton type="reset" id="reset" value="Reset" styleClass="btn btn-default" />
+									<h:commandButton id="delete" action="#{topicController.deleteStatuses}" value="Delete Statuses"
+										styleClass="btn btn-default">
+										<f:param name="name" value="${param.name}" />
+									</h:commandButton>
+								</div>
+							</h:form>
+						</div>
+						<!-- /.panel-body -->
+
+					</div>
+					<!-- /.panel -->
+				</div>
+				<!-- /.col-lg-6 -->
+				<div class="col-lg-6">
+					<div class="panel panel-default">
+						<div class="panel-heading">Status</div>
+						<!-- /.panel-heading -->
+
+						<div class="panel-body">
+							<div class="list-group">
+								<c:forEach items="#{currentTopic.topicStatus.databaseStatus}" var="entry">
+									<span class="list-group-item"> <i class="fa fa-dot-circle-o fa-fw"></i> <h:outputText
+											value=" #{entry.key}" /> <span class="pull-right text-muted small"><em><h:outputText
+													value=" #{entry.value}" /></em> </span>
+									</span>
+								</c:forEach>
+							</div>
+							<h:form id="refreshForm" role="form">
+								<div class="form-group">
+									<h:commandButton id="refreshButton" action="#{topicController.refreshMongoStatus(currentTopic)}"
+										value="Refresh" styleClass="btn btn-default">
+										<f:param name="name" value="${param.name}" />
+									</h:commandButton>
+								</div>
+							</h:form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /.row -->
+
+
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">Upload Status Data</div>
+						<!-- /.panel-heading -->
+						<div class="panel-body">
+							<h:form id="uploadDataForm" role="form">
+								<div class="form-group">
+
+									<h:outputLabel for="statusDataFilename" value="Status Data Filename" />
+									<h:message for="statusDataFilename" errorClass="center-block alert alert-warning" />
+									<h:inputText styleClass="form-control" id="statusDataFilename" value="#{extractorController.filename}"
+										t:placeholder="Example: data.json">
+										<f:validateRegex pattern="[a-zA-Z0-9\.-]+"></f:validateRegex>
+									</h:inputText>
+
+									<p class="help-block">
+										The file must be already on the server, in the path:
+										<h:outputText value="#{constants.mongoDatafileLocation}" />
+										.
+									</p>
+									<h:commandButton id="uploadDataButton" action="#{extractorController.insertDataFromFile(currentTopic)}"
+										value="Upload" styleClass="btn btn-default">
+										<f:param name="name" value="${param.name}" />
+									</h:commandButton>
+								</div>
+							</h:form>
+
+						</div>
+					</div>
+				</div>
+				<!-- /.col-lg-12 -->
+			</div>
+			<!-- /.row -->
+
+		</h:panelGroup>
+		<!-- panel group -->
+	</ui:define>
+
+	<ui:define name="scripts">
+		<h:outputScript type="text/javascript">
+            $(document).ready(function(){
+                $("#extractor-mod\\:name").val("<h:outputText value="#{currentTopic.name}" />");
+                $("#extractor-mod\\:keywords").val("<h:outputText value="#{currentTopic.keywords}" />");
+                $("#extractor-mod\\:upperLimit").val("<h:outputText value="#{currentTopic.upperLimit}" />");
+                $("#extractor-mod\\:lowerLimit").val("<h:outputText value="#{currentTopic.lowerLimit}" />");
+                $("#extractor-mod\\:language").val("<h:outputText value="#{currentTopic.language}" />");
+                $("#extractor-mod\\:statusesPerCall").val("<h:outputText value="#{currentTopic.statusesPerCall}" />");
+                $("#extractor-mod\\:statusesPerFullExtraction").val("<h:outputText
+				value="#{currentTopic.statusesPerFullExtraction}" />");
+				$("#extractor-mod\\:processorPositiveBoundary").val("<h:outputText value="#{currentTopic.processorPositiveBoundary}" />");
+				$("#extractor-mod\\:processorNegativeBoundary").val("<h:outputText value="#{currentTopic.processorNegativeBoundary}" />");
+				
+				$("#extractor-mod\\:plotterLeftDateBoundary").val("<h:outputText value="#{currentTopic.plotterLeftDateBoundary}" />");
+				$("#extractor-mod\\:plotterRightDateBoundary").val("<h:outputText value="#{currentTopic.plotterRightDateBoundary}" />");
+				$("#extractor-mod\\:plotterLeftDateBoundary").datetimepicker();
+				$("#extractor-mod\\:plotterRightDateBoundary").datetimepicker();
+				$("#extractor-mod\\:plotterStepSize").val("<h:outputText value="#{currentTopic.plotterStepSize}" />");
+            });
+        </h:outputScript>
+	</ui:define>
+</ui:composition>
