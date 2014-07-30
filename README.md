@@ -1,4 +1,4 @@
-[![Stories in Ready](https://badge.waffle.io/miguelfc/marble.png?label=ready&title=Ready)](https://waffle.io/miguelfc/marble)
+[![Stories in Ready](https://badge.waffle.io/miguelfc/marble.png?label=ready&title=Ready)](https://waffle.io/miguelfc/marble) [ ![Codeship Status for miguelfc/marble](https://www.codeship.io/projects/f42fa540-fa36-0131-5a84-6a22440fbafa/status)](https://www.codeship.io/projects/29022)
 This is the Marble Initiative!
 ======
 
