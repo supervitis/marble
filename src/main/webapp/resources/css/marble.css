@@ -1,0 +1,15 @@
+.dropdown-login input[type="text"], .dropdown-login input[type="password"] {
+	height: 30px;
+	font-size: 12px;
+	line-height: 14px;
+}
+
+.dropdown-login input[type="submit"] {
+	height: 30px;
+	font-size: 14px;
+	padding-top: 5px;
+}
+
+.dropdown-login {
+	padding: 20px 15px 20px 15px;
+}
