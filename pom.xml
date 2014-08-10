@@ -24,14 +24,13 @@
 
 		<!-- JBoss dependency versions -->
 		<version.jboss.maven.plugin>7.4.Final</version.jboss.maven.plugin>
-		<!-- Define the version of the JBoss BOMs we want to import to specify 
-			tested stacks. -->
+		<!-- Define the version of the JBoss BOMs we want to import to specify tested stacks. -->
 		<version.jboss.bom>1.0.7.Final</version.jboss.bom>
 		<version.jboss.as>7.2.0.Final</version.jboss.as>
 
 		<!-- other plugin versions -->
-		<!-- <version.ear.plugin>2.6</version.ear.plugin> <version.ejb.plugin>2.3</version.ejb.plugin> 
-			<version.surefire.plugin>2.10</version.surefire.plugin> <version.war.plugin>2.1.1</version.war.plugin> -->
+		<!-- <version.ear.plugin>2.6</version.ear.plugin> <version.ejb.plugin>2.3</version.ejb.plugin> <version.surefire.plugin>2.10</version.surefire.plugin> 
+			<version.war.plugin>2.1.1</version.war.plugin> -->
 
 		<!-- maven-compiler-plugin -->
 		<maven.compiler.target>1.7</maven.compiler.target>
@@ -39,44 +38,16 @@
 	</properties>
 
 	<dependencies>
-
-		<!-- Define the version of the EJB jar so that we don't need to repeat 
-			ourselves in every module -->
-		<!-- <dependency> <groupId>org.marble</groupId> <artifactId>Marble-ejb</artifactId> 
-			<version>${project.version}</version> <type>ejb</type> </dependency> -->
-
-		<!-- Define the version of the WAR so that we don't need to repeat ourselves 
-			in every module -->
-		<!-- <dependency> <groupId>org.marble</groupId> <artifactId>Marble-web</artifactId> 
-			<version>${project.version}</version> <type>war</type> <scope>compile</scope> 
-			</dependency> -->
-
-		<!-- JBoss distributes a complete set of Java EE 6 APIs including a Bill 
-			of Materials (BOM). A BOM specifies the versions of a "stack" (or a collection) 
-			of artifacts. We use this here so that we always get the correct versions 
-			of artifacts. Here we use the jboss-javaee-6.0-with-tools stack (you can 
-			read this as the JBoss stack of the Java EE 6 APIs, with some extras tools 
-			for your project, such as Arquillian for testing) and the jboss-javaee-6.0-with-hibernate 
-			stack you can read this as the JBoss stack of the Java EE 6 APIs, with extras 
-			from the Hibernate family of projects) -->
-		<!-- <dependency> <groupId>org.jboss.bom</groupId> <artifactId>jboss-javaee-6.0-with-tools</artifactId> 
-			<version>${version.jboss.bom}</version> <type>pom</type> <scope>import</scope> 
-			</dependency> <dependency> <groupId>org.jboss.bom</groupId> <artifactId>jboss-javaee-6.0-with-hibernate</artifactId> 
-			<version>${version.jboss.bom}</version> <type>pom</type> <scope>import</scope> 
-			</dependency> -->
-
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
 			<version>4.0.6.RELEASE</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 			<version>4.0.6.RELEASE</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-config</artifactId>
@@ -88,6 +59,33 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<!-- Hibernate dependencies -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>4.3.6.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>9.3-1102-jdbc41</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>5.1.2.Final</version>
+		</dependency>
+		<dependency>
+            <groupId>jboss</groupId>
+            <artifactId>javassist</artifactId>
+            <version>3.4.ga</version>
+        </dependency>
+        <dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-orm</artifactId>
+			<version>4.0.6.RELEASE</version>
+		</dependency>
+        <!-- End of Hibernate dependencies -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
@@ -137,7 +135,7 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
-
+		
 
 	</dependencies>
 
@@ -145,9 +143,8 @@
 		<pluginManagement>
 			<plugins>
 				<!-- The JBoss AS plugin deploys your ear to a local JBoss AS container -->
-				<!-- Due to Maven's lack of intelligence with EARs we need to configure 
-					the jboss-as maven plugin to skip deployment for all modules. We then enable 
-					it specifically in the ear module. -->
+				<!-- Due to Maven's lack of intelligence with EARs we need to configure the jboss-as maven plugin to skip deployment for all modules. We 
+					then enable it specifically in the ear module. -->
 				<plugin>
 					<groupId>org.jboss.as.plugins</groupId>
 					<artifactId>jboss-as-maven-plugin</artifactId>

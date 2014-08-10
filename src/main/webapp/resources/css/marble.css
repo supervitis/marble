@@ -13,3 +13,7 @@
 .dropdown-login {
 	padding: 20px 15px 20px 15px;
 }
+
+.dropdown-user span {
+	padding: 3px 20px;
+}

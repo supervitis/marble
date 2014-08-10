@@ -159,7 +159,7 @@
 			<!-- /.dropdown-user -->
 		</sec:authorize> <sec:authorize access="isAuthenticated()">
 			<ul class="dropdown-menu dropdown-user">
-				<li><i class="fa fa-user fa-fw"></i> Hello <sec:authentication property="principal.username" />!</li>
+				<li><span><i class="fa fa-user fa-fw"></i> Hello <sec:authentication property="principal.username" />!</span></li>
 				<li class="divider"></li>
 				<li><a href="<c:url value="/j_spring_security_logout"/>"><i class="fa fa-sign-out fa-fw"></i> Logout</a></li>
 			</ul>
