@@ -4,16 +4,16 @@
 	line-height: 14px;
 }
 
-.dropdown-login input[type="submit"] {
+.dropdown-user input[type="submit"] {
 	height: 30px;
 	font-size: 14px;
 	padding-top: 5px;
 }
 
-.dropdown-login {
+.dropdown-user {
 	padding: 20px 15px 20px 15px;
 }
 
 .dropdown-user span {
-	padding: 3px 20px;
+	padding: 3px 0px;
 }

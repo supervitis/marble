@@ -15,18 +15,19 @@
 							<br />
 						</div>
 					</c:if>
-					<form role="form" action="<c:url value= "/j_spring_security_check"></c:url>" method="post">
+					<form role="form" action="<c:url value= "/login/authenticate"></c:url>" method="post">
 						<fieldset>
 							<div class="form-group">
-								<input class="form-control" placeholder="Username" name="j_username" type="text" autofocus />
+								<input class="form-control" placeholder="Username" name="username" type="text" autofocus />
 							</div>
 							<div class="form-group">
-								<input class="form-control" placeholder="Password" name="j_password" type="password" value="" />
+								<input class="form-control" placeholder="Password" name="password" type="password" value="" />
 							</div>
 							<div class="checkbox">
-								<label> <input name="_spring_security_remember_me" type="checkbox" value="Remember Me" />Remember Me
+								<label> <input name="_spring_security_remember_me" disabled="disabled" type="checkbox" value="Remember Me" />Remember Me
 								</label>
 							</div>
+							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 							<input class="btn btn-lg btn-success btn-block" type="submit" value="Login" />
 						</fieldset>
 					</form>

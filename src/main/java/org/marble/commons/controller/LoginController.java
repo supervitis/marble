@@ -14,10 +14,12 @@ public class LoginController {
 		return new ModelAndView("login");
 	}
 
-	@RequestMapping(value = "/loginfailed", method = RequestMethod.GET)
-	public ModelAndView loginerror(Model model) {
-		model.addAttribute("error", "true");
-		return new ModelAndView("login");
+	@RequestMapping(value = "/login/failure", method = RequestMethod.GET)
+	// Check
+	public ModelAndView loginerror() {
+		ModelAndView model = new ModelAndView("login");
+		model.addObject("error", "true");
+		return model;
 	}
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
