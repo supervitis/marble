@@ -37,6 +37,10 @@
 <!-- Custom Fonts -->
 <link href="<c:url value="/resources/font-awesome-4.1.0/css/font-awesome.min.css"/>" rel="stylesheet" type="text/css">
 
+<!-- Date Time Picker -->
+<link href="<c:url value="/resources/css/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css"/>" rel="stylesheet"
+	type="text/css">
+
 <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
@@ -62,6 +66,13 @@
 		</nav>
 
 		<div id="page-wrapper">
+			<!-- /.row -->
+			<c:if test="${notificationMessage != null}">
+				<div class="alert alert-${notificationLevel}">
+					<i class='fa fa-exclamation-triangle'></i>
+					<spring:message code="${notificationMessage}" />
+				</div>
+			</c:if>
 			<tiles:insertAttribute name="content" />
 		</div>
 		<!-- /#page-wrapper -->
@@ -85,9 +96,13 @@
 	<script src="<c:url value="/resources/js/plugins/morris/morris-data.js"/>"></script>
 	-->
 
+	<!-- Date Time Picker -->
+	<script src="<c:url value="/resources/js/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"/>"></script>
+
 	<!-- Custom Theme JavaScript -->
 	<script src="<c:url value="/resources/js/sb-admin-2.js"/>"></script>
 
+	<tiles:insertAttribute name="script" />
 </body>
 
 </html>

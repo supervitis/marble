@@ -25,6 +25,7 @@
 		<hibernate.version>4.3.6.Final</hibernate.version>
 		<bonecp.version>0.8.0.RELEASE</bonecp.version>
 		<postgresql.version>9.3-1102-jdbc41</postgresql.version>
+		<log4j.version>2.0</log4j.version>
 
 		<!-- JDBC Setting -->
 		<hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
@@ -120,7 +121,7 @@
 			<artifactId>bootstrap</artifactId>
 			<version>${bootstrap.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.tiles</groupId>
 			<artifactId>tiles-extras</artifactId>
@@ -132,6 +133,13 @@
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
 			<version>${spring.version}</version>
+			<exclusions>
+				<!-- Exclude commons-logging in favor of SLF4J -->
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -220,16 +228,19 @@
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
+
 		<!-- Postgresql Driver -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<version>${postgresql.version}</version>
 		</dependency>
+
+		<!-- SLF4J -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.7</version>
+		</dependency>
 	</dependencies>
-
-
-
-
-
 </project>

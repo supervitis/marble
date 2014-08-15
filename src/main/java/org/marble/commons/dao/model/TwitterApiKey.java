@@ -11,10 +11,9 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Table
 public class TwitterApiKey implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -6137928572799267601L;
 
-    
-    @NotNull
+	@NotNull
     @NotEmpty
     private String            consumerKey;
 
@@ -33,7 +32,6 @@ public class TwitterApiKey implements Serializable {
     private String            accessTokenSecret;
     
     @NotNull
-    @NotEmpty
     private Boolean           enabled;
     
     private String            owner;

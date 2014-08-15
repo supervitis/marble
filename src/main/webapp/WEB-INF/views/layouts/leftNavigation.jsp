@@ -1,4 +1,5 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <div class="navbar-default sidebar" role="navigation">
 	<div class="sidebar-nav navbar-collapse">
 		<ul class="nav" id="side-menu">
@@ -11,7 +12,8 @@
 					</span>
 				</div> <!-- /input-group -->
 			</li>
-			<li><a href="controlPanel.xhtml"><i class="fa fa-cog fa-fw"></i> Control Panel</a></li>
+			<li><a href="controlPanel.xhtml"><i class="fa fa-wrench fa-fw"></i> Control Panel</a></li>
+			<li><a href="<c:url value="/admin/"/>"><i class="fa fa-cog fa-fw"></i> Administration Panel</a></li>
 			<li><a href="topicsPanel.xhtml"><i class="fa fa-tasks fa-fw"></i> Topics</a></li>
 			<li><a href="#"><i class="fa fa-tags fa-fw"></i> Topics<span class="fa arrow"></span></a>
 				<ul class="nav nav-second-level">

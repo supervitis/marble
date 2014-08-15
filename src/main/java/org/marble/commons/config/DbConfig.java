@@ -44,7 +44,6 @@ public class DbConfig {
         boneCPDataSource.setPartitionCount(3);
         boneCPDataSource.setAcquireIncrement(5);
         boneCPDataSource.setStatementsCacheSize(100);
-        boneCPDataSource.setReleaseHelperThreads(3);
 
         return boneCPDataSource;
 
@@ -73,7 +72,7 @@ public class DbConfig {
         properties.setProperty("hibernate.cache.use_second_level_cache", "true");
         properties.setProperty("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
         properties.setProperty("hibernate.cache.use_query_cache", "true");
-        properties.setProperty("hibernate.generate_statistics", "true");
+        properties.setProperty("hibernate.generate_statistics", "false");
 
         factory.setJpaProperties(properties);
 

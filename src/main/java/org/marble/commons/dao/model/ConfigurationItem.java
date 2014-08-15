@@ -9,7 +9,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table
-public class GlobalConfiguration implements Serializable {
+public class ConfigurationItem implements Serializable {
 
 	private static final long serialVersionUID = -946199796905909629L;
 
