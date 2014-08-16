@@ -14,7 +14,7 @@
 <meta name="author" content='<tiles:insertAttribute name="author"/>'>
 
 
-<title><tiles:insertAttribute name="title" /></title>
+<title>Marble - <tiles:insertAttribute name="title" /></title>
 
 <!-- Bootstrap Core CSS -->
 <link href='<c:url value="/resources/css/bootstrap.min.css"/>' rel="stylesheet">
@@ -58,7 +58,7 @@
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
 					<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href='<c:url value="/"></c:url>'><tiles:insertAttribute name="title" /></a>
+				<a class="navbar-brand" href='<c:url value="/"></c:url>'>Marble</a>
 			</div>
 			<!-- /.navbar-header -->
 			<tiles:insertAttribute name="topNavigation" />
@@ -66,10 +66,16 @@
 		</nav>
 
 		<div id="page-wrapper">
+			<div class="row">
+				<div class="col-lg-12">
+					<h1 class="page-header"><tiles:insertAttribute name="title" /></h1>
+				</div>
+				<!-- /.col-lg-12 -->
+			</div>
 			<!-- /.row -->
 			<c:if test="${notificationMessage != null}">
 				<div class="alert alert-${notificationLevel}">
-					<i class='fa fa-exclamation-triangle'></i>
+					<i class='fa ${notificationIcon}'></i>
 					<spring:message code="${notificationMessage}" />
 				</div>
 			</c:if>

@@ -24,6 +24,7 @@ public class ResetController {
 		
 		// Setting message
 		redirectAttributes.addFlashAttribute("notificationMessage", "ResetController.rebaseMessage");
+		redirectAttributes.addFlashAttribute("notificationIcon", "fa-exclamation-triangle");
 		redirectAttributes.addFlashAttribute("notificationLevel", "danger");
 		return "redirect:/";
 	}

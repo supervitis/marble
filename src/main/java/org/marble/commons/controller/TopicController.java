@@ -8,7 +8,10 @@ import org.marble.commons.dao.model.TopicStatus;
 import org.marble.commons.exception.InvalidTopicException;
 import org.marble.commons.exception.InvalidUserException;
 import org.marble.commons.model.SignupForm;
+import org.marble.commons.service.ResetServiceImpl;
 import org.marble.commons.service.TopicService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -21,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping("/topic")
 public class TopicController {
 
+	private static final Logger log =  LoggerFactory.getLogger(ResetServiceImpl.class);
 	@Autowired
 	TopicService topicService;
 
@@ -49,8 +53,8 @@ public class TopicController {
 
 	@RequestMapping(value = "/edit/{topicId}", method = RequestMethod.POST)
 	public ModelAndView save(@PathVariable Integer topicId, @Valid Topic topic, BindingResult result) {
+		
 		ModelAndView modelAndView = new ModelAndView();
-
 		try {
 			topicService.updateTopic(topic);
 		} catch (InvalidTopicException e) {
@@ -62,7 +66,11 @@ public class TopicController {
 		modelAndView.setViewName("edit_topic");
 		modelAndView.addObject("topic", topic);
 		
-		//TODO Set notification message and list view
+		modelAndView.addObject("notificationMessage", "TopicController.topicModified");
+		modelAndView.addObject("notificationIcon", "fa-check-circle");
+		modelAndView.addObject("notificationLevel", "success");
+		
+		//TODO Set  list view as return
 		
 		return modelAndView;
 	}

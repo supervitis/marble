@@ -2,20 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <div class="row">
-	<div class="col-lg-12">
-		<h1 class="page-header">Dashboard</h1>
-	</div>
-	<!-- /.col-lg-12 -->
-</div>
-<!-- /.row -->
-<c:if test="${notificationMessage != null}">
-	<div class="alert alert-${notificationLevel}">
-		<i class='fa fa-exclamation-triangle'></i>
-		<spring:message code="${notificationMessage}" />
-	</div>
-</c:if>
-
-<div class="row">
 	<div class="col-lg-3 col-md-6">
 		<div class="panel panel-primary">
 			<div class="panel-heading">

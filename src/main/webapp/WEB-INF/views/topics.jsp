@@ -2,13 +2,6 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
-<div class="row">
-	<div class="col-lg-12">
-		<h1 class="page-header">Topics Dashboard</h1>
-	</div>
-	<!-- /.col-lg-12 -->
-</div>
-
 <div class="row topics-panel">
 	<div class="col-lg-12">
 		<div class="panel panel-default">

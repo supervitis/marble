@@ -29,6 +29,9 @@ public class TilesConfig extends WebMvcConfigurerAdapter {
 		addBaseDefinition("home", "Home", Boolean.FALSE);
 		addBaseDefinition("login", "Login", Boolean.FALSE);
 		addBaseDefinition("admin", "Administration Panel", Boolean.FALSE);
+		
+		// Just for test
+		//addBaseDefinition("signup", "Test", Boolean.FALSE);
 
 		addBaseDefinition("edit_topic", "Edit Topic", Boolean.TRUE);
 
@@ -38,7 +41,7 @@ public class TilesConfig extends WebMvcConfigurerAdapter {
 	private void addBaseDefinition(String name, String title, Boolean script) {
 		Map<String, Attribute> attributes = getDefaultAttributes();
 
-		attributes.put("title", new Attribute("Marble - " + title));
+		attributes.put("title", new Attribute(title));
 		attributes.put("content", new Attribute("/WEB-INF/views/" + name + ".jsp"));
 
 		if (script) {
