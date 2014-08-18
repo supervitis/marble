@@ -17,7 +17,7 @@
 <title>Marble - <tiles:insertAttribute name="title" /></title>
 
 <!-- Bootstrap Core CSS -->
-<link href='<c:url value="/resources/css/bootstrap.min.css"/>' rel="stylesheet">
+<link href='<c:url value="/resources/css/bootstrap/bootstrap.css"/>' rel="stylesheet">
 
 <!-- MetisMenu CSS -->
 <link href="<c:url value="/resources/css/plugins/metisMenu/metisMenu.min.css"/>" rel="stylesheet">

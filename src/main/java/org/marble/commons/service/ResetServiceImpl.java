@@ -83,6 +83,7 @@ public class ResetServiceImpl implements ResetService {
 		for (int i = 0; i < topics.length; i = i + 1) {
 			Topic topic = new Topic();
 			topic.setName(topics[i]);
+			topic.setKeywords(topics[i]);
 
 			topic = topicDao.save(topic);
 		}

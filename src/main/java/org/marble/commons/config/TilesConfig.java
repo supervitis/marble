@@ -28,12 +28,15 @@ public class TilesConfig extends WebMvcConfigurerAdapter {
 		// Here is where the views are defined
 		addBaseDefinition("home", "Home", Boolean.FALSE);
 		addBaseDefinition("login", "Login", Boolean.FALSE);
+		addBaseDefinition("error", "Oops!", Boolean.FALSE);
+		addBaseDefinition("not_found", "Not found!", Boolean.FALSE);
 		addBaseDefinition("admin", "Administration Panel", Boolean.FALSE);
 		
 		// Just for test
 		//addBaseDefinition("signup", "Test", Boolean.FALSE);
 
 		addBaseDefinition("edit_topic", "Edit Topic", Boolean.TRUE);
+		addBaseDefinition("topics_list", "Topics", Boolean.FALSE);
 
 		return tilesConfigurer;
 	}

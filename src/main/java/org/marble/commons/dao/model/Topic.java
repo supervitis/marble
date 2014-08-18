@@ -1,6 +1,7 @@
 package org.marble.commons.dao.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,9 +9,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 @Entity
 @Table
@@ -26,17 +31,33 @@ public class Topic implements Serializable {
 	@Column(unique = true)
 	private String name;
 	private String description;
+	
+	@NotNull
+	@NotEmpty
 	private String keywords;
+	
+	@Digits(fraction = 0, integer = 16)
 	private Long upperLimit;
+	@Digits(fraction = 0, integer = 16)
 	private Long lowerLimit;
+	@Pattern(regexp = "[a-zA-Z]{2}|")
 	private String language;
+
+	@Digits(fraction = 0, integer = 3)
 	private Integer statusesPerCall;
+	@Digits(fraction = 0, integer = 8)
 	private Integer statusesPerFullExtraction;
 	private Double processorPositiveBoundary;
 	private Double processorNegativeBoundary;
-	private String plotterLeftDateBoundary;
-	private String plotterRightDateBoundary;
+	
+	@DateTimeFormat(iso = ISO.DATE_TIME)
+	private Date plotterLeftDateBoundary;
+	@DateTimeFormat(iso = ISO.DATE_TIME)
+	private Date plotterRightDateBoundary;
+	
+	@Digits(fraction = 0, integer = 8)
 	private Integer plotterStepSize;
+	
 	private TopicStatus topicStatus = new TopicStatus();
 
 	// TODO For future versions:
@@ -49,6 +70,7 @@ public class Topic implements Serializable {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
 	public String getName() {
 		return name;
 	}
@@ -129,19 +151,19 @@ public class Topic implements Serializable {
 		this.processorNegativeBoundary = processorNegativeBoundary;
 	}
 
-	public String getPlotterLeftDateBoundary() {
+	public Date getPlotterLeftDateBoundary() {
 		return plotterLeftDateBoundary;
 	}
 
-	public void setPlotterLeftDateBoundary(String plotterLeftDateBoundary) {
+	public void setPlotterLeftDateBoundary(Date plotterLeftDateBoundary) {
 		this.plotterLeftDateBoundary = plotterLeftDateBoundary;
 	}
 
-	public String getPlotterRightDateBoundary() {
+	public Date getPlotterRightDateBoundary() {
 		return plotterRightDateBoundary;
 	}
 
-	public void setPlotterRightDateBoundary(String plotterRightDateBoundary) {
+	public void setPlotterRightDateBoundary(Date plotterRightDateBoundary) {
 		this.plotterRightDateBoundary = plotterRightDateBoundary;
 	}
 

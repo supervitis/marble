@@ -26,6 +26,7 @@
 		<bonecp.version>0.8.0.RELEASE</bonecp.version>
 		<postgresql.version>9.3-1102-jdbc41</postgresql.version>
 		<log4j.version>2.0</log4j.version>
+		<lesscss.version>1.7.0.1.1</lesscss.version>
 
 		<!-- JDBC Setting -->
 		<hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
@@ -88,6 +89,30 @@
 				<filtering>false</filtering>
 			</resource>
 		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.lesscss</groupId>
+				<artifactId>lesscss-maven-plugin</artifactId>
+				<version>${lesscss.version}</version>
+				<configuration>
+		<compress>true</compress>
+					<includes>
+						<include>marble.less</include>
+						<include>sb-admin-2.less</include>
+						<include>bootstrap/bootstrap.less</include>
+					</includes>
+					<sourceDirectory>${basedir}/src/main/webapp/resources/less</sourceDirectory>
+					<outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}/resources/css</outputDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
 	</build>
 
 	<dependencies>
@@ -242,5 +267,8 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>1.7.7</version>
 		</dependency>
+
+
 	</dependencies>
+
 </project>

@@ -14,7 +14,7 @@
 			</li>
 			<li><a href="controlPanel.xhtml"><i class="fa fa-wrench fa-fw"></i> Control Panel</a></li>
 			<li><a href="<c:url value="/admin/"/>"><i class="fa fa-cog fa-fw"></i> Administration Panel</a></li>
-			<li><a href="topicsPanel.xhtml"><i class="fa fa-tasks fa-fw"></i> Topics</a></li>
+			<li><a href="<c:url value="/topic/"/>"><i class="fa fa-tasks fa-fw"></i> Topics</a></li>
 			<li><a href="#"><i class="fa fa-tags fa-fw"></i> Topics<span class="fa arrow"></span></a>
 				<ul class="nav nav-second-level">
 					<li><a href="panels-wells.html">Topic 1</a></li>
