@@ -1,4 +1,26 @@
-.dropdown-login input[type="text"], .dropdown-login input[type="password"] {
+/* Colors of the Marble palette:
+074A43 (dark green)
+58C76D (light green)
+428BCA (blue)
+FFCB3D (yellow)
+FE671B (orange)
+
+Lightened (50%):
+#86C9C2
+#D7FFEC
+#C1FFFF
+#FFFFBC
+#FFE69A
+
+Lightened (30%):
+549790
+A5FFBA
+8FD8FF
+FFFF8A
+FFB468
+*/
+.dropdown-login input[type="text"], .dropdown-login input[type="password"]
+	{
 	height: 30px;
 	font-size: 12px;
 	line-height: 14px;
@@ -16,4 +38,47 @@
 
 .dropdown-user span {
 	padding: 3px 0px;
+}
+/*
+.btn-light-green {
+	background-color: #A5FFBA;
+}
+.btn-blue {
+	background-color: #8FD8FF;
+}
+.btn-yellow {
+	background-color: #FFFF8A;
+}
+.btn-orange {
+	background-color: #FFB468;
+}
+*/
+.btn-light-green:hover {
+	color: white;
+	background-color: #58C76D;
+}
+
+.btn-blue:hover {
+	color: white;
+	background-color: #428BCA;
+}
+
+.btn-yellow:hover {
+	color: white;
+	background-color: #FFCB3D;
+}
+
+.btn-orange:hover {
+	color: white;
+	background-color: #FE671B;
+}
+
+.btn-primary {
+	border-color: #549790;
+	background-color: #549790;
+}
+
+.btn-primary:hover {
+	border-color: #074A43;
+	background-color: #074A43;
 }
