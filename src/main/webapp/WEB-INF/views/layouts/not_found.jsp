@@ -12,4 +12,5 @@
 	<tiles:putAttribute name="title" value="We couldn't find it!" />
 	<tiles:putAttribute name="content" value="/WEB-INF/views/not_found.jsp" />
 	<tiles:putAttribute name="script" value="" />
+	<tiles:putAttribute name="decoration" value="" />
 </tiles:insertTemplate>

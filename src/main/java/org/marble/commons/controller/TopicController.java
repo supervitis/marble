@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/topic")
@@ -51,7 +52,7 @@ public class TopicController {
 		modelAndView.addObject("topic", topic);
 		return modelAndView;
 	}
-
+	
 	@RequestMapping(value = "/edit/{topicId}", method = RequestMethod.POST)
 	public ModelAndView save(@PathVariable Integer topicId, @Valid Topic topic, BindingResult result) throws InvalidTopicException {
 
@@ -75,6 +76,49 @@ public class TopicController {
 		// TODO Set list view as return
 
 		return modelAndView;
+	}
+	
+	@RequestMapping(value = "/create", method = RequestMethod.GET)
+	public ModelAndView create() throws InvalidTopicException {
+		ModelAndView modelAndView = new ModelAndView();
+
+		Topic topic = new Topic();
+		modelAndView.setViewName("create_topic");
+		modelAndView.addObject("topic", topic);
+		return modelAndView;
+	}
+
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	public ModelAndView create(@Valid Topic topic, BindingResult result, RedirectAttributes redirectAttributes) throws InvalidTopicException {
+
+		ModelAndView modelAndView = new ModelAndView();
+		
+		if (result.hasErrors()) {
+			modelAndView.addObject("notificationMessage", "TopicController.editTopicError");
+			modelAndView.addObject("notificationIcon", "fa-exclamation-triangle");
+			modelAndView.addObject("notificationLevel", "danger");
+			modelAndView.setViewName("create_topic");
+			modelAndView.addObject("topic", topic);
+			return modelAndView;
+		}
+
+		topic = topicService.createTopic(topic);
+		// Setting message
+		redirectAttributes.addFlashAttribute("notificationMessage", "TopicController.topicCreated");
+		redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
+		redirectAttributes.addFlashAttribute("notificationLevel", "success");
+		modelAndView.setViewName("redirect:/topic");
+		return modelAndView;
+	}
+
+	@RequestMapping(value = "/delete/{topicId}")
+	public String delete(@PathVariable Integer topicId, RedirectAttributes redirectAttributes) throws InvalidTopicException {
+		topicService.deleteTopic(topicId);
+		// Setting message
+		redirectAttributes.addFlashAttribute("notificationMessage", "TopicController.topicDeleted");
+		redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
+		redirectAttributes.addFlashAttribute("notificationLevel", "success");
+		return "redirect:/topic";
 	}
 
 	@InitBinder

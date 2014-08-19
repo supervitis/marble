@@ -26,29 +26,31 @@ public class TilesConfig extends WebMvcConfigurerAdapter {
 		tilesConfigurer.setDefinitions(new String[] {});
 
 		// Here is where the views are defined
-		addBaseDefinition("home", "Home", Boolean.FALSE);
+		addBaseDefinition("home", "Home", "<i class='fa fa-home fa-fw'></i>", Boolean.FALSE);
 		addBaseDefinition("login", "Login", Boolean.FALSE);
 		addBaseDefinition("error", "Oops!", Boolean.FALSE);
 		addBaseDefinition("not_found", "Not found!", Boolean.FALSE);
-		addBaseDefinition("admin", "Administration Panel", Boolean.FALSE);
+		
 		
 		// Just for test
 		//addBaseDefinition("signup", "Test", Boolean.FALSE);
-
-		addBaseDefinition("edit_topic", "Edit Topic", Boolean.TRUE);
-		addBaseDefinition("topics_list", "Topics", Boolean.FALSE);
+		addBaseDefinition("admin", "Administration Panel", "<i class='fa fa-cog fa-fw'></i>", Boolean.FALSE);
+		addBaseDefinition("edit_topic", "Edit Topic", "<i class='fa fa-pencil fa-fw'></i>" , Boolean.TRUE);
+		addBaseDefinition("create_topic", "edit_topic", "Create New Topic", "<i class='fa fa-file-o fa-fw'></i>", Boolean.TRUE);
+		addBaseDefinition("topics_list", "Topics", "<i class='fa fa-tags fa-fw'></i>", Boolean.FALSE);
 
 		return tilesConfigurer;
 	}
 
-	private void addBaseDefinition(String name, String title, Boolean script) {
+	private void addBaseDefinition(String name, String view, String title, String decoration, Boolean script) {
 		Map<String, Attribute> attributes = getDefaultAttributes();
 
 		attributes.put("title", new Attribute(title));
-		attributes.put("content", new Attribute("/WEB-INF/views/" + name + ".jsp"));
+		attributes.put("content", new Attribute("/WEB-INF/views/" + view + ".jsp"));
+		attributes.put("decoration", new Attribute(decoration));
 
 		if (script) {
-			attributes.put("script", new Attribute("/WEB-INF/views/scripts/" + name + ".jsp"));
+			attributes.put("script", new Attribute("/WEB-INF/views/scripts/" + view + ".jsp"));
 		}
 		else {
 			attributes.put("script", new Attribute(""));
@@ -57,6 +59,16 @@ public class TilesConfig extends WebMvcConfigurerAdapter {
 		Attribute layout = new Attribute("/WEB-INF/views/layouts/baseLayout.jsp");
 		tiles.put(name, new Definition(name, layout, attributes));
 	}
+	
+	private void addBaseDefinition(String name, String title, String decoration, Boolean script) {
+		addBaseDefinition(name, name, title, decoration, script);
+	}
+	
+	private void addBaseDefinition(String name, String title, Boolean script) {
+		addBaseDefinition(name, name, title, "", script);
+	}
+	
+	
 
 	private Map<String, Attribute> getDefaultAttributes() {
 		Map<String, Attribute> attributes = new HashMap<String, Attribute>();

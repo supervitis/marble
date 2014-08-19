@@ -2,7 +2,27 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<fieldset>
+					<p class="help-block">These page shows the Topics avaiable in the system. If you want to create a new one, click on the Create button below.</p>
+					<div class="form-group">
+						<div class="col-lg-offset-10 col-lg-2">
+							<a href="<c:url value="/topic/create"/>" class="btn btn-primary pull-right"><i class="fa fa-file-o"></i> Create</a>
 
+						</div>
+					</div>
+				</fieldset>
+			</div>
+			<!-- .panel-body -->
+		</div>
+		<!-- /.panel -->
+	</div>
+	<!-- /.col-lg-12 -->
+</div>
+<!-- /.row -->
 <div class="row">
 	<div class="col-lg-12">
 		<div class="panel panel-default">
@@ -21,11 +41,10 @@
 							<c:forEach var="topic" items="${topics}">
 								<tr>
 									<td>${topic.name}</td>
-									<td><a href="<c:url value="/topic/edit/${topic.id}"/>" class="btn btn-default"><i class="fa fa-pencil"></i> Edit</a>
-									<a href="<c:url value="#"/>" class="btn btn-default btn-light-green"><i class="fa fa-sign-in"></i> Extract</a>
-									<a href="<c:url value="#"/>" class="btn btn-default btn-blue"><i class="fa fa-scissors"></i> Process</a>
-									<a href="<c:url value="#"/>" class="btn btn-default btn-orange"><i class="fa fa-bar-chart-o"></i> Plot</a>
-									</td>
+									<td><a href="<c:url value="/topic/edit/${topic.id}"/>" class="btn btn-default"><i class="fa fa-pencil"></i> Edit</a> <a
+										href="<c:url value="#"/>" class="btn btn-default btn-light-green"><i class="fa fa-sign-in"></i> Extract</a> <a
+										href="<c:url value="#"/>" class="btn btn-default btn-blue"><i class="fa fa-scissors"></i> Process</a> <a href="<c:url value="#"/>"
+										class="btn btn-default btn-orange"><i class="fa fa-bar-chart-o"></i> Plot</a></td>
 								</tr>
 							</c:forEach>
 						</table>

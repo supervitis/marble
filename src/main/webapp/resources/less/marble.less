@@ -1,61 +1,81 @@
 // TODO Merge with bootstrap variables file
 
-// Colors of the Marble palette:
-@theme-dark-green: #074A43;
-@theme-green: #58C76D;
-@theme-blue: #428BCA; 
-@theme-yellow: #FFCB3D;
-@theme-orange: #FE671B;
 
-.dropdown-login input[type="text"], .dropdown-login input[type="password"] {
-    height: 30px;
-    font-size: 12px;
-    line-height: 14px;
+
+@import "bootstrap/variables.less";
+.dropdown-login input[type="text"] , .dropdown-login input[type="password"] {
+	height: 30px;
+	font-size: 12px;
+	line-height: 14px;
 }
+
 .dropdown-user {
-    padding: 20px 15px 20px 15px;
-    input[type="submit"] {
-        height: 30px;
-        font-size: 14px;
-        padding-top: 5px;
-    }
-    span {
-        padding: 3px 0px;
-    }
+	padding: 20px 15px 20px 15px;
+	input[type="submit"] {
+		height: 30px;
+		font-size: 14px;
+		padding-top: 5px;
+	}
+
+	span {
+		padding: 3px 0px;
+	}
 }
+
 .btn-light-green {
-    //background-color: lighten(@theme-green, 30%);
-    &:hover {
-        color: white;
-        background-color: @theme-green;
-    }
+	&:hover {
+		color: white;
+		background-color: @theme-green;
+	}
 }
+
 .btn-blue {
-    //background-color: lighten(@theme-blue, 30%);
-    &:hover {
-        color: white;
-        background-color: @theme-blue;
-    }
+	&:hover {
+		color: white;
+		background-color: @theme-blue;
+	}
 }
+
 .btn-yellow {
-    //background-color: lighten(@theme-yellow, 30%);
-    &:hover {
-        color: white;
-        background-color: @theme-yellow;
-    }
+	&:hover {
+		color: white;
+		background-color: @theme-yellow;
+	}
 }
+
 .btn-orange {
-    //background-color: lighten(@theme-orange, 30%);
-    &:hover {
-        color: white;
-        background-color: @theme-orange;
-    }
+	&:hover {
+		color: white;
+		background-color: @theme-orange;
+	}
 }
+
 .btn-primary {
-    border-color: lighten(@theme-dark-green, 10%);
-    background-color: lighten(@theme-dark-green, 10%);
-    &:hover {
-        border-color: @theme-dark-green;
-        background-color: @theme-dark-green
-    }
+	border-color: lighten(@theme-dark-green, 10%);
+	background-color: lighten(@theme-dark-green, 10%);
+	&:hover {
+		border-color: @theme-dark-green;
+		background-color: @theme-dark-green
+	}
 }
+
+.main-logo {
+	font-size: @font-size-h3;
+	color: @theme-dark-green ! important;
+	.logo {
+		background: @theme-dark-green;
+		color: #fff;
+		display: inline-block;
+		font-weight: bold;
+		line-height: 1.2em;
+		margin-right: 1px;
+		text-align: center;
+		width: 1.1em;
+		border-radius: 0.1em;
+	}
+
+	.narrow {
+		width: 0.5em;
+	}
+}
+

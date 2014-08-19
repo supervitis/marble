@@ -18,8 +18,8 @@ import org.springframework.util.StringUtils;
 @Service
 public class TopicServiceImpl implements TopicService {
 
-    @Autowired
-    TopicDao topicDao;
+	@Autowired
+	TopicDao topicDao;
 
 	@Override
 	public Topic updateTopic(Topic topic) throws InvalidTopicException {
@@ -30,7 +30,7 @@ public class TopicServiceImpl implements TopicService {
 		}
 		return topic;
 	}
-	
+
 	@Override
 	public Topic getTopic(Integer id) throws InvalidTopicException {
 		Topic topic = topicDao.findOne(id);
@@ -39,10 +39,25 @@ public class TopicServiceImpl implements TopicService {
 		}
 		return topic;
 	}
-	
+
 	@Override
-	public List<Topic> getTopics(){
+	public List<Topic> getTopics() {
 		List<Topic> topics = topicDao.findAll();
 		return topics;
+	}
+
+	@Override
+	public void deleteTopic(Integer id) {
+		topicDao.delete(id);
+		return;
+	}
+
+	@Override
+	public Topic createTopic(Topic topic) throws InvalidTopicException {
+		topic = topicDao.save(topic);
+		if (topic == null) {
+			throw new InvalidTopicException();
+		}
+		return topic;
 	}
 }

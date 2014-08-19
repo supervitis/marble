@@ -9,13 +9,22 @@
 				<div class="panel-body">
 					<fieldset>
 						<p class="help-block">
-							<spring:message code='edit_topic.form.informative_message' />
+							<c:if test="${not empty topic.id}">
+								<spring:message code='edit_topic.form.informative_message.edit' />
+								<form:input type="hidden" id="id" path="id" class="form-control" />
+							</c:if>
+							<c:if test="${empty topic.id}">
+								<spring:message code='edit_topic.form.informative_message.add' />
+							</c:if>
 						</p>
 						<div class="form-group">
 							<div class="col-lg-offset-10 col-lg-2">
-								<form:input type="hidden" id="id" path="id" class="form-control" />
-								<input type="submit" id="btnAdd" class="btn btn-primary pull-right" value="<spring:message code='edit_topic.form.save' />" /> <a
-									href="<c:url value="/topic"/>" class="btn btn-default pull-right"><spring:message code="edit_topic.form.cancel" /></a>
+								<button type="submit" id="save" class="btn btn-primary pull-right">
+									<i class="fa fa-floppy-o"></i>
+									<spring:message code="edit_topic.form.save" />
+								</button>
+								<a href="<c:url value="/topic"/>" class="btn btn-default pull-right"><i class="fa fa-times"></i> <spring:message
+										code="edit_topic.form.cancel" /></a>
 
 							</div>
 						</div>
@@ -211,4 +220,28 @@
 	</div>
 	<!-- /.row -->
 </form:form>
+
+<c:if test="${not empty topic.id}">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<fieldset>
+						<p class="help-block">If you want to delete this Topic, click the Delete button below (there is no way back!).</p>
+						<div class="form-group">
+							<div class="col-lg-offset-10 col-lg-2">
+								<a href="<c:url value="/topic/delete/${topic.id}"/>" class="btn btn-danger pull-right"><i class="fa fa-trash-o"></i> Delete</a>
+
+							</div>
+						</div>
+					</fieldset>
+				</div>
+				<!-- .panel-body -->
+			</div>
+			<!-- /.panel -->
+		</div>
+		<!-- /.col-lg-12 -->
+	</div>
+	<!-- /.row -->
+</c:if>
 

@@ -15,4 +15,8 @@ public interface TopicService {
 
 	List<Topic> getTopics();
 
+	public void deleteTopic(Integer id);
+
+	public Topic createTopic(Topic topic) throws InvalidTopicException;
+
 }
