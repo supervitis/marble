@@ -7,7 +7,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
@@ -22,7 +21,6 @@ import org.springframework.web.servlet.view.tiles3.TilesView;
 @EnableWebMvc
 @ComponentScan(basePackages = { "org.marble.commons" })
 @Import(DbConfig.class)
-
 @Configuration
 public class AppConfig extends WebMvcConfigurerAdapter {
 
@@ -51,7 +49,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 		viewResolver.setOrder(-2);
 		return viewResolver;
 	}
-	
+
 	/* I18n */
 	@Bean
 	public LocaleResolver localeResolver() {
@@ -60,13 +58,12 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 		sessionLocaleResolver.setDefaultLocale(defaultLocale);
 		return sessionLocaleResolver;
 	}
-	
+
 	@Bean
 	public ResourceBundleMessageSource messageSource() {
 		ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
 		messageSource.setBasename("messages");
 		return messageSource;
 	}
-	
 
 }

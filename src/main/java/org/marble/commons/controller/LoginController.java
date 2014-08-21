@@ -21,6 +21,14 @@ public class LoginController {
 		model.addObject("error", "true");
 		return model;
 	}
+	
+	@RequestMapping(value = "/login/promote", method = RequestMethod.GET)
+	// Check
+	public ModelAndView loginpromote() {
+		ModelAndView model = new ModelAndView("login");
+		model.addObject("promote", "true");
+		return model;
+	}
 
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public ModelAndView logout(Model model) {

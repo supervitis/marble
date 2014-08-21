@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <div class="container">
@@ -15,6 +16,13 @@
 							<br />
 						</div>
 					</c:if>
+					<c:if test="${not empty promote}">
+						<div class="alert alert-info">
+							<sec:authentication property="principal.username" var="loggedUser" />
+							<spring:message code="LoginController.promotionNeeded" arguments="${loggedUser}" />
+							<br />
+						</div>
+					</c:if>
 					<form role="form" action="<c:url value= "/login/authenticate"></c:url>" method="post">
 						<fieldset>
 							<div class="form-group">
@@ -27,8 +35,8 @@
 								<label> <input name="_spring_security_remember_me" disabled="disabled" type="checkbox" value="Remember Me" />Remember Me
 								</label>
 							</div>
-							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-							<input class="btn btn-lg btn-success btn-block" type="submit" value="Login" />
+							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /> <input class="btn btn-lg btn-success btn-block"
+								type="submit" value="Login" />
 						</fieldset>
 					</form>
 				</div>
