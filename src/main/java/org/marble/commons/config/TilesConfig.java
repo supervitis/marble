@@ -42,10 +42,15 @@ public class TilesConfig extends WebMvcConfigurerAdapter {
         addBaseDefinition("topics_list", "Topics", "<i class='fa fa-tags fa-fw'></i>", Boolean.FALSE);
 
         // Topics Views
-        addBaseDefinition("edit_twitter_api_key", "Edit Twitter API Key", "<i class='fa fa-pencil fa-fw'></i>", Boolean.FALSE);
-        addBaseDefinition("create_twitter_api_key", "edit_twitter_api_key", "Create New Twitter API Key", "<i class='fa fa-file-o fa-fw'></i>",
+        addBaseDefinition("edit_twitter_api_key", "Edit Twitter API Key", "<i class='fa fa-pencil fa-fw'></i>",
                 Boolean.FALSE);
+        addBaseDefinition("create_twitter_api_key", "edit_twitter_api_key", "Create New Twitter API Key",
+                "<i class='fa fa-file-o fa-fw'></i>", Boolean.FALSE);
         addBaseDefinition("twitter_api_keys_list", "Twitter API Keys", "<i class='fa fa-key fa-fw'></i>", Boolean.FALSE);
+        
+        // Executions Views
+        addBaseDefinition("view_execution", "Execution Detail", "<i class='fa fa-rocket fa-fw'></i>",
+                Boolean.FALSE);
 
         return tilesConfigurer;
     }

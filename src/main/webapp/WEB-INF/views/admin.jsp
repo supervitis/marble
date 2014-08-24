@@ -9,15 +9,11 @@
 			<!-- /.panel-heading -->
 
 			<div class="panel-body">
-				<fieldset>
-					<p class="help-block">Twitter API Keys</p>
-					<div class="form-group">
-						<div class="col-lg-offset-10 col-lg-2">
-							<a href="<c:url value="/admin/keys/twitter"/>" class="btn btn-primary pull-right"><i class="fa fa-key"></i>
-								View Keys</a>
-						</div>
+				<p>Twitter API Keys</p>
+					<div class="col-lg-offset-10 col-lg-2">
+						<a href="<c:url value="/admin/keys/twitter"/>" class="btn btn-primary pull-right"><i class="fa fa-key"></i>
+							View Keys</a>
 					</div>
-				</fieldset>
 			</div>
 
 			<!-- .panel-body -->

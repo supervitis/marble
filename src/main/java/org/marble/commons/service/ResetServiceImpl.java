@@ -1,15 +1,21 @@
 package org.marble.commons.service;
 
 import org.marble.commons.dao.ConfigurationItemDao;
+import org.marble.commons.dao.ExecutionDao;
 import org.marble.commons.dao.TopicDao;
 import org.marble.commons.dao.TwitterApiKeyDao;
 import org.marble.commons.dao.model.ConfigurationItem;
+import org.marble.commons.dao.model.Execution;
+import org.marble.commons.dao.model.ExecutionStatus;
 import org.marble.commons.dao.model.Topic;
 import org.marble.commons.dao.model.TwitterApiKey;
+import org.marble.commons.thread.Executor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,6 +28,13 @@ public class ResetServiceImpl implements ResetService {
     TwitterApiKeyDao twitterApiKeyDao;
     @Autowired
     TopicDao topicDao;
+    @Autowired
+    ExecutionDao executionDao;
+
+    @Autowired
+    private TaskExecutor taskExecutor;
+    @Autowired
+    private ApplicationContext context;
 
     @Value("${rebase.configuration:}")
     private String[] configuration;
@@ -79,13 +92,29 @@ public class ResetServiceImpl implements ResetService {
     public void resetTopics() {
         log.info("Reseting TopicDAO...");
         topicDao.deleteAll();
+
+        Integer lastid = 0;
         for (int i = 0; i < topics.length; i = i + 1) {
             Topic topic = new Topic();
             topic.setName(topics[i]);
             topic.setKeywords(topics[i]);
 
             topic = topicDao.save(topic);
+
+            // MFC Temporal
+            Execution execution = new Execution();
+            execution.setTopic(topic);
+            execution.setStatus(ExecutionStatus.created);
+            execution.setLog("Hola\nEste es\nUn log");
+            execution = executionDao.save(execution);
+
+            lastid = execution.getId();
+            log.info("MFC: lastid: " + lastid);
         }
+        Executor executor = (Executor) context.getBean("executor");
+        executor.setId(lastid);
+        taskExecutor.execute(executor);
+
         log.info("TopicDAO reset.");
         return;
     }
