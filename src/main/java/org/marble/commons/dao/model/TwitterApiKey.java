@@ -8,11 +8,18 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
-@Table
+@Table(name="mrbl_twitter_api_keys")
 public class TwitterApiKey implements Serializable {
 
 	private static final long serialVersionUID = -6137928572799267601L;
 
+	@Id
+	@Column(unique = true)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+	
+	private String description;
+	
 	@NotNull
     @NotEmpty
     private String            consumerKey;
@@ -21,7 +28,6 @@ public class TwitterApiKey implements Serializable {
     @NotEmpty
     private String            consumerSecret;
 
-    @Id
     @NotNull
     @NotEmpty
     @Column(unique = true)
@@ -33,10 +39,9 @@ public class TwitterApiKey implements Serializable {
     
     @NotNull
     private Boolean           enabled;
-    
-    private String            owner;
 
     public TwitterApiKey() {
+        this.description = null;
         this.consumerKey = null;
         this.consumerSecret = null;
         this.accessToken = null;
@@ -44,13 +49,30 @@ public class TwitterApiKey implements Serializable {
         this.setEnabled(Boolean.FALSE);
     }
 
-    public TwitterApiKey(String consumerKey, String consumerSecret, String accessToken,
+    public TwitterApiKey(String description, String consumerKey, String consumerSecret, String accessToken,
             String accessTokenSecret) {
+        this.description = description;
         this.consumerKey = consumerKey;
         this.consumerSecret = consumerSecret;
         this.accessToken = accessToken;
         this.accessTokenSecret = accessTokenSecret;
         this.setEnabled(Boolean.FALSE);
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getConsumerKey() {
@@ -91,14 +113,6 @@ public class TwitterApiKey implements Serializable {
 
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
-    }
-
-    public String getOwner() {
-        return owner;
-    }
-
-    public void setOwner(String owner) {
-        this.owner = owner;
     }
 
     public String toString() {

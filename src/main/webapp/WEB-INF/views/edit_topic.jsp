@@ -18,7 +18,7 @@
 							</c:if>
 						</p>
 						<div class="form-group">
-							<div class="col-lg-offset-10 col-lg-2">
+							<div class="col-lg-offset-8 col-lg-4">
 								<button type="submit" id="save" class="btn btn-primary pull-right">
 									<i class="fa fa-floppy-o"></i>
 									<spring:message code="edit_topic.form.save" />

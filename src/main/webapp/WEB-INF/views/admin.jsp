@@ -5,6 +5,29 @@
 
 	<div class="col-lg-3">
 		<div class="panel panel-default">
+			<div class="panel-heading">Social Networks</div>
+			<!-- /.panel-heading -->
+
+			<div class="panel-body">
+				<fieldset>
+					<p class="help-block">Twitter API Keys</p>
+					<div class="form-group">
+						<div class="col-lg-offset-10 col-lg-2">
+							<a href="<c:url value="/admin/keys/twitter"/>" class="btn btn-primary pull-right"><i class="fa fa-key"></i>
+								View Keys</a>
+						</div>
+					</div>
+				</fieldset>
+			</div>
+
+			<!-- .panel-body -->
+		</div>
+		<!-- /.panel -->
+	</div>
+	<!-- /.col-lg-3 -->
+
+	<div class="col-lg-3">
+		<div class="panel panel-default">
 			<div class="panel-heading">Undoable Actions</div>
 			<!-- /.panel-heading -->
 			<div class="panel-body">
@@ -34,6 +57,6 @@
 		</div>
 		<!-- /.panel -->
 	</div>
-	<!-- /.col-lg-6 -->
+	<!-- /.col-lg-3 -->
 </div>
 <!-- /.row -->

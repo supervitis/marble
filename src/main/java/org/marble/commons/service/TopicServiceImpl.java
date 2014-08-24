@@ -3,17 +3,10 @@ package org.marble.commons.service;
 import java.util.List;
 
 import org.marble.commons.dao.TopicDao;
-import org.marble.commons.dao.UserDao;
 import org.marble.commons.dao.model.Topic;
-import org.marble.commons.dao.model.User;
 import org.marble.commons.exception.InvalidTopicException;
-import org.marble.commons.exception.InvalidUserException;
-import org.marble.commons.model.SignupForm;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 @Service
 public class TopicServiceImpl implements TopicService {

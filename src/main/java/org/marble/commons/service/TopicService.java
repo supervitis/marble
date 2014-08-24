@@ -4,8 +4,6 @@ import java.util.List;
 
 import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidTopicException;
-import org.marble.commons.exception.InvalidUserException;
-import org.marble.commons.model.SignupForm;
 
 public interface TopicService {
 

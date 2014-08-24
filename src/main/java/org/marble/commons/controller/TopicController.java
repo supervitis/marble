@@ -5,16 +5,9 @@ import java.util.Date;
 
 import javax.validation.Valid;
 
-import org.marble.commons.dao.TopicDao;
 import org.marble.commons.dao.model.Topic;
-import org.marble.commons.dao.model.TopicStatus;
 import org.marble.commons.exception.InvalidTopicException;
-import org.marble.commons.exception.InvalidUserException;
-import org.marble.commons.model.SignupForm;
-import org.marble.commons.service.ResetServiceImpl;
 import org.marble.commons.service.TopicService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -31,7 +24,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/topic")
 public class TopicController {
 
-	private static final Logger log = LoggerFactory.getLogger(ResetServiceImpl.class);
 	@Autowired
 	TopicService topicService;
 
@@ -94,7 +86,7 @@ public class TopicController {
 		ModelAndView modelAndView = new ModelAndView();
 		
 		if (result.hasErrors()) {
-			modelAndView.addObject("notificationMessage", "TopicController.editTopicError");
+			modelAndView.addObject("notificationMessage", "TopicController.addTopicError");
 			modelAndView.addObject("notificationIcon", "fa-exclamation-triangle");
 			modelAndView.addObject("notificationLevel", "danger");
 			modelAndView.setViewName("create_topic");

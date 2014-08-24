@@ -18,7 +18,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 @Entity
-@Table
+@Table(name="mrbl_topics")
 public class Topic implements Serializable {
 	private static final long serialVersionUID = -4417618450499483945L;
 

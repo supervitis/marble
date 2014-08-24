@@ -13,16 +13,12 @@
 				</div> <!-- /input-group -->
 			</li>
 			<li><a href="controlPanel.xhtml"><i class="fa fa-wrench fa-fw"></i> Control Panel</a></li>
-			<li><a href="<c:url value="/admin/"/>"><i class="fa fa-cog fa-fw"></i> Administration Panel</a></li>
-			<li><a href="<c:url value="/topic/"/>"><i class="fa fa-tasks fa-fw"></i> Topics</a></li>
-			<li><a href="#"><i class="fa fa-tags fa-fw"></i> Topics<span class="fa arrow"></span></a>
-				<ul class="nav nav-second-level">
-					<li><a href="panels-wells.html">Topic 1</a></li>
-					<li><a href="buttons.html">Topic 2</a></li>
-					<li><a href="notifications.html">Topic 3</a></li>
-					<li><a href="typography.html">Topic 4</a></li>
-					<li><a href="grid.html">Grid</a></li>
+			<li><a href="<c:url value="/admin/"/>"><i class="fa fa-cog fa-fw"></i> Administration Panel<span class="fa arrow"></span></a>
+			<ul class="nav nav-second-level">
+					<li><a href="<c:url value="/admin/"/>"><i class="fa fa-cog fa-fw"></i> Main</a>
+					<li><a href="<c:url value="/admin/keys/twitter"/>"><i class="fa fa-key fa-fw"></i> Twitter API Keys</a></li>
 				</ul> <!-- /.nav-second-level --></li>
+			<li><a href="<c:url value="/topic/"/>"><i class="fa fa-tasks fa-fw"></i> Topics</a></li>
 		</ul>
 	</div>
 	<!-- /.sidebar-collapse -->
