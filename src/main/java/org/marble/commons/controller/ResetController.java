@@ -14,18 +14,30 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping(value = "/admin/reset")
 public class ResetController {
 
-	@Autowired
-	ResetService resetService;
+    @Autowired
+    ResetService resetService;
 
-	@RequestMapping(value = "/rebase", method = RequestMethod.GET)
-	public String rebase(RedirectAttributes redirectAttributes) {
-		// Reseting the data
-		resetService.resetAll();
-		
-		// Setting message
-		redirectAttributes.addFlashAttribute("notificationMessage", "ResetController.rebaseMessage");
-		redirectAttributes.addFlashAttribute("notificationIcon", "fa-exclamation-triangle");
-		redirectAttributes.addFlashAttribute("notificationLevel", "danger");
-		return "redirect:/";
-	}
+    @RequestMapping(value = "/rebase", method = RequestMethod.GET)
+    public String rebase(RedirectAttributes redirectAttributes) {
+        // Reseting the data
+        resetService.resetAll();
+
+        // Setting message
+        redirectAttributes.addFlashAttribute("notificationMessage", "ResetController.rebaseMessage");
+        redirectAttributes.addFlashAttribute("notificationIcon", "fa-exclamation-triangle");
+        redirectAttributes.addFlashAttribute("notificationLevel", "danger");
+        return "redirect:/";
+    }
+
+    @RequestMapping(value = "/special", method = RequestMethod.GET)
+    public String special(RedirectAttributes redirectAttributes) {
+        // Reseting the data
+        Integer executionId = resetService.getTheSpecial();
+
+        // Setting message
+        redirectAttributes.addFlashAttribute("notificationMessage", "ResetController.specialMessage");
+        redirectAttributes.addFlashAttribute("notificationIcon", "fa-exclamation-triangle");
+        redirectAttributes.addFlashAttribute("notificationLevel", "success");
+        return "redirect:/execution/" + executionId;
+    }
 }

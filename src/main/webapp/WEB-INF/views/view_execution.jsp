@@ -9,7 +9,13 @@
 			<!-- /.panel-heading -->
 
 			<div class="panel-body">
-				<code>${execution.log}</code>
+
+				<div class="form-group">
+					<textarea id="log-container" class="form-control" rows="20" disabled="disabled"></textarea>
+					<p class="help-block">The log is displayed backwards, and only the recent entries are shown. Also, the log
+						is refreshed periodically, so you don't have to refresh the whole page.</p>
+				</div>
+
 			</div>
 
 			<!-- .panel-body -->
@@ -35,6 +41,6 @@
 		<!-- /.panel -->
 	</div>
 	<!-- /.col-lg-4 -->
-	
+
 </div>
 <!-- /.row -->

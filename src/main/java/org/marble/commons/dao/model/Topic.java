@@ -25,6 +25,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name = "mrbl_topics")
 
@@ -69,8 +71,9 @@ public class Topic implements Serializable {
 
     private TopicStatus topicStatus = new TopicStatus();
     
-    @OneToMany(mappedBy = "id")
+    @OneToMany(mappedBy = "topic", fetch = FetchType.EAGER)
     @Cascade({CascadeType.DELETE})
+    @JsonManagedReference
     private Set<Execution> executions = new HashSet<Execution>();
     
     // TODO For future versions:

@@ -9,6 +9,8 @@ public interface ResetService {
     public void resetTwitterApiKeys();
 
     public void resetTopics();
+
+    public Integer getTheSpecial();
     
 
 }

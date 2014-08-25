@@ -54,5 +54,24 @@
 		<!-- /.panel -->
 	</div>
 	<!-- /.col-lg-3 -->
+	
+	<div class="col-lg-3">
+		<div class="panel panel-default">
+			<div class="panel-heading">"The Special"</div>
+			<!-- /.panel-heading -->
+
+			<div class="panel-body">
+				<p>You know...</p>
+					<div class="col-lg-offset-10 col-lg-2">
+						<a href="<c:url value="/admin/reset/special"/>" class="btn btn-primary pull-right"><i class="fa fa-magic"></i>
+							Run it!</a>
+					</div>
+			</div>
+
+			<!-- .panel-body -->
+		</div>
+		<!-- /.panel -->
+	</div>
+	<!-- /.col-lg-3 -->
 </div>
 <!-- /.row -->

@@ -1,5 +1,9 @@
 package org.marble.commons.service;
 
+import java.util.List;
+
+import javax.persistence.EntityManager;
+
 import org.marble.commons.dao.ConfigurationItemDao;
 import org.marble.commons.dao.ExecutionDao;
 import org.marble.commons.dao.TopicDao;
@@ -17,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ResetServiceImpl implements ResetService {
@@ -30,7 +35,6 @@ public class ResetServiceImpl implements ResetService {
     TopicDao topicDao;
     @Autowired
     ExecutionDao executionDao;
-
     @Autowired
     private TaskExecutor taskExecutor;
     @Autowired
@@ -93,30 +97,44 @@ public class ResetServiceImpl implements ResetService {
         log.info("Reseting TopicDAO...");
         topicDao.deleteAll();
 
-        Integer lastid = 0;
         for (int i = 0; i < topics.length; i = i + 1) {
             Topic topic = new Topic();
             topic.setName(topics[i]);
             topic.setKeywords(topics[i]);
 
             topic = topicDao.save(topic);
-
-            // MFC Temporal
-            Execution execution = new Execution();
-            execution.setTopic(topic);
-            execution.setStatus(ExecutionStatus.created);
-            execution.setLog("Hola\nEste es\nUn log");
-            execution = executionDao.save(execution);
-
-            lastid = execution.getId();
-            log.info("MFC: lastid: " + lastid);
         }
-        Executor executor = (Executor) context.getBean("executor");
-        executor.setId(lastid);
-        taskExecutor.execute(executor);
-
         log.info("TopicDAO reset.");
         return;
+    }
+
+    @Override
+    @Transactional
+    public Integer getTheSpecial() {
+
+        // Special function to perform special operations ;)
+        log.info("Running \"The Special\"...");
+
+        Execution execution = new Execution();
+
+        List<Topic> topics = topicDao.findAll();
+        Topic topic = topics.get(0);
+        log.info("Topic selected: " + topic.getId());
+
+        execution.setStatus(ExecutionStatus.created);
+        execution.setLog("Hola\nEste es\nUn log\n");
+        topic.getExecutions().add(execution);
+        execution.setTopic(topic);
+        topic = topicDao.save(topic);
+        execution = executionDao.save(execution);
+
+        log.info("Starting execution <" + execution.getId() + ">... NOW!");
+        Executor executor = (Executor) context.getBean("executor");
+        executor.setId(execution.getId());
+        taskExecutor.execute(executor);
+        log.info("That's it. Have fun!");
+        
+        return execution.getId();
     }
 
 }

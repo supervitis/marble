@@ -37,12 +37,18 @@ public class Executor implements Runnable {
     public void run() {
 
         Execution execution;
+        
         try {
-            log.info("MFC: lastid dentro: " + id);
-            log.info("MFC: exec: " + executionService);
+            log.info("Waiting a second...");
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+        }
+        
+        try {
+            log.info("Executor executing <" + id + ">");
             execution = executionService.getExecution(id);
         } catch (InvalidExecutionException e) {
-            log.info("MFC Error 1: ", e);
+            log.info("Execution <" + id + "> not found.", e);
             return;
         }
 
