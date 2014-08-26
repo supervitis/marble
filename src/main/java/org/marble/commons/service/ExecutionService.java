@@ -1,7 +1,6 @@
 package org.marble.commons.service;
 
 import org.marble.commons.dao.model.Execution;
-import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidExecutionException;
 
 public interface ExecutionService {

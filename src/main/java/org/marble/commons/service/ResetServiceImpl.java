@@ -2,8 +2,6 @@ package org.marble.commons.service;
 
 import java.util.List;
 
-import javax.persistence.EntityManager;
-
 import org.marble.commons.dao.ConfigurationItemDao;
 import org.marble.commons.dao.ExecutionDao;
 import org.marble.commons.dao.TopicDao;
@@ -129,9 +127,11 @@ public class ResetServiceImpl implements ResetService {
         execution = executionDao.save(execution);
 
         log.info("Starting execution <" + execution.getId() + ">... NOW!");
-        Executor executor = (Executor) context.getBean("executor");
-        executor.setId(execution.getId());
+        Executor executor = (Executor) context.getBean("executorTest");
+        executor.setExecution(execution);
+        //xecutor.setId(execution.getId());
         taskExecutor.execute(executor);
+
         log.info("That's it. Have fun!");
         
         return execution.getId();

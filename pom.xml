@@ -27,6 +27,10 @@
 		<postgresql.version>9.3-1102-jdbc41</postgresql.version>
 		<log4j.version>2.0</log4j.version>
 		<lesscss.version>1.7.0.1.1</lesscss.version>
+		<json.version>2.4.2</json.version>
+		<twitter.version>4.0.2</twitter.version>
+		<mongodb.version>2.12.3</mongodb.version>
+		<spring.mongodb.version>1.5.2.RELEASE</spring.mongodb.version>
 
 		<!-- JDBC Setting -->
 		<hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
@@ -316,14 +320,34 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
-			<version>2.4.2</version>
+			<version>${json.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-annotations</artifactId>
-			<version>2.4.2</version>
+			<version>${json.version}</version>
 		</dependency>
 
+		<!-- Twitter -->
+		<dependency>
+			<groupId>org.twitter4j</groupId>
+			<artifactId>twitter4j-core</artifactId>
+			<version>${twitter.version}</version>
+		</dependency>
+		
+		<!-- MongoDB -->
+				<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>${mongodb.version}</version>
+		</dependency>
+		
+		<!-- Spring data MongoDB -->
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-mongodb</artifactId>
+			<version>${spring.mongodb.version}</version>
+		</dependency>
 
 	</dependencies>
 

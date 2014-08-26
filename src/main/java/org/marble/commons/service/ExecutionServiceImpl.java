@@ -2,9 +2,7 @@ package org.marble.commons.service;
 
 import org.marble.commons.dao.ExecutionDao;
 import org.marble.commons.dao.model.Execution;
-import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidExecutionException;
-import org.marble.commons.exception.InvalidTopicException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

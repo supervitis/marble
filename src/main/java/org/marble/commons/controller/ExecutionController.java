@@ -1,27 +1,14 @@
 package org.marble.commons.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import javax.validation.Valid;
-
 import org.marble.commons.dao.model.Execution;
-import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidExecutionException;
-import org.marble.commons.exception.InvalidTopicException;
 import org.marble.commons.service.ExecutionService;
-import org.marble.commons.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/execution")
