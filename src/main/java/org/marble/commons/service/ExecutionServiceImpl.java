@@ -1,8 +1,12 @@
 package org.marble.commons.service;
 
+import java.util.List;
+
 import org.marble.commons.dao.ExecutionDao;
 import org.marble.commons.dao.model.Execution;
+import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidExecutionException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,5 +43,11 @@ public class ExecutionServiceImpl implements ExecutionService {
             throw new InvalidExecutionException();
         }
         return execution;
+    }
+
+    @Override
+    public List<Execution> getExecutionsPerTopic(Integer topicId) {
+        List<Execution> executions = executionDao.findByTopic_id(topicId);
+        return executions;
     }
 }

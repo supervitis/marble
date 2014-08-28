@@ -31,6 +31,7 @@
 		<twitter.version>4.0.2</twitter.version>
 		<mongodb.version>2.12.3</mongodb.version>
 		<spring.mongodb.version>1.5.2.RELEASE</spring.mongodb.version>
+		<reflections.version>0.9.9-RC2</reflections.version>
 
 		<!-- JDBC Setting -->
 		<hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
@@ -334,19 +335,26 @@
 			<artifactId>twitter4j-core</artifactId>
 			<version>${twitter.version}</version>
 		</dependency>
-		
+
 		<!-- MongoDB -->
-				<dependency>
+		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongo-java-driver</artifactId>
 			<version>${mongodb.version}</version>
 		</dependency>
-		
+
 		<!-- Spring data MongoDB -->
 		<dependency>
 			<groupId>org.springframework.data</groupId>
 			<artifactId>spring-data-mongodb</artifactId>
 			<version>${spring.mongodb.version}</version>
+		</dependency>
+
+		<!-- Class Scanning -->
+		<dependency>
+			<groupId>org.reflections</groupId>
+			<artifactId>reflections-maven</artifactId>
+			<version>${reflections.version}</version>
 		</dependency>
 
 	</dependencies>

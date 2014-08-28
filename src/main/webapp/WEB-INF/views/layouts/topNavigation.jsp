@@ -18,7 +18,7 @@
 								<label> <input name="_spring_security_remember_me" type="checkbox" disabled="disabled" value="Remember Me" />Remember Me
 								</label>
 							</div>
-							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /> <input class="btn btn-lg btn-success btn-block"
+							<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" /> <input class="btn btn-lg btn-primary btn-block"
 								type="submit" value="Login" />
 						</fieldset>
 					</form></li>

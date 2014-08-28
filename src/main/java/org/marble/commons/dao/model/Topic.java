@@ -19,8 +19,6 @@ import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -29,53 +27,72 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "mrbl_topics")
-
 public class Topic implements Serializable {
     private static final long serialVersionUID = -4417618450499483945L;
 
     @Id
-    @Column(unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(unique = true, name = "id")
     private Integer id;
     @NotNull
     @NotEmpty
-    @Column(unique = true)
+    @Column(unique = true, name = "name")
     private String name;
+    @Column(name = "description")
     private String description;
 
     @NotNull
     @NotEmpty
+    @Column(name = "keywords")
     private String keywords;
 
     @Digits(fraction = 0, integer = 16)
+    @Column(name = "upper_limit")
     private Long upperLimit;
+    
     @Digits(fraction = 0, integer = 16)
+    @Column(name = "lower_limit")
     private Long lowerLimit;
+    
     @Pattern(regexp = "[a-zA-Z]{2}|")
+    @Column(name = "language")
     private String language;
 
     @Digits(fraction = 0, integer = 3)
+    @Column(name = "statuses_per_call")
     private Integer statusesPerCall;
+    
     @Digits(fraction = 0, integer = 8)
+    @Column(name = "statuses_per_full_extraction")
     private Integer statusesPerFullExtraction;
+    
+    @Column(name = "processor_positive_boundary")
     private Double processorPositiveBoundary;
+    
+    @Column(name = "processor_negative_boundary")
     private Double processorNegativeBoundary;
 
     @DateTimeFormat(iso = ISO.DATE_TIME)
+    @Column(name = "plotter_left_date_boundary")
     private Date plotterLeftDateBoundary;
+    
     @DateTimeFormat(iso = ISO.DATE_TIME)
+    @Column(name = "plotter_right_date_boundary")
     private Date plotterRightDateBoundary;
 
     @Digits(fraction = 0, integer = 8)
+    @Column(name = "plotter_step_size")
     private Integer plotterStepSize;
 
+    @Column(name = "topic_status")
     private TopicStatus topicStatus = new TopicStatus();
-    
+
     @OneToMany(mappedBy = "topic", fetch = FetchType.EAGER)
-    @Cascade({CascadeType.DELETE})
+    @Cascade({ CascadeType.DELETE })
+    @Column(name = "executions")
     @JsonManagedReference
     private Set<Execution> executions = new HashSet<Execution>();
-    
+
     // TODO For future versions:
     // @ElementCollection
     // private List<String> keywords = new ArrayList<String>();
@@ -210,12 +227,12 @@ public class Topic implements Serializable {
     public void setExecutions(Set<Execution> executions) {
         this.executions = executions;
     }
-    
+
     public void addExecution(Execution execution) {
         this.executions.add(execution);
         return;
     }
-    
+
     public void removeExecution(Execution execution) {
         this.executions.remove(execution);
         return;

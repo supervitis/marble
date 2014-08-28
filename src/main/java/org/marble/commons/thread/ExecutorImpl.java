@@ -2,15 +2,14 @@ package org.marble.commons.thread;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.marble.commons.dao.model.Execution;
-import org.marble.commons.dao.model.ExecutionStatus;
-import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidExecutionException;
+import org.marble.commons.model.ExecutionCommand;
+import org.marble.commons.model.ExecutionStatus;
 import org.marble.commons.service.ExecutionService;
-import org.marble.commons.service.ResetServiceImpl;
 import org.marble.commons.util.MarbleUtil;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,36 +56,48 @@ public class ExecutorImpl implements Executor {
         } catch (InterruptedException e) {
         }
 
+        try {
         Integer id = execution.getId();
         log.info("Executor starting execution <" + id + ">, of type <" + execution.getType() + ">");
 
         // Changing execution state
-        execution.setStatus(ExecutionStatus.RUNNING);
+        execution.setStatus(ExecutionStatus.Running);
 
         execution.appendLog(MarbleUtil.getDatedMessage("Will create something in the mongo.\n"));
         DBCollection collection = mongoOperation.getCollection("prueba");
         DBObject dbObject = (DBObject) JSON.parse("{process: " + id + "}");
         collection.insert(dbObject);
 
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 10; i++) {
 
-            String date = dateFormat.format(new Date());
-
-            log.info("MFC: " + date + ": process <" + id + "> is running.");
             execution.appendLog(MarbleUtil.getDatedMessage("process is running.\n"));
-            try {
+            execution = executionService.updateExecution(execution);
+
+            // Check for commands
+            log.error("Current command: <"+execution.getCommand()+">");
+            if (execution.getCommand() != null){
+                execution.setStatus(ExecutionStatus.Stopped);
+                execution.appendLog(MarbleUtil.getDatedMessage("Execution was stopped by the user."));
                 execution = executionService.updateExecution(execution);
-            } catch (InvalidExecutionException e) {
-                log.info("MFC Error 2: ", e);
+
                 return;
             }
-
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
-                log.info("MFC Error 3: ", e);
+                log.info("The execution was aborted.", e);
+                execution.setStatus(ExecutionStatus.Aborted);
+                execution = executionService.updateExecution(execution);
                 return;
             }
+        }
+        
+        execution.setStatus(ExecutionStatus.Stopped);
+        execution.appendLog(MarbleUtil.getDatedMessage("Execution finished completely."));
+        
+            execution = executionService.updateExecution(execution);
+        } catch (InvalidExecutionException e) {
+            log.error("A fatal error ocurred while manipulating the Execution object.", e);
         }
     }
 }

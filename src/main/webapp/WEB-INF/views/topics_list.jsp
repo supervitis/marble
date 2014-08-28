@@ -51,7 +51,11 @@
 												code="topics_list.form.extract" /></a> <a href="<c:url value="#"/>" class="btn btn-default btn-blue"><i
 											class="fa fa-scissors"></i> <spring:message code="topics_list.form.process" /></a> <a href="<c:url value="#"/>"
 										class="btn btn-default btn-orange"><i class="fa fa-bar-chart-o"></i> <spring:message
-												code="topics_list.form.plot" /></a></td>
+												code="topics_list.form.plot" /></a>
+												<a href="<c:url value="/topic/${topic.id}/execution"/>"
+										class="btn btn-default btn-default"><i class="fa fa-rocket"></i> <spring:message
+												code="topics_list.form.executions" /></a>
+												</td>
 								</tr>
 							</c:forEach>
 						</table>

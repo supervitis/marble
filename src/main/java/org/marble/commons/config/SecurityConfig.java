@@ -52,13 +52,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				// Configures url based authorization
 				.and()
 					.authorizeRequests()
-						// Urls reserved to Admin
+					    // Urls open to the public
+                        .antMatchers("/login").permitAll()
+                        .antMatchers("/").permitAll()
+                        // Urls reserved to Admin and Operators
+                        .antMatchers("/topic/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPER')")
+                        .antMatchers("/execution/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPER')")
+                        .antMatchers("/rest/execution/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPER')")
+                        // Urls reserved to Admin
 						.antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
-						// Urls reserved to Admin and Operators
-						.antMatchers("/topic/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPER')")
-						// Urls open to the public
-						.antMatchers("/login").permitAll()
-						.antMatchers("/").permitAll()
+						.antMatchers("/rest/**").access("hasRole('ROLE_ADMIN')")
+						
+						
 				;
 	}
 

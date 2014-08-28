@@ -24,101 +24,112 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/topic")
 public class TopicController {
 
-	@Autowired
-	TopicService topicService;
+    @Autowired
+    TopicService topicService;
 
-	@RequestMapping
-	public ModelAndView home() {
-		ModelAndView modelAndView = new ModelAndView("topics_list");
-		modelAndView.addObject("topics", topicService.getTopics());
-		return modelAndView;
-	}
+    @RequestMapping
+    public ModelAndView home() {
+        ModelAndView modelAndView = new ModelAndView("topics_list");
+        modelAndView.addObject("topics", topicService.getTopics());
+        return modelAndView;
+    }
 
-	@RequestMapping(value = "/edit/{topicId}", method = RequestMethod.GET)
-	public ModelAndView edit(@PathVariable Integer topicId) throws InvalidTopicException {
-		ModelAndView modelAndView = new ModelAndView();
+    @RequestMapping(value = "/edit/{topicId:[0-9]+}", method = RequestMethod.GET)
+    public ModelAndView edit(@PathVariable Integer topicId) throws InvalidTopicException {
+        ModelAndView modelAndView = new ModelAndView();
 
-		Topic topic;
-		topic = topicService.getTopic(topicId);
-		modelAndView.setViewName("edit_topic");
-		modelAndView.addObject("topic", topic);
-		return modelAndView;
-	}
-	
-	@RequestMapping(value = "/edit/{topicId}", method = RequestMethod.POST)
-	public ModelAndView save(@PathVariable Integer topicId, @Valid Topic topic, BindingResult result) throws InvalidTopicException {
+        Topic topic;
+        topic = topicService.getTopic(topicId);
+        modelAndView.setViewName("edit_topic");
+        modelAndView.addObject("topic", topic);
+        return modelAndView;
+    }
 
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("edit_topic");
-		modelAndView.addObject("topic", topic);
+    @RequestMapping(value = "/edit/{topicId:[0-9]+}", method = RequestMethod.POST)
+    public ModelAndView save(@PathVariable Integer topicId, @Valid Topic topic, BindingResult result)
+            throws InvalidTopicException {
 
-		if (result.hasErrors()) {
-			modelAndView.addObject("notificationMessage", "TopicController.editTopicError");
-			modelAndView.addObject("notificationIcon", "fa-exclamation-triangle");
-			modelAndView.addObject("notificationLevel", "danger");
-			return modelAndView;
-		}
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("edit_topic");
+        modelAndView.addObject("topic", topic);
 
-		topicService.updateTopic(topic);
+        if (result.hasErrors()) {
+            modelAndView.addObject("notificationMessage", "TopicController.editTopicError");
+            modelAndView.addObject("notificationIcon", "fa-exclamation-triangle");
+            modelAndView.addObject("notificationLevel", "danger");
+            return modelAndView;
+        }
 
-		modelAndView.addObject("notificationMessage", "TopicController.topicModified");
-		modelAndView.addObject("notificationIcon", "fa-check-circle");
-		modelAndView.addObject("notificationLevel", "success");
+        topicService.updateTopic(topic);
 
-		// TODO Set list view as return
+        modelAndView.addObject("notificationMessage", "TopicController.topicModified");
+        modelAndView.addObject("notificationIcon", "fa-check-circle");
+        modelAndView.addObject("notificationLevel", "success");
 
-		return modelAndView;
-	}
-	
-	@RequestMapping(value = "/create", method = RequestMethod.GET)
-	public ModelAndView create() throws InvalidTopicException {
-		ModelAndView modelAndView = new ModelAndView();
+        // TODO Set list view as return
 
-		Topic topic = new Topic();
-		modelAndView.setViewName("create_topic");
-		modelAndView.addObject("topic", topic);
-		return modelAndView;
-	}
+        return modelAndView;
+    }
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public ModelAndView create(@Valid Topic topic, BindingResult result, RedirectAttributes redirectAttributes) throws InvalidTopicException {
+    @RequestMapping(value = "/create", method = RequestMethod.GET)
+    public ModelAndView create() throws InvalidTopicException {
+        ModelAndView modelAndView = new ModelAndView();
 
-		ModelAndView modelAndView = new ModelAndView();
-		
-		if (result.hasErrors()) {
-			modelAndView.addObject("notificationMessage", "TopicController.addTopicError");
-			modelAndView.addObject("notificationIcon", "fa-exclamation-triangle");
-			modelAndView.addObject("notificationLevel", "danger");
-			modelAndView.setViewName("create_topic");
-			modelAndView.addObject("topic", topic);
-			return modelAndView;
-		}
+        Topic topic = new Topic();
+        modelAndView.setViewName("create_topic");
+        modelAndView.addObject("topic", topic);
+        return modelAndView;
+    }
 
-		topic = topicService.createTopic(topic);
-		// Setting message
-		redirectAttributes.addFlashAttribute("notificationMessage", "TopicController.topicCreated");
-		redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
-		redirectAttributes.addFlashAttribute("notificationLevel", "success");
-		modelAndView.setViewName("redirect:/topic");
-		return modelAndView;
-	}
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    public ModelAndView create(@Valid Topic topic, BindingResult result, RedirectAttributes redirectAttributes)
+            throws InvalidTopicException {
 
-	@RequestMapping(value = "/delete/{topicId}")
-	public String delete(@PathVariable Integer topicId, RedirectAttributes redirectAttributes) throws InvalidTopicException {
-		topicService.deleteTopic(topicId);
-		// Setting message
-		redirectAttributes.addFlashAttribute("notificationMessage", "TopicController.topicDeleted");
-		redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
-		redirectAttributes.addFlashAttribute("notificationLevel", "success");
-		return "redirect:/topic";
-	}
+        ModelAndView modelAndView = new ModelAndView();
 
-	@InitBinder
-	public void initBinder(WebDataBinder binder) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-		sdf.setLenient(true);
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
-		// You can register other Custom Editors with the WebDataBinder, like CustomNumberEditor for Integers and Longs,
-		// or StringTrimmerEditor for Strings
-	}
+        if (result.hasErrors()) {
+            modelAndView.addObject("notificationMessage", "TopicController.addTopicError");
+            modelAndView.addObject("notificationIcon", "fa-exclamation-triangle");
+            modelAndView.addObject("notificationLevel", "danger");
+            modelAndView.setViewName("create_topic");
+            modelAndView.addObject("topic", topic);
+            return modelAndView;
+        }
+
+        topic = topicService.createTopic(topic);
+        // Setting message
+        redirectAttributes.addFlashAttribute("notificationMessage", "TopicController.topicCreated");
+        redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
+        redirectAttributes.addFlashAttribute("notificationLevel", "success");
+        modelAndView.setViewName("redirect:/topic");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/delete/topicId:[0-9]+")
+    public String delete(@PathVariable Integer topicId, RedirectAttributes redirectAttributes)
+            throws InvalidTopicException {
+        topicService.deleteTopic(topicId);
+        // Setting message
+        redirectAttributes.addFlashAttribute("notificationMessage", "TopicController.topicDeleted");
+        redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
+        redirectAttributes.addFlashAttribute("notificationLevel", "success");
+        return "redirect:/topic";
+    }
+
+    @RequestMapping(value = "/{topicId:[0-9]+}/execution", method = RequestMethod.GET)
+    public ModelAndView execution(@PathVariable Integer topicId) throws InvalidTopicException {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("forward:/execution/topic/" + topicId);
+        return modelAndView;
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+        sdf.setLenient(true);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
+        // You can register other Custom Editors with the WebDataBinder, like
+        // CustomNumberEditor for Integers and Longs,
+        // or StringTrimmerEditor for Strings
+    }
 }

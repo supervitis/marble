@@ -73,6 +73,7 @@ public class DbConfig {
         properties.setProperty("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
         properties.setProperty("hibernate.cache.use_query_cache", "true");
         properties.setProperty("hibernate.generate_statistics", "false");
+        //properties.setProperty("hibernate.show_sql", "true");
 
         factory.setJpaProperties(properties);
 

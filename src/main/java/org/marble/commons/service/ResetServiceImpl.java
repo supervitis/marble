@@ -8,10 +8,11 @@ import org.marble.commons.dao.TopicDao;
 import org.marble.commons.dao.TwitterApiKeyDao;
 import org.marble.commons.dao.model.ConfigurationItem;
 import org.marble.commons.dao.model.Execution;
-import org.marble.commons.dao.model.ExecutionStatus;
 import org.marble.commons.dao.model.Topic;
 import org.marble.commons.dao.model.TwitterApiKey;
+import org.marble.commons.model.ExecutionStatus;
 import org.marble.commons.thread.Executor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,7 +120,7 @@ public class ResetServiceImpl implements ResetService {
         Topic topic = topics.get(0);
         log.info("Topic selected: " + topic.getId());
 
-        execution.setStatus(ExecutionStatus.created);
+        execution.setStatus(ExecutionStatus.Initialized);
         execution.setLog("Hola\nEste es\nUn log\n");
         topic.getExecutions().add(execution);
         execution.setTopic(topic);
@@ -127,7 +128,7 @@ public class ResetServiceImpl implements ResetService {
         execution = executionDao.save(execution);
 
         log.info("Starting execution <" + execution.getId() + ">... NOW!");
-        Executor executor = (Executor) context.getBean("executorTest");
+        Executor executor = (Executor) context.getBean("executorImpl");
         executor.setExecution(execution);
         //xecutor.setId(execution.getId());
         taskExecutor.execute(executor);

@@ -16,6 +16,14 @@ public class GlobalExceptionHandler {
 	private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
 	// TODO divide for each particular exception
+	@ExceptionHandler({ InvalidTopicException.class, InvalidExecutionException.class, InvalidTwitterApiKeyException.class })
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    public ModelAndView handleInvalidTopicException(HttpServletRequest request, Exception e) {
+        ModelAndView modelAndView = new ModelAndView("not_found");
+        log.error("Exception Occured. URL: <" + request.getRequestURL() + ">, error: " + e.getMessage(), e);
+        return modelAndView;
+    }
+	
 	@ExceptionHandler({ Exception.class })
 	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
 	public ModelAndView handleGlobalException(HttpServletRequest request, Exception e) {

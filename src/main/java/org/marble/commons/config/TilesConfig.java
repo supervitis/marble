@@ -50,6 +50,7 @@ public class TilesConfig extends WebMvcConfigurerAdapter {
 
         // Executions Views
         addBaseDefinition("view_execution", "Execution Detail", "<i class='fa fa-rocket fa-fw'></i>", Boolean.TRUE);
+        addBaseDefinition("executions_list", "Executions", "<i class='fa fa-rocket fa-fw'></i>", Boolean.FALSE);
 
         return tilesConfigurer;
     }
