@@ -32,6 +32,7 @@
 		<mongodb.version>2.12.3</mongodb.version>
 		<spring.mongodb.version>1.5.2.RELEASE</spring.mongodb.version>
 		<reflections.version>0.9.9-RC2</reflections.version>
+		<aspectj.version>1.8.2</aspectj.version>
 
 		<!-- JDBC Setting -->
 		<hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
@@ -91,6 +92,15 @@
 		</resources>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.lesscss</groupId>
 				<artifactId>lesscss-maven-plugin</artifactId>
 				<version>${lesscss.version}</version>
@@ -130,9 +140,52 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>aspectj-maven-plugin</artifactId>
+				<version>1.6</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.aspectj</groupId>
+						<artifactId>aspectjrt</artifactId>
+						<version>${aspectj.version}</version>
+					</dependency>
+					<dependency>
+						<groupId>org.aspectj</groupId>
+						<artifactId>aspectjtools</artifactId>
+						<version>${aspectj.version}</version>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+							<goal>test-compile</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<outxml>true</outxml>
+					<aspectLibraries>
+						<aspectLibrary>
+							<groupId>org.springframework</groupId>
+							<artifactId>spring-aspects</artifactId>
+						</aspectLibrary>
+						<aspectLibrary>
+							<groupId>org.springframework.data</groupId>
+							<artifactId>spring-data-mongodb-cross-store</artifactId>
+						</aspectLibrary>
+					</aspectLibraries>
+					<complianceLevel>${maven.compiler.source}</complianceLevel>
+					<source>${maven.compiler.source}</source>
+					<target>${maven.compiler.target}</target>
+				</configuration>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
+
+
 				<!-- TODO MFC Please, get rid of this, is a chapuza by the word -->
 				<!--This plugin's configuration is used to store Eclipse m2e settings 
 					only. It has no influence on the Maven build itself. -->
@@ -156,6 +209,10 @@
 										<ignore></ignore>
 									</action>
 								</pluginExecution>
+								<!-- <pluginExecution> <pluginExecutionFilter> <groupId> org.codehaus.mojo 
+									</groupId> <artifactId> aspectj-maven-plugin </artifactId> <versionRange> 
+									[1.6,) </versionRange> <goals> <goal>test-compile</goal> <goal>compile</goal> 
+									</goals> </pluginExecutionFilter> <action> <ignore></ignore> </action> </pluginExecution> -->
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
 					</configuration>
@@ -328,6 +385,12 @@
 			<artifactId>jackson-annotations</artifactId>
 			<version>${json.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${json.version}</version>
+		</dependency>
+
 
 		<!-- Twitter -->
 		<dependency>
@@ -346,8 +409,18 @@
 		<!-- Spring data MongoDB -->
 		<dependency>
 			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-mongodb</artifactId>
+			<artifactId>spring-data-mongodb-cross-store</artifactId>
 			<version>${spring.mongodb.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aspects</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>${aspectj.version}</version>
 		</dependency>
 
 		<!-- Class Scanning -->

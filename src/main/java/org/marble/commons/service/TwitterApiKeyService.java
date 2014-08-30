@@ -12,6 +12,8 @@ public interface TwitterApiKeyService {
 	public TwitterApiKey getTwitterApiKey(Integer id) throws InvalidTwitterApiKeyException;
 
 	List<TwitterApiKey> getTwitterApiKeys();
+	
+	List<TwitterApiKey> getEnabledTwitterApiKeys();
 
 	public void deleteTwitterApiKey(Integer id);
 

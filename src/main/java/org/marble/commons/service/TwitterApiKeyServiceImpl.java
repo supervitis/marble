@@ -5,6 +5,7 @@ import java.util.List;
 import org.marble.commons.dao.TwitterApiKeyDao;
 import org.marble.commons.dao.model.TwitterApiKey;
 import org.marble.commons.exception.InvalidTwitterApiKeyException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,18 +28,24 @@ public class TwitterApiKeyServiceImpl implements TwitterApiKeyService {
 	@Override
 	public TwitterApiKey getTwitterApiKey(Integer id)
 			throws InvalidTwitterApiKeyException {
-		TwitterApiKey topic = twitterApiKeyDao.findOne(id);
-		if (topic == null) {
+		TwitterApiKey key = twitterApiKeyDao.findOne(id);
+		if (key == null) {
 			throw new InvalidTwitterApiKeyException();
 		}
-		return topic;
+		return key;
 	}
 
 	@Override
 	public List<TwitterApiKey> getTwitterApiKeys() {
-		List<TwitterApiKey> topics = twitterApiKeyDao.findAll();
-		return topics;
+		List<TwitterApiKey> keys = twitterApiKeyDao.findAll();
+		return keys;
 	}
+	
+	@Override
+    public List<TwitterApiKey> getEnabledTwitterApiKeys() {
+        List<TwitterApiKey> keys = twitterApiKeyDao.findByEnabled(Boolean.TRUE);
+        return keys;
+    }
 
 	@Override
 	public void deleteTwitterApiKey(Integer id) {

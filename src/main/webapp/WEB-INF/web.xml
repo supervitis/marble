@@ -41,5 +41,4 @@
 		<error-code>404</error-code>
 		<location>/WEB-INF/views/layouts/not_found.jsp</location>
 	</error-page>
-
 </web-app>

@@ -1,11 +1,11 @@
-package org.marble.commons.thread;
+package org.marble.commons.executor;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
 import org.marble.commons.dao.model.Execution;
 import org.marble.commons.exception.InvalidExecutionException;
-import org.marble.commons.model.ExecutionCommand;
+import org.marble.commons.executor.extractor.ExtractorExecutor;
 import org.marble.commons.model.ExecutionStatus;
 import org.marble.commons.service.ExecutionService;
 import org.marble.commons.util.MarbleUtil;
@@ -23,9 +23,11 @@ import com.mongodb.util.JSON;
 
 @Component
 @Scope("prototype")
-public class ExecutorImpl implements Executor {
+public class ExecutorImpl implements ExtractorExecutor {
 
     private static final Logger log = LoggerFactory.getLogger(ExecutorImpl.class);
+    
+    private static final String name = "ExecutorImpl";
 
     @Autowired
     ExecutionService executionService;
@@ -99,5 +101,10 @@ public class ExecutorImpl implements Executor {
         } catch (InvalidExecutionException e) {
             log.error("A fatal error ocurred while manipulating the Execution object.", e);
         }
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
     }
 }

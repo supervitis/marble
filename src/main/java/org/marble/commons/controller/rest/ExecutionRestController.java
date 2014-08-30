@@ -23,7 +23,6 @@ public class ExecutionRestController {
     
     @Autowired
     private ExecutionService executionService;
-
     @RequestMapping(value = "/{id}",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)

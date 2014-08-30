@@ -35,7 +35,7 @@
 						<thead>
 							<tr>
 								<th>Status</th>
-								<th id="execution-status">Unknown</th>
+								<th id="execution-status">${execution.status }</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -64,7 +64,9 @@
 					<table class="table table-hover">
 						<thead>
 							<tr>
-								<th><a id="send-command-stop" class="btn btn-default btn-block">Stop</a></th>
+								<th><div data-toggle="tooltip" title="Actions are not available right now.">
+										<a id="send-command-stop" class="btn btn-default btn-block disabled">Stop</a>
+									</div></th>
 							</tr>
 						</thead>
 						<!-- <tbody>

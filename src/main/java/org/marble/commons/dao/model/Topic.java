@@ -20,13 +20,19 @@ import javax.validation.constraints.Pattern;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.data.mongodb.crossstore.RelatedDocument;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import twitter4j.Status;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "mrbl_topics")
+@JsonIgnoreProperties({ "changeSet" })
 public class Topic implements Serializable {
     private static final long serialVersionUID = -4417618450499483945L;
 
@@ -46,11 +52,11 @@ public class Topic implements Serializable {
     @Column(name = "keywords")
     private String keywords;
 
-    @Digits(fraction = 0, integer = 16)
+    @Digits(fraction = 0, integer = 24)
     @Column(name = "upper_limit")
     private Long upperLimit;
     
-    @Digits(fraction = 0, integer = 16)
+    @Digits(fraction = 0, integer = 24)
     @Column(name = "lower_limit")
     private Long lowerLimit;
     
@@ -92,6 +98,13 @@ public class Topic implements Serializable {
     @Column(name = "executions")
     @JsonManagedReference
     private Set<Execution> executions = new HashSet<Execution>();
+    
+    // Statuses
+    @RelatedDocument
+    @JsonIgnore
+    private SurveyInfo statuses = new SurveyInfo().addQuestionAndAnswer("age", "22")
+            .addQuestionAndAnswer("married", "Yes")
+            .addQuestionAndAnswer("citizenship", "Norwegian");
 
     // TODO For future versions:
     // @ElementCollection
@@ -236,5 +249,17 @@ public class Topic implements Serializable {
     public void removeExecution(Execution execution) {
         this.executions.remove(execution);
         return;
+    }
+
+    public SurveyInfo getStatuses() {
+        return statuses;
+    }
+
+    public void setStatuses(SurveyInfo statuses) {
+        this.statuses = statuses;
+    }
+    
+    public void addStatus(Status status) {
+        //this.statuses.addStatus(status);
     }
 }

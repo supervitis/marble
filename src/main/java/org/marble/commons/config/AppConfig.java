@@ -5,8 +5,10 @@ import java.util.Locale;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
@@ -15,13 +17,16 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 import org.springframework.web.servlet.view.tiles3.TilesView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 @EnableWebMvc
 @ComponentScan(basePackages = { "org.marble.commons" })
-@Import(DbConfig.class)
 @Configuration
 public class AppConfig extends WebMvcConfigurerAdapter {
 
@@ -75,5 +80,28 @@ public class AppConfig extends WebMvcConfigurerAdapter {
         pool.setWaitForTasksToCompleteOnShutdown(true);
         return pool;
     }
+	
+	
+    @Bean
+    public ObjectMapper getMapper(){
+        ObjectMapper mapper = new ObjectMapper();
+          mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+          return mapper;
+    }
+    
+    @Bean
+    public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter(){
+        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
+        mappingJackson2HttpMessageConverter.setObjectMapper(getMapper());
+        return mappingJackson2HttpMessageConverter;
+    }
+    
+    @Bean
+    public RequestMappingHandlerAdapter requestMappingHandlerAdapter() {
+       RequestMappingHandlerAdapter handlerAdapter = new RequestMappingHandlerAdapter();
+       handlerAdapter.getMessageConverters().add(0, mappingJackson2HttpMessageConverter());
+       return handlerAdapter;
+    }
+    
 	
 }

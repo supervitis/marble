@@ -3,6 +3,7 @@ package org.marble.commons.controller.rest;
 import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidTopicException;
 import org.marble.commons.service.TopicService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;

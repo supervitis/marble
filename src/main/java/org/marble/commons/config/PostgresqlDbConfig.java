@@ -1,8 +1,8 @@
 package org.marble.commons.config;
 
-
 import com.jolbox.bonecp.BoneCPDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -18,13 +18,16 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
+
 import java.util.Properties;
 
 @PropertySource(value = "classpath:db.properties")
-@EnableTransactionManagement(proxyTargetClass = true)
-@EnableJpaRepositories("org.marble.commons.dao")
+@EnableTransactionManagement(mode=AdviceMode.ASPECTJ)
+@EnableJpaRepositories(
+        transactionManagerRef = "postgresqlTransactionManager",
+        basePackages = "org.marble.commons.dao")
 @Configuration
-public class DbConfig {
+public class PostgresqlDbConfig {
 
     @Autowired
     Environment env;
@@ -56,7 +59,7 @@ public class DbConfig {
 
     @Bean
     @Autowired
-    public EntityManagerFactory entityManagerFactory(BoneCPDataSource dataSource) {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(BoneCPDataSource dataSource) {
         HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         vendorAdapter.setGenerateDdl(true);
         vendorAdapter.setShowSql(false);
@@ -70,19 +73,20 @@ public class DbConfig {
 
         Properties properties = new Properties();
         properties.setProperty("hibernate.cache.use_second_level_cache", "true");
-        properties.setProperty("hibernate.cache.region.factory_class", "org.hibernate.cache.ehcache.EhCacheRegionFactory");
+        properties.setProperty("hibernate.cache.region.factory_class",
+                "org.hibernate.cache.ehcache.EhCacheRegionFactory");
         properties.setProperty("hibernate.cache.use_query_cache", "true");
         properties.setProperty("hibernate.generate_statistics", "false");
-        //properties.setProperty("hibernate.show_sql", "true");
+        // properties.setProperty("hibernate.show_sql", "true");
 
         factory.setJpaProperties(properties);
 
         factory.afterPropertiesSet();
 
-        return factory.getObject();
+        return factory;
     }
 
-    @Bean
+    @Bean(name = "postgresqlTransactionManager")
     @Autowired
     public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         JpaTransactionManager txManager = new JpaTransactionManager();

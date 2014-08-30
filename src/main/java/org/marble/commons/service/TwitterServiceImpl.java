@@ -2,8 +2,6 @@ package org.marble.commons.service;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
-
 import org.marble.commons.dao.model.TwitterApiKey;
 
 import twitter4j.Query;
@@ -15,8 +13,7 @@ import twitter4j.TwitterFactory;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
-@Service
-public class TwitterSearchServiceImpl implements TwitterSearchService {
+public class TwitterServiceImpl implements TwitterService {
 
     final public long DEFAULT_MAX_ID = 0;
     final public int DEFAULT_COUNT = 100;
@@ -27,11 +24,11 @@ public class TwitterSearchServiceImpl implements TwitterSearchService {
 
     Twitter twitter;
 
-    public TwitterSearchServiceImpl() {
+    public TwitterServiceImpl() {
 
     }
 
-    public TwitterSearchServiceImpl(TwitterApiKey apiKey) {
+    public TwitterServiceImpl(TwitterApiKey apiKey) {
         this.configure(apiKey);
     }
 
