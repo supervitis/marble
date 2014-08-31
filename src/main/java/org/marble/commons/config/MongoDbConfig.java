@@ -12,8 +12,6 @@ import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.MongoExceptionTranslator;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
-import org.springframework.data.mongodb.crossstore.MongoChangeSetPersister;
-import org.springframework.data.mongodb.crossstore.MongoDocumentBacking;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 
 @PropertySource(value = "classpath:db.properties")
@@ -41,6 +39,7 @@ public class MongoDbConfig {
         return mongoTemplate;
     }
     
+    /* This was used for cross-store MongoDB, but it is unusable right now 
     @Bean
     public MongoDocumentBacking mongoDocumentBacking() throws Exception {
         MongoDocumentBacking mdb = MongoDocumentBacking.aspectOf();

@@ -53,6 +53,7 @@
                     $("#execution-status").html(data.status);
                     $("#execution-type").html(data.type);
                     $("#execution-command").html(data.command);
+                    $("#execution-updated-at").html(data.updatedAt);
 
                     $("#updated").removeClass("alert-warning");
                     $("#updated").addClass("alert-success");

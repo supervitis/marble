@@ -27,7 +27,7 @@ public class ExecutionRestController {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     Execution get(@PathVariable("id") Integer id) throws InvalidExecutionException {
-        Execution execution = executionService.getExecution(id);
+        Execution execution = executionService.findOne(id);
         return execution;
     }
     
@@ -35,10 +35,9 @@ public class ExecutionRestController {
             method = RequestMethod.PUT,
             produces = MediaType.APPLICATION_JSON_VALUE)
     Execution command(@PathVariable("id") Integer id, @RequestBody Command command) throws InvalidExecutionException {
-        Execution execution = executionService.getExecution(id);
+        Execution execution = executionService.findOne(id);
         execution.setCommand(command.getCommand());
-        execution = executionService.updateExecution(execution);
+        execution = executionService.save(execution);
         return execution;
     }
-
 }

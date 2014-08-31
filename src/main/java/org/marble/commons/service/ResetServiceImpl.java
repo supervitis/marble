@@ -8,11 +8,8 @@ import org.marble.commons.dao.TopicDao;
 import org.marble.commons.dao.TwitterApiKeyDao;
 import org.marble.commons.dao.model.ConfigurationItem;
 import org.marble.commons.dao.model.Execution;
-import org.marble.commons.dao.model.Statuses;
-import org.marble.commons.dao.model.SurveyInfo;
 import org.marble.commons.dao.model.Topic;
 import org.marble.commons.dao.model.TwitterApiKey;
-import org.marble.commons.dao.model.User;
 import org.marble.commons.executor.Executor;
 import org.marble.commons.model.ExecutionStatus;
 
@@ -24,8 +21,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import twitter4j.Status;
 
 @Service
 public class ResetServiceImpl implements ResetService {
@@ -39,8 +34,7 @@ public class ResetServiceImpl implements ResetService {
     TopicDao topicDao;
     @Autowired
     ExecutionDao executionDao;
-    // @Autowired
-    // UserDao userDao;
+
     @Autowired
     private TaskExecutor taskExecutor;
     @Autowired
@@ -137,24 +131,6 @@ public class ResetServiceImpl implements ResetService {
         Executor executor = (Executor) context.getBean("twitterExtractionExecutor");
         executor.setExecution(execution);
         taskExecutor.execute(executor);
-
-        // MFC
-        SurveyInfo surveyInfo = new SurveyInfo();
-        surveyInfo.addQuestionAndAnswer("age", "22");
-        surveyInfo.addQuestionAndAnswer("married", "Yes")
-                .addQuestionAndAnswer("citizenship", "Norwegian");
-        execution.setSurveyInfo(surveyInfo);
-        execution = executionDao.save(execution);
-
-        SurveyInfo surveyInfo2 = new SurveyInfo().addQuestionAndAnswer("age", "44")
-                .addQuestionAndAnswer("married", "No")
-                .addQuestionAndAnswer("citizenship", "Russian");
-        topic.setStatuses(surveyInfo2);
-        topic = topicDao.save(topic);
-        
-        surveyInfo.addQuestionAndAnswer("angry", "YES!");
-        execution.setSurveyInfo(surveyInfo);
-        execution = executionDao.save(execution);
 
         log.info("That's it. Have fun!");
 

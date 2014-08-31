@@ -2,19 +2,22 @@ package org.marble.commons.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import javax.validation.Valid;
 
 import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidTopicException;
 import org.marble.commons.service.TopicService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,9 +27,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/topic")
 public class TopicController {
+    
+    private static final Logger log = LoggerFactory.getLogger(TopicController.class);
 
     @Autowired
     TopicService topicService;
+    
+    @Autowired
+    private Validator validator;
 
     @RequestMapping
     public ModelAndView home() {
@@ -47,7 +55,7 @@ public class TopicController {
     }
 
     @RequestMapping(value = "/edit/{topicId:[0-9]+}", method = RequestMethod.POST)
-    public ModelAndView save(@PathVariable Integer topicId, @Valid Topic topic, BindingResult result)
+    public ModelAndView save(@Valid Topic topic, BindingResult result, @PathVariable Integer topicId)
             throws InvalidTopicException {
 
         ModelAndView modelAndView = new ModelAndView();
@@ -83,7 +91,7 @@ public class TopicController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ModelAndView create(@Valid Topic topic, BindingResult result, RedirectAttributes redirectAttributes)
+    public ModelAndView create(@ModelAttribute("topic") @Valid Topic topic, BindingResult result, RedirectAttributes redirectAttributes)
             throws InvalidTopicException {
 
         ModelAndView modelAndView = new ModelAndView();
@@ -123,12 +131,20 @@ public class TopicController {
         modelAndView.setViewName("forward:/execution/topic/" + topicId);
         return modelAndView;
     }
+    
+    @RequestMapping(value = "/{topicId:[0-9]+}/execution/extract", method = RequestMethod.GET)
+    public ModelAndView executeExtractor(@PathVariable Integer topicId) throws InvalidTopicException {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("forward:/execution/topic/" + topicId + "/extract");
+        return modelAndView;
+    }
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
         sdf.setLenient(true);
         binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
+        binder.setValidator(validator);
         // You can register other Custom Editors with the WebDataBinder, like
         // CustomNumberEditor for Integers and Longs,
         // or StringTrimmerEditor for Strings

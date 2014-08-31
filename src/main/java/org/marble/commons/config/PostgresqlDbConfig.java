@@ -2,7 +2,6 @@ package org.marble.commons.config;
 
 import com.jolbox.bonecp.BoneCPDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.AdviceMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -22,9 +21,8 @@ import javax.persistence.EntityManagerFactory;
 import java.util.Properties;
 
 @PropertySource(value = "classpath:db.properties")
-@EnableTransactionManagement(mode=AdviceMode.ASPECTJ)
+@EnableTransactionManagement
 @EnableJpaRepositories(
-        transactionManagerRef = "postgresqlTransactionManager",
         basePackages = "org.marble.commons.dao")
 @Configuration
 public class PostgresqlDbConfig {
@@ -86,7 +84,7 @@ public class PostgresqlDbConfig {
         return factory;
     }
 
-    @Bean(name = "postgresqlTransactionManager")
+    @Bean
     @Autowired
     public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
         JpaTransactionManager txManager = new JpaTransactionManager();

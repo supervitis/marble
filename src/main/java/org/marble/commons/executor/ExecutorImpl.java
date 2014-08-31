@@ -73,14 +73,14 @@ public class ExecutorImpl implements ExtractorExecutor {
         for (int i = 0; i < 10; i++) {
 
             execution.appendLog(MarbleUtil.getDatedMessage("process is running.\n"));
-            execution = executionService.updateExecution(execution);
+            execution = executionService.save(execution);
 
             // Check for commands
             log.error("Current command: <"+execution.getCommand()+">");
             if (execution.getCommand() != null){
                 execution.setStatus(ExecutionStatus.Stopped);
                 execution.appendLog(MarbleUtil.getDatedMessage("Execution was stopped by the user."));
-                execution = executionService.updateExecution(execution);
+                execution = executionService.save(execution);
 
                 return;
             }
@@ -89,7 +89,7 @@ public class ExecutorImpl implements ExtractorExecutor {
             } catch (InterruptedException e) {
                 log.info("The execution was aborted.", e);
                 execution.setStatus(ExecutionStatus.Aborted);
-                execution = executionService.updateExecution(execution);
+                execution = executionService.save(execution);
                 return;
             }
         }
@@ -97,7 +97,7 @@ public class ExecutorImpl implements ExtractorExecutor {
         execution.setStatus(ExecutionStatus.Stopped);
         execution.appendLog(MarbleUtil.getDatedMessage("Execution finished completely."));
         
-            execution = executionService.updateExecution(execution);
+            execution = executionService.save(execution);
         } catch (InvalidExecutionException e) {
             log.error("A fatal error ocurred while manipulating the Execution object.", e);
         }

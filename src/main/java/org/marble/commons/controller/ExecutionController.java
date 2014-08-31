@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/execution")
@@ -23,7 +24,7 @@ public class ExecutionController {
 
     @Autowired
     ExecutionService executionService;
-    
+
     @Autowired
     TopicService topicService;
 
@@ -41,14 +42,15 @@ public class ExecutionController {
         ModelAndView modelAndView = new ModelAndView();
 
         Execution execution;
-        execution = executionService.getExecution(executionId);
+        execution = executionService.findOne(executionId);
         modelAndView.setViewName("view_execution");
         modelAndView.addObject("execution", execution);
         return modelAndView;
     }
 
     @RequestMapping(value = "/topic/{topicId:[0-9]+}", method = RequestMethod.GET)
-    public ModelAndView showPerTopic(@PathVariable Integer topicId) throws InvalidExecutionException, InvalidTopicException {
+    public ModelAndView showPerTopic(@PathVariable Integer topicId) throws InvalidExecutionException,
+            InvalidTopicException {
         ModelAndView modelAndView = new ModelAndView();
 
         Topic topic = topicService.getTopic(topicId);
@@ -60,94 +62,24 @@ public class ExecutionController {
         return modelAndView;
     }
 
-    //
-    /*
-     * @RequestMapping(value = "/edit/{topicId}", method = RequestMethod.POST)
-     * public ModelAndView save(@PathVariable Integer topicId, @Valid Topic
-     * topic, BindingResult result) throws InvalidTopicException {
-     * 
-     * ModelAndView modelAndView = new ModelAndView();
-     * modelAndView.setViewName("edit_topic");
-     * modelAndView.addObject("topic", topic);
-     * 
-     * if (result.hasErrors()) {
-     * modelAndView.addObject("notificationMessage",
-     * "TopicController.editTopicError");
-     * modelAndView.addObject("notificationIcon", "fa-exclamation-triangle");
-     * modelAndView.addObject("notificationLevel", "danger");
-     * return modelAndView;
-     * }
-     * 
-     * topicService.updateTopic(topic);
-     * 
-     * modelAndView.addObject("notificationMessage",
-     * "TopicController.topicModified");
-     * modelAndView.addObject("notificationIcon", "fa-check-circle");
-     * modelAndView.addObject("notificationLevel", "success");
-     * 
-     * // TODO Set list view as return
-     * 
-     * return modelAndView;
-     * }
-     * 
-     * @RequestMapping(value = "/create", method = RequestMethod.GET)
-     * public ModelAndView create() throws InvalidTopicException {
-     * ModelAndView modelAndView = new ModelAndView();
-     * 
-     * Topic topic = new Topic();
-     * modelAndView.setViewName("create_topic");
-     * modelAndView.addObject("topic", topic);
-     * return modelAndView;
-     * }
-     * 
-     * @RequestMapping(value = "/create", method = RequestMethod.POST)
-     * public ModelAndView create(@Valid Topic topic, BindingResult result,
-     * RedirectAttributes redirectAttributes) throws InvalidTopicException {
-     * 
-     * ModelAndView modelAndView = new ModelAndView();
-     * 
-     * if (result.hasErrors()) {
-     * modelAndView.addObject("notificationMessage",
-     * "TopicController.addTopicError");
-     * modelAndView.addObject("notificationIcon", "fa-exclamation-triangle");
-     * modelAndView.addObject("notificationLevel", "danger");
-     * modelAndView.setViewName("create_topic");
-     * modelAndView.addObject("topic", topic);
-     * return modelAndView;
-     * }
-     * 
-     * topic = topicService.createTopic(topic);
-     * // Setting message
-     * redirectAttributes.addFlashAttribute("notificationMessage",
-     * "TopicController.topicCreated");
-     * redirectAttributes.addFlashAttribute("notificationIcon",
-     * "fa-check-circle");
-     * redirectAttributes.addFlashAttribute("notificationLevel", "success");
-     * modelAndView.setViewName("redirect:/topic");
-     * return modelAndView;
-     * }
-     * 
-     * @RequestMapping(value = "/delete/{topicId}")
-     * public String delete(@PathVariable Integer topicId, RedirectAttributes
-     * redirectAttributes) throws InvalidTopicException {
-     * topicService.deleteTopic(topicId);
-     * // Setting message
-     * redirectAttributes.addFlashAttribute("notificationMessage",
-     * "TopicController.topicDeleted");
-     * redirectAttributes.addFlashAttribute("notificationIcon",
-     * "fa-check-circle");
-     * redirectAttributes.addFlashAttribute("notificationLevel", "success");
-     * return "redirect:/topic";
-     * }
-     * 
-     * @InitBinder
-     * public void initBinder(WebDataBinder binder) {
-     * SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-     * sdf.setLenient(true);
-     * binder.registerCustomEditor(Date.class, new CustomDateEditor(sdf, true));
-     * // You can register other Custom Editors with the WebDataBinder, like
-     * CustomNumberEditor for Integers and Longs,
-     * // or StringTrimmerEditor for Strings
-     * }
-     */
+    @RequestMapping(value = "/topic/{topicId:[0-9]+}/extract", method = RequestMethod.GET)
+    public String special(@PathVariable Integer topicId, RedirectAttributes redirectAttributes) {
+        // Reseting the data
+        Integer executionId = 0;
+        try {
+            executionId = executionService.executeExtractor(topicId);
+        } catch (InvalidExecutionException | InvalidTopicException e) {
+            // Setting message
+            redirectAttributes.addFlashAttribute("notificationMessage", "ExecutionController.extractorExecutionFailed");
+            redirectAttributes.addFlashAttribute("notificationIcon", "fa-exclamation-triangle");
+            redirectAttributes.addFlashAttribute("notificationLevel", "danger");
+            return "redirect:/topic/" + topicId +"/execution";
+        }
+
+        // Setting message
+        redirectAttributes.addFlashAttribute("notificationMessage", "ExecutionController.extractorExecuted");
+        redirectAttributes.addFlashAttribute("notificationIcon", "fa-sign-in");
+        redirectAttributes.addFlashAttribute("notificationLevel", "success");
+        return "redirect:/execution/" + executionId;
+    }
 }

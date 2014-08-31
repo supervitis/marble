@@ -2,14 +2,16 @@ package org.marble.commons.config;
 
 import java.util.Locale;
 
+import org.hibernate.validator.HibernateValidator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
@@ -55,6 +57,7 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 		viewResolver.setOrder(-2);
 		return viewResolver;
 	}
+	
 
 	/* I18n */
 	@Bean
@@ -102,6 +105,5 @@ public class AppConfig extends WebMvcConfigurerAdapter {
        handlerAdapter.getMessageConverters().add(0, mappingJackson2HttpMessageConverter());
        return handlerAdapter;
     }
-    
-	
+    	
 }

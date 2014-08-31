@@ -20,13 +20,9 @@ import javax.validation.constraints.Pattern;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.data.mongodb.crossstore.RelatedDocument;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import twitter4j.Status;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -40,9 +36,11 @@ public class Topic implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, name = "id")
     private Integer id;
-    @NotNull
-    @NotEmpty
+    
     @Column(unique = true, name = "name")
+    @NotEmpty
+    @org.hibernate.validator.constraints.Length(max=20)
+    @Pattern(regexp = "[a-zA-Z_0-9-]+")
     private String name;
     @Column(name = "description")
     private String description;
@@ -99,13 +97,6 @@ public class Topic implements Serializable {
     @JsonManagedReference
     private Set<Execution> executions = new HashSet<Execution>();
     
-    // Statuses
-    @RelatedDocument
-    @JsonIgnore
-    private SurveyInfo statuses = new SurveyInfo().addQuestionAndAnswer("age", "22")
-            .addQuestionAndAnswer("married", "Yes")
-            .addQuestionAndAnswer("citizenship", "Norwegian");
-
     // TODO For future versions:
     // @ElementCollection
     // private List<String> keywords = new ArrayList<String>();
@@ -249,17 +240,5 @@ public class Topic implements Serializable {
     public void removeExecution(Execution execution) {
         this.executions.remove(execution);
         return;
-    }
-
-    public SurveyInfo getStatuses() {
-        return statuses;
-    }
-
-    public void setStatuses(SurveyInfo statuses) {
-        this.statuses = statuses;
-    }
-    
-    public void addStatus(Status status) {
-        //this.statuses.addStatus(status);
     }
 }

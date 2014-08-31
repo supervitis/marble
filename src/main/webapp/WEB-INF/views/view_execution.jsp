@@ -47,6 +47,10 @@
 								<th>Pending Action</th>
 								<td id="execution-command">Unknown</td>
 							</tr>
+							<tr>
+								<th>Last Updated</th>
+								<td id="execution-updated-at">Unknown</td>
+							</tr>
 						</tbody>
 					</table>
 				</div>

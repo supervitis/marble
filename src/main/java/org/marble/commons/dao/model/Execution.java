@@ -13,19 +13,23 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
-import org.springframework.data.mongodb.crossstore.RelatedDocument;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import org.marble.commons.model.ExecutionCommand;
 import org.marble.commons.model.ExecutionStatus;
 import org.marble.commons.util.MarbleUtil;
+import org.marble.commons.util.StringDateSerializer;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
 @Table(name = "mrbl_executions")
@@ -51,7 +55,7 @@ public class Execution implements Serializable {
     private ExecutionCommand command;
 
     @Column(length = 100000, name = "log")
-    private String log;
+    private String log ="";
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "topic_id")
@@ -59,23 +63,13 @@ public class Execution implements Serializable {
     @JsonBackReference
     private Topic topic;
 
+    @JsonSerialize(using=StringDateSerializer.class)
     @Column(name = "created_at")
     public Date createdAt;
 
+    @JsonSerialize(using=StringDateSerializer.class)
     @Column(name = "updated_at")
     public Date updatedAt;
-
-    @RelatedDocument
-    @JsonIgnore
-    private SurveyInfo surveyInfo;
-    
-    public SurveyInfo getSurveyInfo() {
-        return surveyInfo;
-    }
-
-    public void setSurveyInfo(SurveyInfo surveyInfo) {
-        this.surveyInfo = surveyInfo;
-    }
 
     public Integer getId() {
         return id;
@@ -152,8 +146,7 @@ public class Execution implements Serializable {
         this.updatedAt = now;
     }
 
-    // MFC Spring Data Bug DATAMONGO-519
-    // @PreUpdate
+    @PreUpdate
     public void preUpdate() {
         this.updatedAt = new Date();
     }
