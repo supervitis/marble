@@ -51,6 +51,8 @@ public interface DatastoreService {
 
     <T> void removeCollection(Class<T> entityClass);
 
+
+    
     <T> void findAllAndRemove(Query query, Class<T> entityClass);
 
     <T> T findOneByQuery(Query query, Class<T> entityClass) throws MongoException;
@@ -62,6 +64,10 @@ public interface DatastoreService {
     <T> T findOneByText(String text, Class<T> entityClass) throws MongoException;
 
     <T> void findAllAndRemoveByTopicId(Integer topicId, Class<T> entityClass) throws MongoException;
+
+    <T> List<T> findAll(Class<T> entityClass);
+
+    
 
     
 

@@ -2,7 +2,12 @@ package org.marble.commons.service;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import javax.annotation.PostConstruct;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -30,6 +35,8 @@ public class SenticNetServiceImpl implements SenticNetService {
 
     @Autowired
     DatastoreService datastoreService;
+
+    Map<String, Float> data = new HashMap<>();
 
     @Override
     public void insertDataFromFile(MultipartFile file) throws IllegalStateException, IOException, SAXException,
@@ -86,14 +93,19 @@ public class SenticNetServiceImpl implements SenticNetService {
 
     }
 
+    @PostConstruct
+    public void getDataToMemory() {
+        // Load all the fields here
+        List<SenticItem> list = datastoreService.findAll(SenticItem.class);
+
+        for (SenticItem item : list) {
+            this.data.put(item.getText(), item.getPolarity());
+        }
+    }
+
     @Override
     public Float getPolarity(String sentence) {
-        try {
-            SenticItem senticItem = (SenticItem) datastoreService.findOneByText(sentence, SenticItem.class);
-            return senticItem.getPolarity();
-        } catch (MongoException e) {
-            return null;
-        }
+        return this.data.get(sentence);
     }
 
 }

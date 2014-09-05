@@ -53,8 +53,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				// Configures url based authorization
 				.and()
 					.authorizeRequests()
-					    // MFC Temporary TODO remove
-					    .anyRequest().permitAll()
 					    // Urls open to the public
 					    .antMatchers("/login").permitAll()
                         .antMatchers("/").permitAll()

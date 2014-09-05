@@ -45,6 +45,11 @@ public class DatastoreServiceImpl implements DatastoreService {
     }
 
     @Override
+    public <T> List<T> findAll(Class<T> entityClass) {
+       return mongoOperations.findAll(entityClass);
+    }
+    
+    @Override
     public <T> void findAllAndRemove(Query query, Class<T> entityClass) {
         mongoOperations.findAllAndRemove(query, entityClass);
     }

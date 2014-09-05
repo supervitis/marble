@@ -59,13 +59,14 @@ public class TopicController {
             throws InvalidTopicException {
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("edit_topic");
-        modelAndView.addObject("topic", topic);
+        
 
         if (result.hasErrors()) {
             modelAndView.addObject("notificationMessage", "TopicController.editTopicError");
             modelAndView.addObject("notificationIcon", "fa-exclamation-triangle");
             modelAndView.addObject("notificationLevel", "danger");
+            modelAndView.setViewName("edit_topic");
+            modelAndView.addObject("topic", topic);
             return modelAndView;
         }
 
