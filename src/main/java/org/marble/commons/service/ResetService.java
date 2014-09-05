@@ -10,7 +10,7 @@ public interface ResetService {
 
     public void resetTopics();
 
-    public Integer getTheSpecial();
+    public void getTheSpecial();
     
 
 }

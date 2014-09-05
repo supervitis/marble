@@ -23,6 +23,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import org.marble.commons.model.ExecutionCommand;
 import org.marble.commons.model.ExecutionStatus;
+import org.marble.commons.model.ExecutionType;
 import org.marble.commons.util.MarbleUtil;
 import org.marble.commons.util.StringDateSerializer;
 

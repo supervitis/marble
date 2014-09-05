@@ -9,7 +9,6 @@ import org.marble.commons.dao.model.OriginalStatus;
 import org.marble.commons.dao.model.Topic;
 import org.marble.commons.dao.model.TwitterApiKey;
 import org.marble.commons.exception.InvalidExecutionException;
-import org.marble.commons.exception.InvalidTopicException;
 import org.marble.commons.model.ExecutionStatus;
 import org.marble.commons.service.DatastoreService;
 import org.marble.commons.service.ExecutionService;
@@ -39,8 +38,8 @@ public class TwitterExtractionExecutor implements ExtractorExecutor {
 
     @Autowired
     TwitterApiKeyService twitterApiKeyService;
-    
-    @Autowired 
+
+    @Autowired
     DatastoreService datastoreService;
 
     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -49,8 +48,6 @@ public class TwitterExtractionExecutor implements ExtractorExecutor {
 
     @Autowired
     TwitterSearchService twitterSearchService;
-
-    Integer id;
 
     @Override
     public String getName() {
@@ -73,7 +70,7 @@ public class TwitterExtractionExecutor implements ExtractorExecutor {
         }
 
         try {
-           
+
             Integer id = execution.getId();
 
             msg = "Starting twitter extraction <" + id + ">.";
@@ -84,12 +81,8 @@ public class TwitterExtractionExecutor implements ExtractorExecutor {
             execution.setStatus(ExecutionStatus.Running);
             execution = executionService.save(execution);
 
-            // MFC START
             // Get the associated topic
             Topic topic = topicService.getTopic(execution.getTopic().getId());
-
-            topic.setDescription("Lo he cambiado!!!!");
-            topicService.updateTopic(topic);
 
             // Get twitter keys
             List<TwitterApiKey> apiKeys = twitterApiKeyService.getEnabledTwitterApiKeys();
@@ -123,7 +116,6 @@ public class TwitterExtractionExecutor implements ExtractorExecutor {
             }
 
             long maxStatuses = 200;
-            log.info("MFC: "+topic.getStatusesPerFullExtraction());
             if (topic.getStatusesPerFullExtraction() != null) {
                 maxStatuses = topic.getStatusesPerFullExtraction();
             }
@@ -171,13 +163,15 @@ public class TwitterExtractionExecutor implements ExtractorExecutor {
                         lastId = status.getId();
                         log.info("UpperLimit: " + lastId + ", count: " + count + ", maxStatuses: " + maxStatuses);
                         topic.setUpperLimit(lastId);
+                        // save
+                        OriginalStatus originalStatus = new OriginalStatus(status, topic.getId());
+                        datastoreService.insertOriginalStatus(originalStatus);
+
                         count++;
                         if (count >= maxStatuses) {
                             break;
                         }
-                        // save
-                        OriginalStatus originalStatus = new OriginalStatus(status, topic.getId());
-                        datastoreService.insertOriginalStatus(originalStatus);
+
                     }
 
                 }
@@ -195,9 +189,16 @@ public class TwitterExtractionExecutor implements ExtractorExecutor {
             execution.appendLog(msg);
             execution.setStatus(ExecutionStatus.Stopped);
             execution = executionService.save(execution);
-        } catch (InvalidExecutionException | InvalidTopicException e) {
-            msg = "An error ocurred while manipulating execution <" + id + ">. Execution aborted.";
-            log.info(msg, e);
+        } catch (Exception e) {
+            msg = "An error ocurred while manipulating execution <" + execution.getId() + ">. Execution aborted.";
+            log.error(msg, e);
+            execution.appendLog(msg);
+            execution.setStatus(ExecutionStatus.Aborted);
+            try {
+                execution = executionService.save(execution);
+            } catch (InvalidExecutionException e1) {
+                log.error("Status couldn't be refreshed on the execution object.");
+            }
             return;
         }
     }

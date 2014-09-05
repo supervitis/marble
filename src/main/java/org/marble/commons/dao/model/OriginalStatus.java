@@ -21,11 +21,11 @@ import twitter4j.UserMentionEntity;
 
 @Document(collection = "original_statuses")
 public class OriginalStatus {
-    
+
     @Indexed
     private Integer topicId;
     private Date createdAt;
-    
+
     @Id
     private long id;
     private String text;
@@ -34,7 +34,7 @@ public class OriginalStatus {
     private long inReplyToStatusId;
     private long inReplyToUserId;
     private boolean isFavorited;
-    
+
     @Indexed
     private boolean isRetweeted;
     private int favoriteCount;
@@ -45,7 +45,7 @@ public class OriginalStatus {
     private boolean isPossiblySensitive;
     private String lang;
     private long[] contributorsIDs;
-    private twitter4j.Status retweetedStatus;
+    private OriginalStatus retweetedStatus;
     private UserMentionEntity[] userMentionEntities;
     private URLEntity[] urlEntities;
     private HashtagEntity[] hashtagEntities;
@@ -56,6 +56,41 @@ public class OriginalStatus {
     private Scopes scopes;
     private User user = null;
     private String[] withheldInCountries = null;
+
+    public OriginalStatus() {
+
+    }
+
+    public OriginalStatus(OriginalStatus status) {
+        this.topicId = status.getTopicId();
+        this.createdAt = status.getCreatedAt();
+        this.id = status.getId();
+        this.text = status.getText();
+        this.source = status.getSource();
+        this.isTruncated = status.isTruncated();
+        this.inReplyToStatusId = status.getInReplyToStatusId();
+        this.inReplyToUserId = status.getInReplyToUserId();
+        this.isFavorited = status.isFavorited();
+        this.isRetweeted = status.isRetweeted();
+        this.favoriteCount = status.getFavoriteCount();
+        this.inReplyToScreenName = status.getInReplyToScreenName();
+        this.geoLocation = status.getGeoLocation();
+        this.place = status.getPlace();
+        this.retweetCount = status.getRetweetCount();
+        this.isPossiblySensitive = status.isPossiblySensitive();
+        this.lang = status.getLang();
+        this.contributorsIDs = status.getContributorsIDs();
+        this.retweetedStatus = status.getRetweetedStatus();
+        this.userMentionEntities = status.getUserMentionEntities();
+        this.urlEntities = status.getUrlEntities();
+        this.hashtagEntities = status.getHashtagEntities();
+        this.mediaEntities = status.getMediaEntities();
+        this.extendedMediaEntities = status.getExtendedMediaEntities();
+        this.symbolEntities = status.getSymbolEntities();
+        this.currentUserRetweetId = status.getCurrentUserRetweetId();
+        this.scopes = status.getScopes();
+        this.user = status.getUser();
+    }
 
     public OriginalStatus(twitter4j.Status status, Integer topicId) {
         this.topicId = topicId;
@@ -76,7 +111,9 @@ public class OriginalStatus {
         this.isPossiblySensitive = status.isPossiblySensitive();
         this.lang = status.getLang();
         this.contributorsIDs = status.getContributors();
-        this.retweetedStatus = (twitter4j.Status) status.getRetweetedStatus();
+        if (status.getRetweetedStatus() != null) {
+            this.retweetedStatus = new OriginalStatus(status.getRetweetedStatus(), null);
+        }
         this.userMentionEntities = status.getUserMentionEntities();
         this.urlEntities = status.getURLEntities();
         this.hashtagEntities = status.getHashtagEntities();
@@ -86,6 +123,12 @@ public class OriginalStatus {
         this.currentUserRetweetId = status.getCurrentUserRetweetId();
         this.scopes = status.getScopes();
         this.user = status.getUser();
+
+        // TODO Fix this (it throws an exception when filled)
+        this.mediaEntities = null;
+        if (this.retweetedStatus != null) {
+            this.retweetedStatus.mediaEntities = null;
+        }
     }
 
     public Integer getTopicId() {
@@ -232,11 +275,11 @@ public class OriginalStatus {
         this.contributorsIDs = contributorsIDs;
     }
 
-    public twitter4j.Status getRetweetedStatus() {
+    public OriginalStatus getRetweetedStatus() {
         return retweetedStatus;
     }
 
-    public void setRetweetedStatus(twitter4j.Status retweetedStatus) {
+    public void setRetweetedStatus(OriginalStatus retweetedStatus) {
         this.retweetedStatus = retweetedStatus;
     }
 

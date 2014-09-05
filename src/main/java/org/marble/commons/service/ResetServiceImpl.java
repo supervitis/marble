@@ -7,12 +7,9 @@ import org.marble.commons.dao.ExecutionDao;
 import org.marble.commons.dao.TopicDao;
 import org.marble.commons.dao.TwitterApiKeyDao;
 import org.marble.commons.dao.model.ConfigurationItem;
-import org.marble.commons.dao.model.Execution;
+import org.marble.commons.dao.model.OriginalStatus;
 import org.marble.commons.dao.model.Topic;
 import org.marble.commons.dao.model.TwitterApiKey;
-import org.marble.commons.executor.Executor;
-import org.marble.commons.model.ExecutionStatus;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +31,11 @@ public class ResetServiceImpl implements ResetService {
     TopicDao topicDao;
     @Autowired
     ExecutionDao executionDao;
+
+    @Autowired
+    SenticNetService senticNetService;
+    @Autowired
+    DatastoreService datastoreService;
 
     @Autowired
     private TaskExecutor taskExecutor;
@@ -109,32 +111,22 @@ public class ResetServiceImpl implements ResetService {
 
     @Override
     @Transactional
-    public Integer getTheSpecial() {
+    public void getTheSpecial() {
 
         // Special function to perform special operations ;)
         log.info("Running \"The Special\"...");
 
-        Execution execution = new Execution();
+        Float pol = senticNetService.getPolarity("wonderment");
+        log.info("Wonderment: <" + pol + ">");
+        pol = senticNetService.getPolarity("asdasdsa");
+        log.info("Wonderment: <" + pol + ">");
 
-        List<Topic> topics = topicDao.findAll();
-        Topic topic = topics.get(0);
-        log.info("Topic selected: " + topic.getId());
-
-        execution.setStatus(ExecutionStatus.Initialized);
-        execution.setLog("Hola\nEste es\nUn log\n");
-        topic.getExecutions().add(execution);
-        execution.setTopic(topic);
-        topic = topicDao.save(topic);
-        execution = executionDao.save(execution);
-
-        log.info("Starting execution <" + execution.getId() + ">... NOW!");
-        Executor executor = (Executor) context.getBean("twitterExtractionExecutor");
-        executor.setExecution(execution);
-        taskExecutor.execute(executor);
+        List<OriginalStatus> statuses = datastoreService.findByTopicId(1, OriginalStatus.class);
+        log.info("Statuses count is <" + statuses.size() + ">");
 
         log.info("That's it. Have fun!");
 
-        return execution.getId();
+        return;
     }
 
 }

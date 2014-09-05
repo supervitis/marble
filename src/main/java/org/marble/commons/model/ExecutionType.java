@@ -1,7 +1,7 @@
-package org.marble.commons.dao.model;
+package org.marble.commons.model;
 
 public enum ExecutionType {
     Extractor,
-    processor,
+    Processor,
     plotter
 }

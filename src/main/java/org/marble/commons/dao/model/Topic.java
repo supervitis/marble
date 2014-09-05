@@ -36,10 +36,10 @@ public class Topic implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, name = "id")
     private Integer id;
-    
+
     @Column(unique = true, name = "name")
     @NotEmpty
-    @org.hibernate.validator.constraints.Length(max=20)
+    @org.hibernate.validator.constraints.Length(max = 20)
     @Pattern(regexp = "[a-zA-Z_0-9-]+")
     private String name;
     @Column(name = "description")
@@ -53,11 +53,11 @@ public class Topic implements Serializable {
     @Digits(fraction = 0, integer = 24)
     @Column(name = "upper_limit")
     private Long upperLimit;
-    
+
     @Digits(fraction = 0, integer = 24)
     @Column(name = "lower_limit")
     private Long lowerLimit;
-    
+
     @Pattern(regexp = "[a-zA-Z]{2}|")
     @Column(name = "language")
     private String language;
@@ -65,21 +65,21 @@ public class Topic implements Serializable {
     @Digits(fraction = 0, integer = 3)
     @Column(name = "statuses_per_call")
     private Integer statusesPerCall;
-    
+
     @Digits(fraction = 0, integer = 8)
     @Column(name = "statuses_per_full_extraction")
     private Integer statusesPerFullExtraction;
-    
+
     @Column(name = "processor_positive_boundary")
     private Double processorPositiveBoundary;
-    
+
     @Column(name = "processor_negative_boundary")
     private Double processorNegativeBoundary;
 
     @DateTimeFormat(iso = ISO.DATE_TIME)
     @Column(name = "plotter_left_date_boundary")
     private Date plotterLeftDateBoundary;
-    
+
     @DateTimeFormat(iso = ISO.DATE_TIME)
     @Column(name = "plotter_right_date_boundary")
     private Date plotterRightDateBoundary;
@@ -88,15 +88,12 @@ public class Topic implements Serializable {
     @Column(name = "plotter_step_size")
     private Integer plotterStepSize;
 
-    @Column(name = "topic_status")
-    private TopicStatus topicStatus = new TopicStatus();
-
     @OneToMany(mappedBy = "topic", fetch = FetchType.EAGER)
     @Cascade({ CascadeType.DELETE })
     @Column(name = "executions")
     @JsonManagedReference
     private Set<Execution> executions = new HashSet<Execution>();
-    
+
     // TODO For future versions:
     // @ElementCollection
     // private List<String> keywords = new ArrayList<String>();
@@ -210,18 +207,6 @@ public class Topic implements Serializable {
 
     public void setPlotterStepSize(Integer plotterStepSize) {
         this.plotterStepSize = plotterStepSize;
-    }
-
-    public TopicStatus getTopicStatus() {
-        // Just to verify that it was initialized
-        if (topicStatus == null) {
-            topicStatus = new TopicStatus();
-        }
-        return topicStatus;
-    }
-
-    public void setTopicStatus(TopicStatus topicStatus) {
-        this.topicStatus = topicStatus;
     }
 
     public Set<Execution> getExecutions() {

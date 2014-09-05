@@ -1,10 +1,14 @@
 package org.marble.commons.util;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+
+import org.springframework.web.multipart.MultipartFile;
 
 public class MarbleUtil {
     public static String getDatedMessage(String message) {
@@ -19,4 +23,11 @@ public class MarbleUtil {
             return arg0.get(0).compareTo(arg1.get(0));
         }
     };
+    
+    public static File multipartToFile(MultipartFile multipart) throws IllegalStateException, IOException 
+    {
+            File convFile = new File( multipart.getOriginalFilename());
+            multipart.transferTo(convFile);
+            return convFile;
+    }
 }

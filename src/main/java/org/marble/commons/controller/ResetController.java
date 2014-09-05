@@ -32,12 +32,12 @@ public class ResetController {
     @RequestMapping(value = "/special", method = RequestMethod.GET)
     public String special(RedirectAttributes redirectAttributes) {
         // Reseting the data
-        Integer executionId = resetService.getTheSpecial();
+        resetService.getTheSpecial();
 
         // Setting message
         redirectAttributes.addFlashAttribute("notificationMessage", "ResetController.specialMessage");
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-exclamation-triangle");
         redirectAttributes.addFlashAttribute("notificationLevel", "success");
-        return "redirect:/execution/" + executionId;
+        return "redirect:/admin";
     }
 }

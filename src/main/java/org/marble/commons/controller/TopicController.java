@@ -55,7 +55,7 @@ public class TopicController {
     }
 
     @RequestMapping(value = "/edit/{topicId:[0-9]+}", method = RequestMethod.POST)
-    public ModelAndView save(@Valid Topic topic, BindingResult result, @PathVariable Integer topicId)
+    public ModelAndView save(@Valid Topic topic, BindingResult result, @PathVariable Integer topicId, RedirectAttributes redirectAttributes)
             throws InvalidTopicException {
 
         ModelAndView modelAndView = new ModelAndView();
@@ -71,12 +71,10 @@ public class TopicController {
 
         topicService.updateTopic(topic);
 
-        modelAndView.addObject("notificationMessage", "TopicController.topicModified");
-        modelAndView.addObject("notificationIcon", "fa-check-circle");
-        modelAndView.addObject("notificationLevel", "success");
-
-        // TODO Set list view as return
-
+        redirectAttributes.addFlashAttribute("notificationMessage", "TopicController.topicModified");
+        redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
+        redirectAttributes.addFlashAttribute("notificationLevel", "success");
+        modelAndView.setViewName("redirect:/topic");
         return modelAndView;
     }
 
@@ -136,6 +134,13 @@ public class TopicController {
     public ModelAndView executeExtractor(@PathVariable Integer topicId) throws InvalidTopicException {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("forward:/execution/topic/" + topicId + "/extract");
+        return modelAndView;
+    }
+    
+    @RequestMapping(value = "/{topicId:[0-9]+}/execution/process", method = RequestMethod.GET)
+    public ModelAndView executeProcessor(@PathVariable Integer topicId) throws InvalidTopicException {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("forward:/execution/topic/" + topicId + "/process");
         return modelAndView;
     }
 

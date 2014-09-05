@@ -63,7 +63,7 @@ public class ExecutionController {
     }
 
     @RequestMapping(value = "/topic/{topicId:[0-9]+}/extract", method = RequestMethod.GET)
-    public String special(@PathVariable Integer topicId, RedirectAttributes redirectAttributes) {
+    public String executeExtractor(@PathVariable Integer topicId, RedirectAttributes redirectAttributes) {
         // Reseting the data
         Integer executionId = 0;
         try {
@@ -78,6 +78,27 @@ public class ExecutionController {
 
         // Setting message
         redirectAttributes.addFlashAttribute("notificationMessage", "ExecutionController.extractorExecuted");
+        redirectAttributes.addFlashAttribute("notificationIcon", "fa-sign-in");
+        redirectAttributes.addFlashAttribute("notificationLevel", "success");
+        return "redirect:/execution/" + executionId;
+    }
+    
+    @RequestMapping(value = "/topic/{topicId:[0-9]+}/process", method = RequestMethod.GET)
+    public String executeProcessor(@PathVariable Integer topicId, RedirectAttributes redirectAttributes) {
+        // Reseting the data
+        Integer executionId = 0;
+        try {
+            executionId = executionService.executeProcessor(topicId);
+        } catch (InvalidExecutionException | InvalidTopicException e) {
+            // Setting message
+            redirectAttributes.addFlashAttribute("notificationMessage", "ExecutionController.processorExecutionFailed");
+            redirectAttributes.addFlashAttribute("notificationIcon", "fa-exclamation-triangle");
+            redirectAttributes.addFlashAttribute("notificationLevel", "danger");
+            return "redirect:/topic/" + topicId +"/execution";
+        }
+
+        // Setting message
+        redirectAttributes.addFlashAttribute("notificationMessage", "ExecutionController.processorExecuted");
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-sign-in");
         redirectAttributes.addFlashAttribute("notificationLevel", "success");
         return "redirect:/execution/" + executionId;

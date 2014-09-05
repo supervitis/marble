@@ -31,7 +31,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
-				// Configures form login
+				//.csrf().disable()
+		        // Configures form login
 				.formLogin()
 					.usernameParameter("username")
 					.passwordParameter("password")
@@ -40,9 +41,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 					.failureUrl("/login/failure")
 
 				// Configures the logout function
-				.and()
-					.exceptionHandling()
-					.accessDeniedPage("/login/promote")
+				//.and()
+				//	.exceptionHandling()
+				//	.accessDeniedPage("/login/promote")
 				.and()
 					.logout()
 					.deleteCookies("JSESSIONID")
@@ -52,8 +53,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				// Configures url based authorization
 				.and()
 					.authorizeRequests()
+					    // MFC Temporary TODO remove
+					    .anyRequest().permitAll()
 					    // Urls open to the public
-                        .antMatchers("/login").permitAll()
+					    .antMatchers("/login").permitAll()
                         .antMatchers("/").permitAll()
                         // Urls reserved to Admin and Operators
                         .antMatchers("/topic/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPER')")

@@ -6,12 +6,12 @@ import javax.transaction.Transactional;
 
 import org.marble.commons.dao.ExecutionDao;
 import org.marble.commons.dao.model.Execution;
-import org.marble.commons.dao.model.ExecutionType;
 import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidExecutionException;
 import org.marble.commons.exception.InvalidTopicException;
 import org.marble.commons.executor.Executor;
 import org.marble.commons.model.ExecutionStatus;
+import org.marble.commons.model.ExecutionType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,7 +94,35 @@ public class ExecutionServiceImpl implements ExecutionService {
         executor.setExecution(execution);
         taskExecutor.execute(executor);
 
-        log.info("That's it. Have fun!");
+        log.info("Executor launched.");
+
+        return execution.getId();
+    }
+    
+    @Override
+    @Transactional
+    public Integer executeProcessor(Integer topicId) throws InvalidTopicException, InvalidExecutionException {
+        // Special function to perform special operations ;)
+        log.info("Executing the processor for topic <"+topicId +">.");
+
+        Execution execution = new Execution();
+
+        Topic topic = topicService.getTopic(topicId);
+        
+        execution.setStatus(ExecutionStatus.Initialized);
+        execution.setType(ExecutionType.Processor);
+        topic.getExecutions().add(execution);
+        execution.setTopic(topic);
+        topic = topicService.updateTopic(topic);
+        
+        execution = this.save(execution);
+
+        log.info("Starting execution <" + execution.getId() + ">... now!");
+        Executor executor = (Executor) context.getBean("bagOfWordsSenticProcessorExecutor");
+        executor.setExecution(execution);
+        taskExecutor.execute(executor);
+
+        log.info("Executor launched.");
 
         return execution.getId();
     }

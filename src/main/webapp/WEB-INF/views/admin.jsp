@@ -1,28 +1,28 @@
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <div class="row">
-
-	<div class="col-lg-3">
+	<div class="col-lg-4">
 		<div class="panel panel-default">
 			<div class="panel-heading">Social Networks</div>
 			<!-- /.panel-heading -->
 
 			<div class="panel-body">
 				<p>Twitter API Keys</p>
-					<div class="col-lg-offset-10 col-lg-2">
-						<a href="<c:url value="/admin/keys/twitter"/>" class="btn btn-primary pull-right"><i class="fa fa-key"></i>
-							View Keys</a>
-					</div>
+				<div class="col-lg-offset-10 col-lg-2">
+					<a href="<c:url value="/admin/keys/twitter"/>" class="btn btn-primary pull-right"><i class="fa fa-key"></i>
+						View Keys</a>
+				</div>
 			</div>
 
 			<!-- .panel-body -->
 		</div>
 		<!-- /.panel -->
 	</div>
-	<!-- /.col-lg-3 -->
+	<!-- /.col-lg-4 -->
 
-	<div class="col-lg-3">
+	<div class="col-lg-4">
 		<div class="panel panel-default">
 			<div class="panel-heading">Undoable Actions</div>
 			<!-- /.panel-heading -->
@@ -54,18 +54,46 @@
 		<!-- /.panel -->
 	</div>
 	<!-- /.col-lg-3 -->
-	
-	<div class="col-lg-3">
+
+	<div class="col-lg-4">
+		<div class="panel panel-default">
+			<div class="panel-heading">Upload SenticNet Data</div>
+			<!-- /.panel-heading -->
+
+			<div class="panel-body">
+				<p>Select the file containing the senticnet data in the original rdf format and click upload. Previous senticnet
+					data will be deleted.</p>
+				<c:url value='/admin/upload/sentic?${_csrf.parameterName}=${_csrf.token}' var="uploadSenticUrl" />
+				<form:form enctype="multipart/form-data" action="${uploadSenticUrl}">
+					<div class="form-group">
+						<input name="file" type="file" class="form-control" />
+					</div>
+					<div class="col-lg-offset-10 col-lg-2">
+						<button type="submit" id="save" class="btn btn-primary pull-right">
+							<i class="fa fa-upload"></i> Upload
+						</button>
+					</div>
+				</form:form>
+			</div>
+			<!-- .panel-body -->
+		</div>
+		<!-- /.panel -->
+	</div>
+	<!-- /.col-lg-3 -->
+</div>
+<!-- /.row -->
+<div class="row">
+	<div class="col-lg-4">
 		<div class="panel panel-default">
 			<div class="panel-heading">"The Special"</div>
 			<!-- /.panel-heading -->
 
 			<div class="panel-body">
 				<p>You know...</p>
-					<div class="col-lg-offset-10 col-lg-2">
-						<a href="<c:url value="/admin/reset/special"/>" class="btn btn-primary pull-right"><i class="fa fa-magic"></i>
-							Run it!</a>
-					</div>
+				<div class="col-lg-offset-10 col-lg-2">
+					<a href="<c:url value="/admin/reset/special"/>" class="btn btn-primary pull-right"><i class="fa fa-magic"></i>
+						Run it!</a>
+				</div>
 			</div>
 
 			<!-- .panel-body -->
