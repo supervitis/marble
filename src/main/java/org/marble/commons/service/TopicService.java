@@ -7,14 +7,16 @@ import org.marble.commons.exception.InvalidTopicException;
 
 public interface TopicService {
 
-	public Topic updateTopic(Topic topic) throws InvalidTopicException;
+	public Topic save(Topic topic) throws InvalidTopicException;
 
-	public Topic getTopic(Integer id) throws InvalidTopicException;
+	public Topic findOne(Integer id) throws InvalidTopicException;
 
-	List<Topic> getTopics();
+	List<Topic> findAll();
 
-	public void deleteTopic(Integer id);
+	public void delete(Integer id);
 
-	public Topic createTopic(Topic topic) throws InvalidTopicException;
+	public Topic create(Topic topic) throws InvalidTopicException;
+
+    Long count();
 
 }

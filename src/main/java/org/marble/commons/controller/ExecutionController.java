@@ -53,7 +53,7 @@ public class ExecutionController {
             InvalidTopicException {
         ModelAndView modelAndView = new ModelAndView();
 
-        Topic topic = topicService.getTopic(topicId);
+        Topic topic = topicService.findOne(topicId);
         List<Execution> executions;
         executions = executionService.getExecutionsPerTopic(topicId);
         modelAndView.setViewName("executions_list");

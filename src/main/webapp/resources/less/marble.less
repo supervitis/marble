@@ -1,8 +1,11 @@
-// TODO Merge with bootstrap variables file
-
-
-
 @import "bootstrap/variables.less";
+
+@theme-dark-green-light: lighten(@theme-dark-green, 10%);
+@theme-green-light: lighten(@theme-green, 10%);
+@theme-blue-light: lighten(@theme-blue, 10%);
+@theme-yellow-light: lighten(@theme-yellow, 10%);
+@theme-orange-light: lighten(@theme-orange, 10%);
+
 .dropdown-login input[type="text"] , .dropdown-login input[type="password"] {
 	height: 30px;
 	font-size: 12px;
@@ -81,4 +84,79 @@
 
 .resize-vertical {
 resize:vertical;
+}
+
+.panel-theme-dark-green {
+    border-color: @theme-dark-green-light;
+    .panel-heading {
+        border-color: @theme-dark-green-light;
+        color: white;
+        background-color: @theme-dark-green-light;
+    }
+    a {
+        color: @theme-dark-green-light;
+        &:hover {
+            color: darken(@theme-dark-green-light, 15%);
+        }
+    }
+}
+
+.panel-theme-green {
+    border-color: @theme-green-light;
+    .panel-heading {
+        border-color: @theme-green-light;
+        color: white;
+        background-color: @theme-green-light;
+    }
+    a {
+        color: @theme-green-light;
+        &:hover {
+            color: darken(@theme-green-light, 15%);
+        }
+    }
+}
+
+.panel-theme-blue {
+    border-color: @theme-blue-light;
+    .panel-heading {
+        border-color: @theme-blue-light;
+        color: white;
+        background-color: @theme-blue-light;
+    }
+    a {
+        color: @theme-blue-light;
+        &:hover {
+            color: darken(@theme-blue-light, 15%);
+        }
+    }
+}
+
+.panel-theme-yellow {
+    border-color: @theme-yellow-light;
+    .panel-heading {
+        border-color: @theme-yellow-light;
+        color: white;
+        background-color: @theme-yellow-light;
+    }
+    a {
+        color: @theme-yellow-light;
+        &:hover {
+            color: darken(@theme-yellow-light, 15%);
+        }
+    }
+}
+
+.panel-theme-orange {
+    border-color: @theme-orange-light;
+    .panel-heading {
+        border-color: @theme-orange-light;
+        color: white;
+        background-color: @theme-orange-light;
+    }
+    a {
+        color: @theme-orange-light;
+        &:hover {
+            color: darken(@theme-orange-light, 15%);
+        }
+    }
 }

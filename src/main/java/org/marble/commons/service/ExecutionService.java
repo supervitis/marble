@@ -20,6 +20,8 @@ public interface ExecutionService {
 
     public Integer executeProcessor(Integer topicId) throws InvalidTopicException, InvalidExecutionException;
 
+    Long count();
+
 	//List<Topic> getTopics();
 
 	//public void deleteTopic(Integer id);

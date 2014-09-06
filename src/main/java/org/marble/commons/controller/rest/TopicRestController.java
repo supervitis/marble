@@ -21,7 +21,7 @@ public class TopicRestController {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     Topic get(@PathVariable("id") Integer id) throws InvalidTopicException {
-        Topic topic = topicService.getTopic(id);
+        Topic topic = topicService.findOne(id);
         return topic;
     }
 }

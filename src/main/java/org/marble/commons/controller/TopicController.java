@@ -39,7 +39,7 @@ public class TopicController {
     @RequestMapping
     public ModelAndView home() {
         ModelAndView modelAndView = new ModelAndView("topics_list");
-        modelAndView.addObject("topics", topicService.getTopics());
+        modelAndView.addObject("topics", topicService.findAll());
         return modelAndView;
     }
 
@@ -48,7 +48,7 @@ public class TopicController {
         ModelAndView modelAndView = new ModelAndView();
 
         Topic topic;
-        topic = topicService.getTopic(topicId);
+        topic = topicService.findOne(topicId);
         modelAndView.setViewName("edit_topic");
         modelAndView.addObject("topic", topic);
         return modelAndView;
@@ -70,7 +70,7 @@ public class TopicController {
             return modelAndView;
         }
 
-        topicService.updateTopic(topic);
+        topicService.save(topic);
 
         redirectAttributes.addFlashAttribute("notificationMessage", "TopicController.topicModified");
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
@@ -104,7 +104,7 @@ public class TopicController {
             return modelAndView;
         }
 
-        topic = topicService.createTopic(topic);
+        topic = topicService.create(topic);
         // Setting message
         redirectAttributes.addFlashAttribute("notificationMessage", "TopicController.topicCreated");
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
@@ -113,10 +113,10 @@ public class TopicController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/delete/topicId:[0-9]+")
+    @RequestMapping(value = "/delete/{topicId:[0-9]+}")
     public String delete(@PathVariable Integer topicId, RedirectAttributes redirectAttributes)
             throws InvalidTopicException {
-        topicService.deleteTopic(topicId);
+        topicService.delete(topicId);
         // Setting message
         redirectAttributes.addFlashAttribute("notificationMessage", "TopicController.topicDeleted");
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");

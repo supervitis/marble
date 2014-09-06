@@ -8,6 +8,7 @@ import java.util.List;
 import org.marble.commons.dao.model.Execution;
 import org.marble.commons.dao.model.OriginalStatus;
 import org.marble.commons.dao.model.ProcessedStatus;
+import org.marble.commons.dao.model.SenticItem;
 import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidExecutionException;
 import org.marble.commons.model.Constants;
@@ -16,10 +17,16 @@ import org.marble.commons.service.DatastoreService;
 import org.marble.commons.service.ExecutionService;
 import org.marble.commons.service.SenticNetService;
 import org.marble.commons.service.TopicService;
+
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -80,7 +87,7 @@ public class BagOfWordsSenticProcessorExecutor implements ProcessorExecutor {
             execution = executionService.save(execution);
 
             // Get the associated topic
-            Topic topic = topicService.getTopic(execution.getTopic().getId());
+            Topic topic = topicService.findOne(execution.getTopic().getId());
 
             // Drop current processed statuses
             datastoreService.findAllAndRemoveByTopicId(topic.getId(), ProcessedStatus.class);
@@ -88,11 +95,21 @@ public class BagOfWordsSenticProcessorExecutor implements ProcessorExecutor {
             // TODO Include ignore neutral sentences from global configuration
             this.ignoreNeutralSentences = Boolean.FALSE;
             log.info("Getting statuses for topic <" + topic.getId() + ">.");
-            List<OriginalStatus> statuses = datastoreService.findByTopicId(topic.getId(), OriginalStatus.class);
 
-            log.info("Statuses count is <" + statuses.size() + ">");
+            log.info("There are <" + datastoreService.countAll(OriginalStatus.class) + "> statuses to process.");
+            log.info("MFC: <" + OriginalStatus.class.getAnnotation(Document.class).toString() + ">");
+
+            // List<OriginalStatus> statuses =
+            // datastoreService.findByTopicId(topic.getId(),
+            // OriginalStatus.class);
+            DBCursor statusesCursor = datastoreService.findCursorByTopicId(topic.getId(), OriginalStatus.class);
+
+            log.info("There are <" + statusesCursor.count() + "> statuses to process.");
             Integer count = 0;
-            for (OriginalStatus status : statuses) {
+            while (statusesCursor.hasNext()) {
+            //for (OriginalStatus status : statuses) {
+                DBObject rawStatus = statusesCursor.next();
+                OriginalStatus status = datastoreService.getConverter().read(OriginalStatus.class, rawStatus);
                 log.debug("Status text is <" + status.getText() + ">");
                 if (status.getCreatedAt() == null) {
                     continue;
@@ -114,7 +131,7 @@ public class BagOfWordsSenticProcessorExecutor implements ProcessorExecutor {
                 datastoreService.save(processedStatus);
 
                 count++;
-                
+
                 if ((count % 100) == 0) {
                     msg = "Statuses processed so far: <" + count + ">";
                     log.info(msg);
@@ -128,12 +145,12 @@ public class BagOfWordsSenticProcessorExecutor implements ProcessorExecutor {
             msg = "Total of statuses processed: <" + count + ">";
             log.info(msg);
             execution.appendLog(msg);
-            
+
             msg = "The Bag of Words Sentic Processor execution for this topic has finished.";
             log.info(msg);
             execution.appendLog(msg);
             execution.setStatus(ExecutionStatus.Stopped);
-            
+
             execution = executionService.save(execution);
         } catch (Exception e) {
             msg = "An error ocurred while running execution <" + execution.getId() + ">. Execution aborted.";

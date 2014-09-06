@@ -44,11 +44,11 @@
 								<td id="execution-type">Unknown</td>
 							</tr>
 							<tr>
-								<th>Pending Action</th>
-								<td id="execution-command">Unknown</td>
+								<th>Created At</th>
+								<td id="execution-created-at">Unknown</td>
 							</tr>
 							<tr>
-								<th>Last Updated</th>
+								<th>Last Updated At</th>
 								<td id="execution-updated-at">Unknown</td>
 							</tr>
 						</tbody>

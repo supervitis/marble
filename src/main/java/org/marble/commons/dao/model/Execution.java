@@ -18,9 +18,6 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
-
 import org.marble.commons.model.ExecutionCommand;
 import org.marble.commons.model.ExecutionStatus;
 import org.marble.commons.model.ExecutionType;
@@ -28,7 +25,6 @@ import org.marble.commons.util.MarbleUtil;
 import org.marble.commons.util.StringDateSerializer;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -55,7 +51,7 @@ public class Execution implements Serializable {
     @Column(name = "command")
     private ExecutionCommand command;
 
-    @Column(length = 100000, name = "log")
+    @Column(length = 50000, name = "log")
     private String log ="";
 
     @ManyToOne(optional = false)
@@ -114,6 +110,11 @@ public class Execution implements Serializable {
 
     public void appendLog(String log) {
         this.log = MarbleUtil.getDatedMessage(log) + "\n" + this.log;
+        if (this.log.length() > 50000) {
+            this.log = this.log.substring(0, 50000);
+            this.log = this.log.substring(0, this.log.lastIndexOf("\n"));
+                    
+        }
     }
 
     public Topic getTopic() {

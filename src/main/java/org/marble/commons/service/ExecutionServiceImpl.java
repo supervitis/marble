@@ -79,13 +79,13 @@ public class ExecutionServiceImpl implements ExecutionService {
 
         Execution execution = new Execution();
 
-        Topic topic = topicService.getTopic(topicId);
+        Topic topic = topicService.findOne(topicId);
         
         execution.setStatus(ExecutionStatus.Initialized);
         execution.setType(ExecutionType.Extractor);
         topic.getExecutions().add(execution);
         execution.setTopic(topic);
-        topic = topicService.updateTopic(topic);
+        topic = topicService.save(topic);
         
         execution = this.save(execution);
 
@@ -107,13 +107,13 @@ public class ExecutionServiceImpl implements ExecutionService {
 
         Execution execution = new Execution();
 
-        Topic topic = topicService.getTopic(topicId);
+        Topic topic = topicService.findOne(topicId);
         
         execution.setStatus(ExecutionStatus.Initialized);
         execution.setType(ExecutionType.Processor);
         topic.getExecutions().add(execution);
         execution.setTopic(topic);
-        topic = topicService.updateTopic(topic);
+        topic = topicService.save(topic);
         
         execution = this.save(execution);
 
@@ -125,5 +125,10 @@ public class ExecutionServiceImpl implements ExecutionService {
         log.info("Executor launched.");
 
         return execution.getId();
+    }
+    
+    @Override
+    public Long count() {
+        return executionDao.count();
     }
 }

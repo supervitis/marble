@@ -56,6 +56,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 					    // Urls open to the public
 					    .antMatchers("/login").permitAll()
                         .antMatchers("/").permitAll()
+                        .antMatchers("/rest/execution/*").permitAll()
+                        .antMatchers("/topic/").permitAll()
+                        .antMatchers("/topic/*/execution").permitAll()
+                        .antMatchers("/topic/*/execution/process").permitAll()
+                        .antMatchers("/execution/topic/*/process").permitAll()
+                        .antMatchers("/execution/*").permitAll()
                         // Urls reserved to Admin and Operators
                         .antMatchers("/topic/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPER')")
                         .antMatchers("/execution/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPER')")

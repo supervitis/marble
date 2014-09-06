@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.springframework.data.mongodb.core.convert.MongoConverter;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,6 +12,7 @@ import org.marble.commons.dao.model.OriginalStatus;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.mongodb.DBCursor;
 import com.mongodb.MongoException;
 
 public interface DatastoreService {
@@ -67,7 +69,11 @@ public interface DatastoreService {
 
     <T> List<T> findAll(Class<T> entityClass);
 
-    
+    <T> long countAll(Class<T> entityClass);
+
+    <T> DBCursor findCursorByTopicId(Integer topicId, Class<T> entityClass);
+
+    MongoConverter getConverter();
 
     
 

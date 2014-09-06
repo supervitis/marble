@@ -82,7 +82,7 @@ public class TwitterExtractionExecutor implements ExtractorExecutor {
             execution = executionService.save(execution);
 
             // Get the associated topic
-            Topic topic = topicService.getTopic(execution.getTopic().getId());
+            Topic topic = topicService.findOne(execution.getTopic().getId());
 
             // Get twitter keys
             List<TwitterApiKey> apiKeys = twitterApiKeyService.getEnabledTwitterApiKeys();
@@ -175,7 +175,7 @@ public class TwitterExtractionExecutor implements ExtractorExecutor {
                     }
 
                 }
-                topicService.updateTopic(topic);
+                topicService.save(topic);
 
                 msg = "Statuses extracted so far: <" + count + ">";
                 log.info(msg);

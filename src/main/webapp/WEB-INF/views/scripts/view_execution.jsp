@@ -52,7 +52,7 @@
                     $("#execution-log").html(data.log);
                     $("#execution-status").html(data.status);
                     $("#execution-type").html(data.type);
-                    $("#execution-command").html(data.command);
+                    $("#execution-created-at").html(data.createdAt);
                     $("#execution-updated-at").html(data.updatedAt);
 
                     $("#updated").removeClass("alert-warning");
