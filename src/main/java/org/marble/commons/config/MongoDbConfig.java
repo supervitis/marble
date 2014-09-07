@@ -20,17 +20,20 @@ public class MongoDbConfig {
 
     @Autowired
     Environment env;
-    
+
     @Autowired
     LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean;
 
     // MongoDB cross-store
     public @Bean
     MongoDbFactory mongoDbFactory() throws Exception {
-        return new SimpleMongoDbFactory(new MongoClient(),
+        SimpleMongoDbFactory simpleMongoDbFactory = new SimpleMongoDbFactory(new MongoClient(
+                env.getProperty("mongodb.hostname"), Integer.parseInt(env.getProperty("mongodb.port"))),
                 env.getProperty("mongodb.database"),
                 new UserCredentials(env.getProperty("mongodb.username"),
                         env.getProperty("mongodb.password")));
+
+        return simpleMongoDbFactory;
     }
 
     public @Bean
@@ -38,50 +41,58 @@ public class MongoDbConfig {
         MongoTemplate mongoTemplate = new MongoTemplate(mongoDbFactory());
         return mongoTemplate;
     }
-    
-    /* This was used for cross-store MongoDB, but it is unusable right now 
-    @Bean
-    public MongoDocumentBacking mongoDocumentBacking() throws Exception {
-        MongoDocumentBacking mdb = MongoDocumentBacking.aspectOf();
-        mdb.setChangeSetPersister(changeSetPersister());
-        return mdb;
-    }
 
-    @Bean
-    public MongoChangeSetPersister changeSetPersister() throws Exception {
-        MongoChangeSetPersister mongoChangeSetPersister = new MongoChangeSetPersister();
-        mongoChangeSetPersister.setEntityManagerFactory(localContainerEntityManagerFactoryBean.getObject());
-        mongoChangeSetPersister.setMongoTemplate(mongoTemplate());
-        return mongoChangeSetPersister;
-    }
-
-    @Bean
-    public MongoExceptionTranslator mongoExceptionTranslator() {
-        return new MongoExceptionTranslator();
-    }
     /*
-
-    public @Bean
-    MongoExceptionTranslator mongoExceptionTranslator() {
-        return new MongoExceptionTranslator();
-    }
-
-    public @Bean
-    MongoDocumentBacking mongoDocumentBacking(MongoChangeSetPersister mongoChangeSetPersister) {
-        MongoDocumentBacking mongoDocumentBacking = MongoDocumentBacking.aspectOf();
-        mongoDocumentBacking.setChangeSetPersister(mongoChangeSetPersister);
-        return mongoDocumentBacking;
-
-    }
-
-    public @Bean
-    MongoChangeSetPersister mongoChangeSetPersister(EntityManagerFactory entityManagerFactory,
-            MongoTemplate mongoTemplate) {
-        MongoChangeSetPersister mongoChangeSetPersister = new MongoChangeSetPersister();
-        mongoChangeSetPersister.setMongoTemplate(mongoTemplate);
-        mongoChangeSetPersister.setEntityManagerFactory(entityManagerFactory);
-        return mongoChangeSetPersister;
-    }
-    */
+     * This was used for cross-store MongoDB, but it is unusable right now
+     * 
+     * @Bean
+     * public MongoDocumentBacking mongoDocumentBacking() throws Exception {
+     * MongoDocumentBacking mdb = MongoDocumentBacking.aspectOf();
+     * mdb.setChangeSetPersister(changeSetPersister());
+     * return mdb;
+     * }
+     * 
+     * @Bean
+     * public MongoChangeSetPersister changeSetPersister() throws Exception {
+     * MongoChangeSetPersister mongoChangeSetPersister = new
+     * MongoChangeSetPersister();
+     * mongoChangeSetPersister.setEntityManagerFactory(
+     * localContainerEntityManagerFactoryBean.getObject());
+     * mongoChangeSetPersister.setMongoTemplate(mongoTemplate());
+     * return mongoChangeSetPersister;
+     * }
+     * 
+     * @Bean
+     * public MongoExceptionTranslator mongoExceptionTranslator() {
+     * return new MongoExceptionTranslator();
+     * }
+     * /*
+     * 
+     * public @Bean
+     * MongoExceptionTranslator mongoExceptionTranslator() {
+     * return new MongoExceptionTranslator();
+     * }
+     * 
+     * public @Bean
+     * MongoDocumentBacking mongoDocumentBacking(MongoChangeSetPersister
+     * mongoChangeSetPersister) {
+     * MongoDocumentBacking mongoDocumentBacking =
+     * MongoDocumentBacking.aspectOf();
+     * mongoDocumentBacking.setChangeSetPersister(mongoChangeSetPersister);
+     * return mongoDocumentBacking;
+     * 
+     * }
+     * 
+     * public @Bean
+     * MongoChangeSetPersister mongoChangeSetPersister(EntityManagerFactory
+     * entityManagerFactory,
+     * MongoTemplate mongoTemplate) {
+     * MongoChangeSetPersister mongoChangeSetPersister = new
+     * MongoChangeSetPersister();
+     * mongoChangeSetPersister.setMongoTemplate(mongoTemplate);
+     * mongoChangeSetPersister.setEntityManagerFactory(entityManagerFactory);
+     * return mongoChangeSetPersister;
+     * }
+     */
 
 }
