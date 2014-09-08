@@ -15,6 +15,7 @@
 <meta name="_csrf" content="${_csrf.token}"/>
 <meta name="_csrf_header" content="${_csrf.headerName}"/>
 
+<base href="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}" />
 
 <title>Marble - <tiles:insertAttribute name="title" /></title>
 
@@ -22,30 +23,30 @@
 <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
 
 <!-- Bootstrap Core CSS -->
-<link href='<c:url value="/resources/css/bootstrap/bootstrap.css"/>' rel="stylesheet">
+<link href='<c:url value="resources/css/bootstrap/bootstrap.css"/>' rel="stylesheet">
 
 <!-- MetisMenu CSS -->
-<link href="<c:url value="/resources/css/plugins/metisMenu/metisMenu.min.css"/>" rel="stylesheet">
+<link href="<c:url value="resources/css/plugins/metisMenu/metisMenu.min.css"/>" rel="stylesheet">
 
 <!-- Timeline CSS -->
-<link href="<c:url value="/resources/css/plugins/timeline.css"/>" rel="stylesheet">
+<link href="<c:url value="resources/css/plugins/timeline.css"/>" rel="stylesheet">
 
 <!-- Custom CSS -->
-<link href="<c:url value="/resources/css/sb-admin-2.css"/>" rel="stylesheet">
+<link href="<c:url value="resources/css/sb-admin-2.css"/>" rel="stylesheet">
 
 <!-- Morris Charts CSS -->
-<link href="<c:url value="/resources/css/plugins/morris.css"/>" rel="stylesheet">
+<link href="<c:url value="resources/css/plugins/morris.css"/>" rel="stylesheet">
 
 
 <!-- Custom Fonts -->
-<link href="<c:url value="/resources/font-awesome-4.1.0/css/font-awesome.min.css"/>" rel="stylesheet" type="text/css">
+<link href="<c:url value="resources/font-awesome-4.1.0/css/font-awesome.min.css"/>" rel="stylesheet" type="text/css">
 
 <!-- Date Time Picker -->
-<link href="<c:url value="/resources/css/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css"/>" rel="stylesheet"
+<link href="<c:url value="resources/css/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css"/>" rel="stylesheet"
 	type="text/css">
 
 <!-- Marble Custom CSS -->
-<link href="<c:url value="/resources/css/marble.css"/>" rel="stylesheet">
+<link href="<c:url value="resources/css/marble.css"/>" rel="stylesheet">
 
 <!--[if lt IE 9]>
         <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -64,7 +65,7 @@
 				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
 					<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand main-logo" href='<c:url value="/"></c:url>'><span class="logo">M</span>arble <span class="logo narrow">I</span>nitiative </a>
+				<a class="navbar-brand main-logo" href='<c:url value=""></c:url>'><span class="logo">M</span>arble <span class="logo narrow">I</span>nitiative </a>
 			</div>
 			<!-- /.navbar-header -->
 			<tiles:insertAttribute name="topNavigation" />
@@ -98,26 +99,26 @@
 	<!-- /#wrapper -->
 
 	<!-- jQuery Version 1.11.0 -->
-	<script src="<c:url value="/resources/js/jquery-1.11.0.js"/>"></script>
+	<script src="<c:url value="resources/js/jquery-1.11.0.js"/>"></script>
 
 	<!-- Bootstrap Core JavaScript -->
-	<script src="<c:url value="/resources/js/bootstrap.min.js"/>"></script>
+	<script src="<c:url value="resources/js/bootstrap.min.js"/>"></script>
 
 	<!-- Metis Menu Plugin JavaScript -->
-	<script src="<c:url value="/resources/js/plugins/metisMenu/metisMenu.min.js"/>"></script>
+	<script src="<c:url value="resources/js/plugins/metisMenu/metisMenu.min.js"/>"></script>
 
 	<!-- Morris Charts JavaScript -->
 	<!--
-	<script src="<c:url value="/resources/js/plugins/morris/raphael.min.js"/>"></script>
-	<script src="<c:url value="/resources/js/plugins/morris/morris.min.js"/>"></script>
-	<script src="<c:url value="/resources/js/plugins/morris/morris-data.js"/>"></script>
+	<script src="<c:url value="resources/js/plugins/morris/raphael.min.js"/>"></script>
+	<script src="<c:url value="resources/js/plugins/morris/morris.min.js"/>"></script>
+	<script src="<c:url value="resources/js/plugins/morris/morris-data.js"/>"></script>
 	-->
 
 	<!-- Date Time Picker -->
-	<script src="<c:url value="/resources/js/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"/>"></script>
+	<script src="<c:url value="resources/js/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"/>"></script>
 
 	<!-- Custom Theme JavaScript -->
-	<script src="<c:url value="/resources/js/sb-admin-2.js"/>"></script>
+	<script src="<c:url value="resources/js/sb-admin-2.js"/>"></script>
 
 	<tiles:insertAttribute name="script" />
 </body>

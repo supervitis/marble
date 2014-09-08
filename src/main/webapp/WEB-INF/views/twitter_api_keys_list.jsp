@@ -12,7 +12,7 @@
 					</p>
 					<div class="form-group">
 						<div class="col-lg-offset-10 col-lg-2">
-							<a href="<c:url value="/admin/keys/twitter/create"/>" class="btn btn-primary pull-right"><i class="fa fa-file-o"></i> <spring:message
+							<a href="<c:url value="admin/keys/twitter/create"/>" class="btn btn-primary pull-right"><i class="fa fa-file-o"></i> <spring:message
 									code="twitter_api_keys_list.form.create" /></a>
 
 						</div>
@@ -48,7 +48,7 @@
 								<tr>
 									<td>${twitter_api_key.description}</td>
 									<td>${twitter_api_key.consumerKey}</td>
-									<td><a href="<c:url value="/admin/keys/twitter/edit/${twitter_api_key.id}"/>" class="btn btn-default"><i
+									<td><a href="<c:url value="admin/keys/twitter/edit/${twitter_api_key.id}"/>" class="btn btn-default"><i
 											class="fa fa-pencil"></i> <spring:message code="twitter_api_keys_list.form.edit" /></a></td>
 								</tr>
 							</c:forEach>

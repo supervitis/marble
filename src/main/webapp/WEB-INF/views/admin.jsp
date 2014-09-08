@@ -11,7 +11,7 @@
 			<div class="panel-body">
 				<p>Twitter API Keys</p>
 				<div class="col-lg-offset-10 col-lg-2">
-					<a href="<c:url value="/admin/keys/twitter"/>" class="btn btn-primary pull-right"><i class="fa fa-key"></i>
+					<a href="<c:url value="admin/keys/twitter"/>" class="btn btn-primary pull-right"><i class="fa fa-key"></i>
 						View Keys</a>
 				</div>
 			</div>
@@ -40,7 +40,7 @@
 							<div class="modal-body">Are you really, really sure?</div>
 							<div class="modal-footer">
 								<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-								<a href="<c:url value="/admin/reset/rebase"/>" class="btn btn-primary">Reset</a>
+								<a href="<c:url value="admin/reset/rebase"/>" class="btn btn-primary">Reset</a>
 							</div>
 						</div>
 						<!-- /.modal-content -->
@@ -91,7 +91,7 @@
 			<div class="panel-body">
 				<p>You know...</p>
 				<div class="col-lg-offset-10 col-lg-2">
-					<a href="<c:url value="/admin/reset/special"/>" class="btn btn-primary pull-right"><i class="fa fa-magic"></i>
+					<a href="<c:url value="admin/reset/special"/>" class="btn btn-primary pull-right"><i class="fa fa-magic"></i>
 						Run it!</a>
 				</div>
 			</div>

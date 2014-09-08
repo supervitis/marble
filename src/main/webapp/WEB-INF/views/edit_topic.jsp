@@ -23,7 +23,7 @@
 									<i class="fa fa-floppy-o"></i>
 									<spring:message code="edit_topic.form.save" />
 								</button>
-								<a href="<c:url value="/topic"/>" class="btn btn-default pull-right"><i class="fa fa-times"></i> <spring:message
+								<a href="<c:url value="topic"/>" class="btn btn-default pull-right"><i class="fa fa-times"></i> <spring:message
 										code="edit_topic.form.cancel" /></a>
 
 							</div>
@@ -230,7 +230,7 @@
 						<p class="help-block">If you want to delete this Topic, click the Delete button below (there is no way back!).</p>
 						<div class="form-group">
 							<div class="col-lg-offset-10 col-lg-2">
-								<a href="<c:url value="/topic/delete/${topic.id}"/>" class="btn btn-danger pull-right"><i class="fa fa-trash-o"></i> Delete</a>
+								<a href="<c:url value="topic/delete/${topic.id}"/>" class="btn btn-danger pull-right"><i class="fa fa-trash-o"></i> Delete</a>
 
 							</div>
 						</div>

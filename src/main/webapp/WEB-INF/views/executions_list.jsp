@@ -45,7 +45,7 @@
 									<td>${execution.type}</td>
 									<td>${execution.status}</td>
 									<td>${execution.updatedAt}</td>
-									<td><a href="<c:url value="/execution/${execution.id}"/>" class="btn btn-default"><i
+									<td><a href="<c:url value="execution/${execution.id}"/>" class="btn btn-default"><i
 											class="fa fa-pencil"></i> <spring:message code="executions_list.form.view" /></a></td>
 								</tr>
 							</c:forEach>

@@ -1,6 +1,9 @@
 package org.marble.commons.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.marble.commons.service.ResetService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +21,8 @@ public class ResetController {
     ResetService resetService;
 
     @RequestMapping(value = "/rebase", method = RequestMethod.GET)
-    public String rebase(RedirectAttributes redirectAttributes) {
+    public String rebase(RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
         // Reseting the data
         resetService.resetAll();
 
@@ -26,11 +30,12 @@ public class ResetController {
         redirectAttributes.addFlashAttribute("notificationMessage", "ResetController.rebaseMessage");
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-exclamation-triangle");
         redirectAttributes.addFlashAttribute("notificationLevel", "danger");
-        return "redirect:/";
+        return "redirect:" + basePath + "/";
     }
 
     @RequestMapping(value = "/special", method = RequestMethod.GET)
-    public String special(RedirectAttributes redirectAttributes) {
+    public String special(RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
         // Reseting the data
         resetService.getTheSpecial();
 
@@ -38,6 +43,6 @@ public class ResetController {
         redirectAttributes.addFlashAttribute("notificationMessage", "ResetController.specialMessage");
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-exclamation-triangle");
         redirectAttributes.addFlashAttribute("notificationLevel", "success");
-        return "redirect:/admin";
+        return "redirect:" + basePath + "/admin";
     }
 }

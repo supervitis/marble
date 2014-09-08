@@ -24,7 +24,7 @@
             type : "PUT",
             data : '{"command": "' + command + '"}',
             contentType: "application/json",
-            url : "<c:url value="/rest/execution/${execution.id}/command" />"
+            url : "<c:url value="rest/execution/${execution.id}/command" />"
         }).done(
                 function() {
                     notification = '<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" '+
@@ -46,7 +46,7 @@
     (function refreshLog() {
         $.ajax({
             dataType : "json",
-            url : "<c:url value="/rest/execution/${execution.id}" />"
+            url : "<c:url value="rest/execution/${execution.id}" />"
         }).done(
                 function(data) {
                     $("#execution-log").html(data.log);

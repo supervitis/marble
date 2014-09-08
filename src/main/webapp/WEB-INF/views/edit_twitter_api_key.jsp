@@ -23,7 +23,7 @@
 									<i class="fa fa-floppy-o"></i>
 									<spring:message code="edit_twitter_api_key.form.save" />
 								</button>
-								<a href="<c:url value="/admin/keys/twitter"/>" class="btn btn-default pull-right"><i class="fa fa-times"></i>
+								<a href="<c:url value="admin/keys/twitter"/>" class="btn btn-default pull-right"><i class="fa fa-times"></i>
 									<spring:message code="edit_twitter_api_key.form.cancel" /></a>
 
 							</div>
@@ -131,7 +131,7 @@
 							way back!).</p>
 						<div class="form-group">
 							<div class="col-lg-offset-10 col-lg-2">
-								<a href="<c:url value="/admin/keys/twitter/delete/${twitter_api_key.id}"/>" class="btn btn-danger pull-right"><i
+								<a href="<c:url value="admin/keys/twitter/delete/${twitter_api_key.id}"/>" class="btn btn-danger pull-right"><i
 									class="fa fa-trash-o"></i> Delete</a>
 
 							</div>

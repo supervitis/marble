@@ -40,8 +40,8 @@ public class PostgresqlDbConfig {
         boneCPDataSource.setPassword(env.getProperty("jdbc.password"));
         boneCPDataSource.setIdleConnectionTestPeriodInMinutes(60);
         boneCPDataSource.setIdleMaxAgeInMinutes(420);
-        boneCPDataSource.setMaxConnectionsPerPartition(30);
-        boneCPDataSource.setMinConnectionsPerPartition(10);
+        boneCPDataSource.setMaxConnectionsPerPartition(3);
+        boneCPDataSource.setMinConnectionsPerPartition(1);
         boneCPDataSource.setPartitionCount(3);
         boneCPDataSource.setAcquireIncrement(5);
         boneCPDataSource.setStatementsCacheSize(100);

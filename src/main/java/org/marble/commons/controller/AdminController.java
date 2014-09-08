@@ -1,6 +1,8 @@
 package org.marble.commons.controller;
 
 import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.slf4j.Logger;
@@ -34,21 +36,22 @@ public class AdminController {
 
     // TODO MFC: Move to some other place
     @RequestMapping(value = "/upload/sentic", method = RequestMethod.POST)
-    public String uploadSentic(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) {
+    public String uploadSentic(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
+        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
         try {
             senticNetService.insertDataFromFile(file);
         } catch (IllegalStateException | IOException | SAXException | ParserConfigurationException e) {
             redirectAttributes.addFlashAttribute("notificationMessage", "AdminController.senticDataUploadError");
             redirectAttributes.addFlashAttribute("notificationIcon", "fa-exclamation-triangle");
             redirectAttributes.addFlashAttribute("notificationLevel", "danger");
-            return "redirect:/admin";
+            return "redirect:" + basePath + "/admin";
         }
 
         redirectAttributes.addFlashAttribute("notificationMessage", "AdminController.senticDataUploaded");
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
         redirectAttributes.addFlashAttribute("notificationLevel", "success");
-        return "redirect:/admin";
+        return "redirect:" + basePath + "/admin";
     }
 
 }

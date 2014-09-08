@@ -1,5 +1,6 @@
 package org.marble.commons.controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.marble.commons.dao.model.TwitterApiKey;
@@ -19,93 +20,98 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/admin/keys/twitter")
 public class TwitterApiKeyController {
 
-	@Autowired
-	TwitterApiKeyService twitterApiKeyService;
+    @Autowired
+    TwitterApiKeyService twitterApiKeyService;
 
-	@RequestMapping
-	public ModelAndView home() {
-		ModelAndView modelAndView = new ModelAndView("twitter_api_keys_list");
-		modelAndView.addObject("twitter_api_keys", twitterApiKeyService.getTwitterApiKeys());
-		return modelAndView;
-	}
+    @RequestMapping
+    public ModelAndView home() {
+        ModelAndView modelAndView = new ModelAndView("twitter_api_keys_list");
+        modelAndView.addObject("twitter_api_keys", twitterApiKeyService.getTwitterApiKeys());
+        return modelAndView;
+    }
 
-	@RequestMapping(value = "/edit/{twitterApiKeyId}", method = RequestMethod.GET)
-	public ModelAndView edit(@PathVariable Integer twitterApiKeyId) throws InvalidTwitterApiKeyException {
-		ModelAndView modelAndView = new ModelAndView();
+    @RequestMapping(value = "/edit/{twitterApiKeyId}", method = RequestMethod.GET)
+    public ModelAndView edit(@PathVariable Integer twitterApiKeyId) throws InvalidTwitterApiKeyException {
+        ModelAndView modelAndView = new ModelAndView();
 
-		TwitterApiKey twitterApiKey;
-		twitterApiKey = twitterApiKeyService.getTwitterApiKey(twitterApiKeyId);
-		modelAndView.setViewName("edit_twitter_api_key");
-		modelAndView.addObject("twitter_api_key", twitterApiKey);
-		return modelAndView;
-	}
-	
-	@RequestMapping(value = "/edit/{twitterApiKeyId}", method = RequestMethod.POST)
-	public ModelAndView save(@PathVariable Integer twitterApiKeyId, @Valid TwitterApiKey twitterApiKey, BindingResult result) throws InvalidTwitterApiKeyException {
+        TwitterApiKey twitterApiKey;
+        twitterApiKey = twitterApiKeyService.getTwitterApiKey(twitterApiKeyId);
+        modelAndView.setViewName("edit_twitter_api_key");
+        modelAndView.addObject("twitter_api_key", twitterApiKey);
+        return modelAndView;
+    }
 
-		ModelAndView modelAndView = new ModelAndView();
-		modelAndView.setViewName("edit_twitter_api_key");
-		modelAndView.addObject("twitter_api_key", twitterApiKey);
+    @RequestMapping(value = "/edit/{twitterApiKeyId}", method = RequestMethod.POST)
+    public ModelAndView save(@PathVariable Integer twitterApiKeyId, @Valid TwitterApiKey twitterApiKey,
+            BindingResult result) throws InvalidTwitterApiKeyException {
 
-		if (result.hasErrors()) {
-			modelAndView.addObject("notificationMessage", "TwitterApiKeyController.editTwitterApiKeyError");
-			modelAndView.addObject("notificationIcon", "fa-exclamation-triangle");
-			modelAndView.addObject("notificationLevel", "danger");
-			return modelAndView;
-		}
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("edit_twitter_api_key");
+        modelAndView.addObject("twitter_api_key", twitterApiKey);
 
-		twitterApiKeyService.updateTwitterApiKey(twitterApiKey);
+        if (result.hasErrors()) {
+            modelAndView.addObject("notificationMessage", "TwitterApiKeyController.editTwitterApiKeyError");
+            modelAndView.addObject("notificationIcon", "fa-exclamation-triangle");
+            modelAndView.addObject("notificationLevel", "danger");
+            return modelAndView;
+        }
 
-		modelAndView.addObject("notificationMessage", "TwitterApiKeyController.twitterApiKeyModified");
-		modelAndView.addObject("notificationIcon", "fa-check-circle");
-		modelAndView.addObject("notificationLevel", "success");
+        twitterApiKeyService.updateTwitterApiKey(twitterApiKey);
 
-		// TODO Set list view as return
+        modelAndView.addObject("notificationMessage", "TwitterApiKeyController.twitterApiKeyModified");
+        modelAndView.addObject("notificationIcon", "fa-check-circle");
+        modelAndView.addObject("notificationLevel", "success");
 
-		return modelAndView;
-	}
-	
-	@RequestMapping(value = "/create", method = RequestMethod.GET)
-	public ModelAndView create() throws InvalidTwitterApiKeyException {
-		ModelAndView modelAndView = new ModelAndView();
+        // TODO Set list view as return
 
-		TwitterApiKey twitterApiKey = new TwitterApiKey();
-		modelAndView.setViewName("create_twitter_api_key");
-		modelAndView.addObject("twitter_api_key", twitterApiKey);
-		return modelAndView;
-	}
+        return modelAndView;
+    }
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public ModelAndView create(@Valid TwitterApiKey twitterApiKey, BindingResult result, RedirectAttributes redirectAttributes) throws InvalidTwitterApiKeyException {
+    @RequestMapping(value = "/create", method = RequestMethod.GET)
+    public ModelAndView create() throws InvalidTwitterApiKeyException {
+        ModelAndView modelAndView = new ModelAndView();
 
-		ModelAndView modelAndView = new ModelAndView();
-		
-		if (result.hasErrors()) {
-			modelAndView.addObject("notificationMessage", "TwitterApiKeyController.addTwitterApiKeyError");
-			modelAndView.addObject("notificationIcon", "fa-exclamation-triangle");
-			modelAndView.addObject("notificationLevel", "danger");
-			modelAndView.setViewName("create_twitter_api_key");
-			modelAndView.addObject("twitter_api_key", twitterApiKey);
-			return modelAndView;
-		}
+        TwitterApiKey twitterApiKey = new TwitterApiKey();
+        modelAndView.setViewName("create_twitter_api_key");
+        modelAndView.addObject("twitter_api_key", twitterApiKey);
+        return modelAndView;
+    }
 
-		twitterApiKey = twitterApiKeyService.createTwitterApiKey(twitterApiKey);
-		// Setting message
-		redirectAttributes.addFlashAttribute("notificationMessage", "TwitterApiKeyController.twitterApiKeyCreated");
-		redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
-		redirectAttributes.addFlashAttribute("notificationLevel", "success");
-		modelAndView.setViewName("redirect:/admin/keys/twitter");
-		return modelAndView;
-	}
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    public ModelAndView create(@Valid TwitterApiKey twitterApiKey, BindingResult result,
+            RedirectAttributes redirectAttributes, HttpServletRequest request) throws InvalidTwitterApiKeyException {
 
-	@RequestMapping(value = "/delete/{twitterApiKeyId}")
-	public String delete(@PathVariable Integer twitterApiKeyId, RedirectAttributes redirectAttributes) throws InvalidTwitterApiKeyException {
-		twitterApiKeyService.deleteTwitterApiKey(twitterApiKeyId);
-		// Setting message
-		redirectAttributes.addFlashAttribute("notificationMessage", "TwitterApiKeyController.twitterApiKeyDeleted");
-		redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
-		redirectAttributes.addFlashAttribute("notificationLevel", "success");
-		return "redirect:/admin/keys/twitter";
-	}
+        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+        ModelAndView modelAndView = new ModelAndView();
+
+        if (result.hasErrors()) {
+            modelAndView.addObject("notificationMessage", "TwitterApiKeyController.addTwitterApiKeyError");
+            modelAndView.addObject("notificationIcon", "fa-exclamation-triangle");
+            modelAndView.addObject("notificationLevel", "danger");
+            modelAndView.setViewName("create_twitter_api_key");
+            modelAndView.addObject("twitter_api_key", twitterApiKey);
+            return modelAndView;
+        }
+
+        twitterApiKey = twitterApiKeyService.createTwitterApiKey(twitterApiKey);
+        // Setting message
+        redirectAttributes.addFlashAttribute("notificationMessage", "TwitterApiKeyController.twitterApiKeyCreated");
+        redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
+        redirectAttributes.addFlashAttribute("notificationLevel", "success");
+        modelAndView.setViewName("redirect:" + basePath + "/admin/keys/twitter");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/delete/{twitterApiKeyId}")
+    public String delete(@PathVariable Integer twitterApiKeyId, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) throws InvalidTwitterApiKeyException {
+        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+        twitterApiKeyService.deleteTwitterApiKey(twitterApiKeyId);
+        // Setting message
+        redirectAttributes.addFlashAttribute("notificationMessage", "TwitterApiKeyController.twitterApiKeyDeleted");
+        redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
+        redirectAttributes.addFlashAttribute("notificationLevel", "success");
+        return "redirect:" + basePath + "/admin/keys/twitter";
+    }
 
 }

@@ -2,6 +2,8 @@ package org.marble.commons.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.marble.commons.dao.model.Topic;
@@ -27,12 +29,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/topic")
 public class TopicController {
-    
+
     private static final Logger log = LoggerFactory.getLogger(TopicController.class);
 
     @Autowired
     TopicService topicService;
-    
+
     @Autowired
     private Validator validator;
 
@@ -55,11 +57,12 @@ public class TopicController {
     }
 
     @RequestMapping(value = "/edit/{topicId:[0-9]+}", method = RequestMethod.POST)
-    public ModelAndView save(@Valid Topic topic, BindingResult result, @PathVariable Integer topicId, RedirectAttributes redirectAttributes)
+    public ModelAndView save(@Valid Topic topic, BindingResult result, @PathVariable Integer topicId,
+            RedirectAttributes redirectAttributes, HttpServletRequest request)
             throws InvalidTopicException {
 
+        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
         ModelAndView modelAndView = new ModelAndView();
-        
 
         if (result.hasErrors()) {
             modelAndView.addObject("notificationMessage", "TopicController.editTopicError");
@@ -75,7 +78,7 @@ public class TopicController {
         redirectAttributes.addFlashAttribute("notificationMessage", "TopicController.topicModified");
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
         redirectAttributes.addFlashAttribute("notificationLevel", "success");
-        modelAndView.setViewName("redirect:/topic");
+        modelAndView.setViewName("redirect:" + basePath + "/topic");
         return modelAndView;
     }
 
@@ -90,9 +93,11 @@ public class TopicController {
     }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public ModelAndView create(@ModelAttribute("topic") @Valid Topic topic, BindingResult result, RedirectAttributes redirectAttributes)
+    public ModelAndView create(@ModelAttribute("topic") @Valid Topic topic, BindingResult result,
+            RedirectAttributes redirectAttributes, HttpServletRequest request)
             throws InvalidTopicException {
 
+        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
         ModelAndView modelAndView = new ModelAndView();
 
         if (result.hasErrors()) {
@@ -109,19 +114,20 @@ public class TopicController {
         redirectAttributes.addFlashAttribute("notificationMessage", "TopicController.topicCreated");
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
         redirectAttributes.addFlashAttribute("notificationLevel", "success");
-        modelAndView.setViewName("redirect:/topic");
+        modelAndView.setViewName("redirect:" + basePath + "/topic");
         return modelAndView;
     }
 
     @RequestMapping(value = "/delete/{topicId:[0-9]+}")
-    public String delete(@PathVariable Integer topicId, RedirectAttributes redirectAttributes)
+    public String delete(@PathVariable Integer topicId, RedirectAttributes redirectAttributes, HttpServletRequest request)
             throws InvalidTopicException {
+        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
         topicService.delete(topicId);
         // Setting message
         redirectAttributes.addFlashAttribute("notificationMessage", "TopicController.topicDeleted");
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
         redirectAttributes.addFlashAttribute("notificationLevel", "success");
-        return "redirect:/topic";
+        return "redirect:" + basePath + "/topic";
     }
 
     @RequestMapping(value = "/{topicId:[0-9]+}/execution", method = RequestMethod.GET)
@@ -130,14 +136,14 @@ public class TopicController {
         modelAndView.setViewName("forward:/execution/topic/" + topicId);
         return modelAndView;
     }
-    
+
     @RequestMapping(value = "/{topicId:[0-9]+}/execution/extract", method = RequestMethod.GET)
     public ModelAndView executeExtractor(@PathVariable Integer topicId) throws InvalidTopicException {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("forward:/execution/topic/" + topicId + "/extract");
         return modelAndView;
     }
-    
+
     @RequestMapping(value = "/{topicId:[0-9]+}/execution/process", method = RequestMethod.GET)
     public ModelAndView executeProcessor(@PathVariable Integer topicId) throws InvalidTopicException {
         ModelAndView modelAndView = new ModelAndView();

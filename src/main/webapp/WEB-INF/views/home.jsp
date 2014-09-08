@@ -15,7 +15,7 @@
 					</div>
 				</div>
 			</div>
-			<a href='<c:url value="/topic" />'>
+			<a href='<c:url value="topic" />'>
 				<div class="panel-footer">
 					<span class="pull-left">View Details</span> <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 					<div class="clearfix"></div>
@@ -36,7 +36,7 @@
 					</div>
 				</div>
 			</div>
-			<a href='<c:url value="/topic" />'>
+			<a href='<c:url value="topic" />'>
 				<div class="panel-footer">
 					<span class="pull-left">View Details</span> <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
 					<div class="clearfix"></div>

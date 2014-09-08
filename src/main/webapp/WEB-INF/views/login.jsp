@@ -23,7 +23,7 @@
 							<br />
 						</div>
 					</c:if>
-					<form role="form" action="<c:url value= "/login/authenticate"></c:url>" method="post">
+					<form role="form" action="<c:url value= "login/authenticate"></c:url>" method="post">
 						<fieldset>
 							<div class="form-group">
 								<input class="form-control" placeholder="Username" name="username" type="text" autofocus />
