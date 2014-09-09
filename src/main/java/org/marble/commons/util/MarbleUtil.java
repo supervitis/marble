@@ -8,6 +8,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.web.multipart.MultipartFile;
 
 public class MarbleUtil {
@@ -23,11 +25,21 @@ public class MarbleUtil {
             return arg0.get(0).compareTo(arg1.get(0));
         }
     };
-    
-    public static File multipartToFile(MultipartFile multipart) throws IllegalStateException, IOException 
+
+    public static File multipartToFile(MultipartFile multipart) throws IllegalStateException, IOException
     {
-            File convFile = new File( multipart.getOriginalFilename());
-            multipart.transferTo(convFile);
-            return convFile;
+        File convFile = new File(multipart.getOriginalFilename());
+        multipart.transferTo(convFile);
+        return convFile;
+    }
+
+    public static String getBasePath(HttpServletRequest request) {
+        if (request.getContextPath().equals("/")) {
+            return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+        }
+        else {
+            return request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+                    + request.getContextPath();
+        }
     }
 }

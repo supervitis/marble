@@ -9,6 +9,7 @@ import javax.validation.Valid;
 import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidTopicException;
 import org.marble.commons.service.TopicService;
+import org.marble.commons.util.MarbleUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +62,8 @@ public class TopicController {
             RedirectAttributes redirectAttributes, HttpServletRequest request)
             throws InvalidTopicException {
 
-        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+        String basePath = MarbleUtil.getBasePath(request);
+        log.info("MFCCCCCC: " + basePath);
         ModelAndView modelAndView = new ModelAndView();
 
         if (result.hasErrors()) {
@@ -78,7 +80,7 @@ public class TopicController {
         redirectAttributes.addFlashAttribute("notificationMessage", "TopicController.topicModified");
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
         redirectAttributes.addFlashAttribute("notificationLevel", "success");
-        modelAndView.setViewName("redirect:" + basePath + "/topic");
+        modelAndView.setViewName("redirect:" + basePath + "/topic/");
         return modelAndView;
     }
 
@@ -97,7 +99,7 @@ public class TopicController {
             RedirectAttributes redirectAttributes, HttpServletRequest request)
             throws InvalidTopicException {
 
-        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+        String basePath = MarbleUtil.getBasePath(request);
         ModelAndView modelAndView = new ModelAndView();
 
         if (result.hasErrors()) {
@@ -119,9 +121,11 @@ public class TopicController {
     }
 
     @RequestMapping(value = "/delete/{topicId:[0-9]+}")
-    public String delete(@PathVariable Integer topicId, RedirectAttributes redirectAttributes, HttpServletRequest request)
+    public String delete(@PathVariable Integer topicId, RedirectAttributes redirectAttributes,
+            HttpServletRequest request)
             throws InvalidTopicException {
-        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+                + request.getContextPath();
         topicService.delete(topicId);
         // Setting message
         redirectAttributes.addFlashAttribute("notificationMessage", "TopicController.topicDeleted");

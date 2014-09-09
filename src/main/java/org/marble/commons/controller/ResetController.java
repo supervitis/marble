@@ -3,6 +3,7 @@ package org.marble.commons.controller;
 import javax.servlet.http.HttpServletRequest;
 
 import org.marble.commons.service.ResetService;
+import org.marble.commons.util.MarbleUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,7 +23,7 @@ public class ResetController {
 
     @RequestMapping(value = "/rebase", method = RequestMethod.GET)
     public String rebase(RedirectAttributes redirectAttributes, HttpServletRequest request) {
-        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+        String basePath = MarbleUtil.getBasePath(request);
         // Reseting the data
         resetService.resetAll();
 
@@ -35,7 +36,7 @@ public class ResetController {
 
     @RequestMapping(value = "/special", method = RequestMethod.GET)
     public String special(RedirectAttributes redirectAttributes, HttpServletRequest request) {
-        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+        String basePath = MarbleUtil.getBasePath(request);
         // Reseting the data
         resetService.getTheSpecial();
 

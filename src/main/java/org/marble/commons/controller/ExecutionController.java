@@ -11,6 +11,7 @@ import org.marble.commons.exception.InvalidExecutionException;
 import org.marble.commons.exception.InvalidTopicException;
 import org.marble.commons.service.ExecutionService;
 import org.marble.commons.service.TopicService;
+import org.marble.commons.util.MarbleUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -67,7 +68,7 @@ public class ExecutionController {
     @RequestMapping(value = "/topic/{topicId:[0-9]+}/extract", method = RequestMethod.GET)
     public String executeExtractor(@PathVariable Integer topicId, RedirectAttributes redirectAttributes,
             HttpServletRequest request) {
-        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+        String basePath = MarbleUtil.getBasePath(request);
         Integer executionId = 0;
         try {
             executionId = executionService.executeExtractor(topicId);
@@ -88,7 +89,7 @@ public class ExecutionController {
 
     @RequestMapping(value = "/topic/{topicId:[0-9]+}/process", method = RequestMethod.GET)
     public String executeProcessor(@PathVariable Integer topicId, RedirectAttributes redirectAttributes, HttpServletRequest request) {
-        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+        String basePath = MarbleUtil.getBasePath(request);
         Integer executionId = 0;
         try {
             executionId = executionService.executeProcessor(topicId);

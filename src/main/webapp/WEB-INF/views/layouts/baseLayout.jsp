@@ -15,7 +15,13 @@
 <meta name="_csrf" content="${_csrf.token}"/>
 <meta name="_csrf_header" content="${_csrf.headerName}"/>
 
-<base href="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}" />
+<c:if test="${pageContext.request.contextPath == '/'}">
+    <base href="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}" />
+</c:if>
+<c:if test="${pageContext.request.contextPath != '/'}">
+	<base href="${pageContext.request.scheme}://${pageContext.request.serverName}:${pageContext.request.serverPort}${pageContext.request.contextPath}/" />
+</c:if>
+
 
 <title>Marble - <tiles:insertAttribute name="title" /></title>
 

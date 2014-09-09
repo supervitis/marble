@@ -6,6 +6,7 @@ import javax.validation.Valid;
 import org.marble.commons.dao.model.TwitterApiKey;
 import org.marble.commons.exception.InvalidTwitterApiKeyException;
 import org.marble.commons.service.TwitterApiKeyService;
+import org.marble.commons.util.MarbleUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -81,7 +82,7 @@ public class TwitterApiKeyController {
     public ModelAndView create(@Valid TwitterApiKey twitterApiKey, BindingResult result,
             RedirectAttributes redirectAttributes, HttpServletRequest request) throws InvalidTwitterApiKeyException {
 
-        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+        String basePath = MarbleUtil.getBasePath(request);
         ModelAndView modelAndView = new ModelAndView();
 
         if (result.hasErrors()) {
@@ -105,7 +106,7 @@ public class TwitterApiKeyController {
     @RequestMapping(value = "/delete/{twitterApiKeyId}")
     public String delete(@PathVariable Integer twitterApiKeyId, RedirectAttributes redirectAttributes,
             HttpServletRequest request) throws InvalidTwitterApiKeyException {
-        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+        String basePath = MarbleUtil.getBasePath(request);
         twitterApiKeyService.deleteTwitterApiKey(twitterApiKeyId);
         // Setting message
         redirectAttributes.addFlashAttribute("notificationMessage", "TwitterApiKeyController.twitterApiKeyDeleted");

@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.xml.sax.SAXException;
 
 import org.marble.commons.service.SenticNetService;
+import org.marble.commons.util.MarbleUtil;
 
 @Controller
 @RequestMapping("/admin")
@@ -38,7 +39,7 @@ public class AdminController {
     @RequestMapping(value = "/upload/sentic", method = RequestMethod.POST)
     public String uploadSentic(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
-        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort();
+        String basePath = MarbleUtil.getBasePath(request);
         try {
             senticNetService.insertDataFromFile(file);
         } catch (IllegalStateException | IOException | SAXException | ParserConfigurationException e) {
