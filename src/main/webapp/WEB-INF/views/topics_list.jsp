@@ -12,8 +12,10 @@
 					</p>
 					<div class="form-group">
 						<div class="col-lg-offset-10 col-lg-2">
-							<a href="<c:url value="topic/create"/>" class="btn btn-primary pull-right"><i class="fa fa-file-o"></i> <spring:message
-									code="topics_list.form.create" /></a>
+							<a href="<c:url value="topic/create"/>" class="btn btn-primary pull-right">
+								<i class="fa fa-file-o"></i>
+								<spring:message code="topics_list.form.create" />
+							</a>
 						</div>
 					</div>
 				</fieldset>
@@ -45,16 +47,27 @@
 							<c:forEach var="topic" items="${topics}">
 								<tr>
 									<td>${topic.name}</td>
-									<td><a href="<c:url value="topic/edit/${topic.id}"/>" class="btn btn-default"><i class="fa fa-pencil"></i>
-											<spring:message code="topics_list.form.edit" /></a> <a
-										href="<c:url value="topic/${topic.id}/execution/extract"/>" class="btn btn-default btn-light-green"><i
-											class="fa fa-sign-in"></i> <spring:message code="topics_list.form.extract" /></a> <a
-										href="<c:url value="topic/${topic.id}/execution/process"/>" class="btn btn-default btn-blue"><i
-											class="fa fa-scissors"></i> <spring:message code="topics_list.form.process" /></a> <a href="<c:url value="#"/>"
-										class="btn btn-default btn-orange"><i class="fa fa-bar-chart-o"></i> <spring:message
-												code="topics_list.form.plot" /></a> <a href="<c:url value="topic/${topic.id}/execution"/>"
-										class="btn btn-default btn-default"><i class="fa fa-rocket"></i> <spring:message
-												code="topics_list.form.executions" /></a></td>
+									<td><a href="<c:url value="topic/info/${topic.id}"/>" class="btn btn-default">
+											<i class="fa fa-info-circle"></i><span class="hidden-xs hidden-sm"> <spring:message
+													code="topics_list.form.info" /></span>
+										</a> <a href="<c:url value="topic/edit/${topic.id}"/>" class="btn btn-default">
+											<i class="fa fa-pencil"></i><span class="hidden-xs hidden-sm"> <spring:message
+													code="topics_list.form.edit" /></span>
+										</a> <a href="<c:url value="topic/${topic.id}/execution/extract"/>" class="btn btn-default btn-light-green">
+											<i class="fa fa-sign-in"></i><span class="hidden-xs hidden-sm"> <spring:message
+													code="topics_list.form.extract" />
+											</span>
+										</a> <a href="<c:url value="topic/${topic.id}/execution/process"/>" class="btn btn-default btn-blue">
+											<i class="fa fa-scissors"></i><span class="hidden-xs hidden-sm"> <spring:message
+													code="topics_list.form.process" /></span>
+										</a> <a href="<c:url value="#"/>" class="btn btn-default btn-orange">
+											<i class="fa fa-bar-chart-o"></i><span class="hidden-xs hidden-sm"> <spring:message
+													code="topics_list.form.plot" /></span>
+										</a> <a href="<c:url value="topic/${topic.id}/execution"/>" class="btn btn-default btn-default">
+											<i class="fa fa-rocket"></i><span class="hidden-xs hidden-sm"> <spring:message
+													code="topics_list.form.executions" />
+											</span>
+										</a></td>
 								</tr>
 							</c:forEach>
 						</table>

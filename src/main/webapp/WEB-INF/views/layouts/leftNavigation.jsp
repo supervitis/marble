@@ -12,12 +12,12 @@
 					</span>
 				</div> <!-- /input-group -->
 			</li>
-			<li><a href="<c:url value="admin/"/>"><i class="fa fa-cog fa-fw"></i> Administration Panel<span class="fa arrow"></span></a>
+			<li><a href="<c:url value="admin"/>"><i class="fa fa-cog fa-fw"></i> Administration Panel<span class="fa arrow"></span></a>
 			<ul class="nav nav-second-level">
-					<li><a href="<c:url value="admin/"/>"><i class="fa fa-cog fa-fw"></i> Main</a>
+					<li><a href="<c:url value="admin"/>"><i class="fa fa-cog fa-fw"></i> Main</a>
 					<li><a href="<c:url value="admin/keys/twitter"/>"><i class="fa fa-key fa-fw"></i> Twitter API Keys</a></li>
 				</ul> <!-- /.nav-second-level --></li>
-			<li><a href="<c:url value="topic/"/>"><i class="fa fa-tags fa-fw"></i> Topics</a></li>
+			<li><a href="<c:url value="topic"/>"><i class="fa fa-tags fa-fw"></i> Topics</a></li>
 		</ul>
 	</div>
 	<!-- /.sidebar-collapse -->

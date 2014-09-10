@@ -6,7 +6,7 @@
 			class="fa fa-caret-down"></i>
 	</a> <sec:authorize access="isAnonymous()">
 			<ul class="dropdown-menu dropdown-user dropdown-login">
-				<li><form role="form" action="<c:url value="login/authenticate" />" method="post">
+				<li><form action="<c:url value="login/authenticate" />" method="post">
 						<fieldset>
 							<div class="form-group">
 								<input class="form-control" placeholder="Username" name="username" type="text" autofocus />
@@ -31,7 +31,7 @@
 				<li>
 					<form action="<c:url value="logout" />" method="post">
 						<fieldset>
-							<input class="btn btn-lg btn-success btn-block" type="submit" value="Logout" /> <input type="hidden" name="${_csrf.parameterName}"
+							<input class="btn btn-lg btn-primary btn-block" type="submit" value="Logout" /> <input type="hidden" name="${_csrf.parameterName}"
 								value="${_csrf.token}" />
 						</fieldset>
 					</form>

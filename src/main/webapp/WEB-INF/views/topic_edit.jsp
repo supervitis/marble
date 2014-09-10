@@ -10,21 +10,21 @@
 					<fieldset>
 						<p class="help-block">
 							<c:if test="${not empty topic.id}">
-								<spring:message code='edit_topic.form.informative_message.edit' />
+								<spring:message code='topic_edit.form.informative_message.edit' />
 								<form:input type="hidden" id="id" path="id" class="form-control" />
 							</c:if>
 							<c:if test="${empty topic.id}">
-								<spring:message code='edit_topic.form.informative_message.add' />
+								<spring:message code='topic_edit.form.informative_message.add' />
 							</c:if>
 						</p>
 						<div class="form-group">
 							<div class="col-lg-offset-8 col-lg-4">
 								<button type="submit" id="save" class="btn btn-primary pull-right">
 									<i class="fa fa-floppy-o"></i>
-									<spring:message code="edit_topic.form.save" />
+									<spring:message code="topic_edit.form.save" />
 								</button>
 								<a href="<c:url value="topic"/>" class="btn btn-default pull-right"><i class="fa fa-times"></i> <spring:message
-										code="edit_topic.form.cancel" /></a>
+										code="topic_edit.form.cancel" /></a>
 
 							</div>
 						</div>
@@ -49,7 +49,7 @@
 
 					<fieldset>
 						<legend>
-							<spring:message code="edit_topic.form.general_properties" />
+							<spring:message code="topic_edit.form.general_properties" />
 						</legend>
 						<spring:bind path="name">
 							<div class="form-group ${status.error ? 'has-error': ''}">
@@ -84,7 +84,7 @@
 				<div class="panel-body">
 					<fieldset>
 						<legend>
-							<spring:message code="edit_topic.form.extractor_properties" />
+							<spring:message code="topic_edit.form.extractor_properties" />
 						</legend>
 						<spring:bind path="keywords">
 							<div class="form-group ${status.error ? 'has-error': ''}">
@@ -147,7 +147,7 @@
 				<div class="panel-body">
 					<fieldset>
 						<legend>
-							<spring:message code="edit_topic.form.processor_properties" />
+							<spring:message code="topic_edit.form.processor_properties" />
 						</legend>
 						<spring:bind path="processorPositiveBoundary">
 							<div class="form-group ${status.error ? 'has-error': ''}">
@@ -180,7 +180,7 @@
 				<div class="panel-body">
 					<fieldset>
 						<legend>
-							<spring:message code="edit_topic.form.plotter_properties" />
+							<spring:message code="topic_edit.form.plotter_properties" />
 						</legend>
 						<spring:bind path="plotterLeftDateBoundary">
 							<div class="form-group ${status.error ? 'has-error': ''}">

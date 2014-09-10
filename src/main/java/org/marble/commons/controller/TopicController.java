@@ -8,6 +8,7 @@ import javax.validation.Valid;
 
 import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidTopicException;
+import org.marble.commons.model.TopicInfo;
 import org.marble.commons.service.TopicService;
 import org.marble.commons.util.MarbleUtil;
 
@@ -52,8 +53,19 @@ public class TopicController {
 
         Topic topic;
         topic = topicService.findOne(topicId);
-        modelAndView.setViewName("edit_topic");
+        modelAndView.setViewName("topic_edit");
         modelAndView.addObject("topic", topic);
+        return modelAndView;
+    }
+    
+    @RequestMapping(value = "/info/{topicId:[0-9]+}", method = RequestMethod.GET)
+    public ModelAndView info(@PathVariable Integer topicId) throws InvalidTopicException {
+        ModelAndView modelAndView = new ModelAndView();
+
+        TopicInfo topicInfo;
+        topicInfo = topicService.info(topicId);
+        modelAndView.setViewName("topic_info");
+        modelAndView.addObject("topicInfo", topicInfo);
         return modelAndView;
     }
 
@@ -70,7 +82,7 @@ public class TopicController {
             modelAndView.addObject("notificationMessage", "TopicController.editTopicError");
             modelAndView.addObject("notificationIcon", "fa-exclamation-triangle");
             modelAndView.addObject("notificationLevel", "danger");
-            modelAndView.setViewName("edit_topic");
+            modelAndView.setViewName("topic_edit");
             modelAndView.addObject("topic", topic);
             return modelAndView;
         }

@@ -10,21 +10,21 @@
 					<fieldset>
 						<p class="help-block">
 							<c:if test="${not empty twitter_api_key.id}">
-								<spring:message code='edit_twitter_api_key.form.informative_message.edit' />
+								<spring:message code='twitter_api_key_edit.form.informative_message.edit' />
 								<form:input type="hidden" id="id" path="id" class="form-control" />
 							</c:if>
 							<c:if test="${empty twitter_api_key.id}">
-								<spring:message code='edit_twitter_api_key.form.informative_message.add' />
+								<spring:message code='twitter_api_key_edit.form.informative_message.add' />
 							</c:if>
 						</p>
 						<div class="form-group">
 							<div class="col-lg-offset-8 col-lg-4">
 								<button type="submit" id="save" class="btn btn-primary pull-right">
 									<i class="fa fa-floppy-o"></i>
-									<spring:message code="edit_twitter_api_key.form.save" />
+									<spring:message code="twitter_api_key_edit.form.save" />
 								</button>
 								<a href="<c:url value="admin/keys/twitter"/>" class="btn btn-default pull-right"><i class="fa fa-times"></i>
-									<spring:message code="edit_twitter_api_key.form.cancel" /></a>
+									<spring:message code="twitter_api_key_edit.form.cancel" /></a>
 
 							</div>
 						</div>
@@ -49,7 +49,7 @@
 
 					<fieldset>
 						<legend>
-							<spring:message code="edit_twitter_api_key.form.general_properties" />
+							<spring:message code="twitter_api_key_edit.form.general_properties" />
 						</legend>
 
 						<spring:bind path="description">

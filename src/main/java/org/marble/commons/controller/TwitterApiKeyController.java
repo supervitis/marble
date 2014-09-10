@@ -37,7 +37,7 @@ public class TwitterApiKeyController {
 
         TwitterApiKey twitterApiKey;
         twitterApiKey = twitterApiKeyService.getTwitterApiKey(twitterApiKeyId);
-        modelAndView.setViewName("edit_twitter_api_key");
+        modelAndView.setViewName("twitter_api_key_edit");
         modelAndView.addObject("twitter_api_key", twitterApiKey);
         return modelAndView;
     }
@@ -47,7 +47,7 @@ public class TwitterApiKeyController {
             BindingResult result) throws InvalidTwitterApiKeyException {
 
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("edit_twitter_api_key");
+        modelAndView.setViewName("twitter_api_key_edit");
         modelAndView.addObject("twitter_api_key", twitterApiKey);
 
         if (result.hasErrors()) {

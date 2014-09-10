@@ -36,7 +36,7 @@ public class ExecutionController {
 
         Execution execution;
         execution = executionService.findOne(executionId);
-        modelAndView.setViewName("view_execution");
+        modelAndView.setViewName("execution_view");
         modelAndView.addObject("execution", execution);
         return modelAndView;
     }

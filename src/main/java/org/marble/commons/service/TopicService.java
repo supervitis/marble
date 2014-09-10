@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidTopicException;
+import org.marble.commons.model.TopicInfo;
 
 public interface TopicService {
 
@@ -18,5 +19,7 @@ public interface TopicService {
 	public Topic create(Topic topic) throws InvalidTopicException;
 
     Long count();
+
+    TopicInfo info(Integer id) throws InvalidTopicException;
 
 }

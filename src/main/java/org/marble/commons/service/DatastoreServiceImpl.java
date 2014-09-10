@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.convert.MongoConverter;
@@ -40,7 +42,7 @@ public class DatastoreServiceImpl implements DatastoreService {
     @Override
     public <T> long countAll(Class<T> entityClass) {
         Query query = new Query();
-       return mongoOperations.count(query, entityClass);
+        return mongoOperations.count(query, entityClass);
     }
     
     @Override
@@ -103,6 +105,13 @@ public class DatastoreServiceImpl implements DatastoreService {
         return this.findOneByQuery(query, entityClass);
     }
     
+    @Override
+    public <T> T findOneByTopicIdSortBy(Integer topicId, String field, Direction direction, Class<T> entityClass) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("topicId").is(topicId));
+        query.with(new Sort(direction, field));
+        return this.findOneByQuery(query, entityClass);
+    }
 
     @Override
     public MongoConverter getConverter() {
@@ -124,6 +133,13 @@ public class DatastoreServiceImpl implements DatastoreService {
     public <T> void save(T object) {
         mongoOperations.save(object);
 
+    }
+
+    @Override
+    public <T> long countByTopicId(Integer topicId, Class<T> entityClass) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("topicId").is(topicId));
+        return mongoOperations.count(query, entityClass);
     }
 
 }
