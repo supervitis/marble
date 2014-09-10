@@ -27,7 +27,7 @@ public class ExecutorImpl implements ExtractorExecutor {
 
     private static final Logger log = LoggerFactory.getLogger(ExecutorImpl.class);
     
-    private static final String name = "ExecutorImpl";
+    private final String name = "ExecutorImpl";
 
     @Autowired
     ExecutionService executionService;

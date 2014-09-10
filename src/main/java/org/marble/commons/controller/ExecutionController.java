@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.marble.commons.dao.TopicDao;
 import org.marble.commons.dao.model.Execution;
 import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidExecutionException;
@@ -30,15 +29,6 @@ public class ExecutionController {
 
     @Autowired
     TopicService topicService;
-
-    /*
-     * @RequestMapping
-     * public ModelAndView home() {
-     * ModelAndView modelAndView = new ModelAndView("topics_list");
-     * modelAndView.addObject("topics", topicService.getTopics());
-     * return modelAndView;
-     * }
-     */
 
     @RequestMapping(value = "/{executionId:[0-9]+}", method = RequestMethod.GET)
     public ModelAndView edit(@PathVariable Integer executionId) throws InvalidExecutionException {
