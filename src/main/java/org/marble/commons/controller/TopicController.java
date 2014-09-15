@@ -123,7 +123,7 @@ public class TopicController {
             return modelAndView;
         }
 
-        topic = topicService.create(topic);
+        topic = topicService.save(topic);
         // Setting message
         redirectAttributes.addFlashAttribute("notificationMessage", "TopicController.topicCreated");
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");

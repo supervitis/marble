@@ -8,37 +8,37 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
-@Table(name="mrbl_twitter_api_keys")
+@Table(name = "mrbl_twitter_api_keys")
 public class TwitterApiKey implements Serializable {
 
-	private static final long serialVersionUID = -6137928572799267601L;
+    private static final long serialVersionUID = -6137928572799267601L;
 
-	@Id
-	@Column(unique = true)
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
-	
-	private String description;
-	
-	@NotNull
-    @NotEmpty
-    private String            consumerKey;
+    @Id
+    @Column(unique = true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    private String description;
 
     @NotNull
     @NotEmpty
-    private String            consumerSecret;
+    private String consumerKey;
+
+    @NotNull
+    @NotEmpty
+    private String consumerSecret;
 
     @NotNull
     @NotEmpty
     @Column(unique = true)
-    private String            accessToken;
+    private String accessToken;
 
     @NotNull
     @NotEmpty
-    private String            accessTokenSecret;
-    
+    private String accessTokenSecret;
+
     @NotNull
-    private Boolean           enabled;
+    private Boolean enabled;
 
     public TwitterApiKey() {
         this.description = null;

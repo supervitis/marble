@@ -16,8 +16,6 @@ public interface TopicService {
 
 	public void delete(Integer id);
 
-	public Topic create(Topic topic) throws InvalidTopicException;
-
     Long count();
 
     TopicInfo info(Integer id) throws InvalidTopicException;

@@ -63,15 +63,6 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public Topic create(Topic topic) throws InvalidTopicException {
-        topic = topicDao.save(topic);
-        if (topic == null) {
-            throw new InvalidTopicException();
-        }
-        return topic;
-    }
-
-    @Override
     public TopicInfo info(Integer id) throws InvalidTopicException {
         // This is only to check if exists
         Topic topic = topicDao.findOne(id);

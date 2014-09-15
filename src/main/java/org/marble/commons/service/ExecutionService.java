@@ -8,11 +8,11 @@ import org.marble.commons.exception.InvalidTopicException;
 
 public interface ExecutionService {
 
-	public Execution save(Execution execution) throws InvalidExecutionException;
+    public Execution save(Execution execution) throws InvalidExecutionException;
 
-	public Execution findOne(Integer id) throws InvalidExecutionException;
-	
-	public void appendToLog(Integer id, String log) throws InvalidExecutionException;
+    public Execution findOne(Integer id) throws InvalidExecutionException;
+
+    public void appendToLog(Integer id, String log) throws InvalidExecutionException;
 
     public List<Execution> getExecutionsPerTopic(Integer topicId);
 
@@ -21,11 +21,5 @@ public interface ExecutionService {
     public Integer executeProcessor(Integer topicId) throws InvalidTopicException, InvalidExecutionException;
 
     Long count();
-
-	//List<Topic> getTopics();
-
-	//public void deleteTopic(Integer id);
-
-	//public Topic createTopic(Topic topic) throws InvalidTopicException;
 
 }

@@ -31,7 +31,7 @@ public class ExecutionController {
     TopicService topicService;
 
     @RequestMapping(value = "/{executionId:[0-9]+}", method = RequestMethod.GET)
-    public ModelAndView edit(@PathVariable Integer executionId) throws InvalidExecutionException {
+    public ModelAndView view(@PathVariable Integer executionId) throws InvalidExecutionException {
         ModelAndView modelAndView = new ModelAndView();
 
         Execution execution;

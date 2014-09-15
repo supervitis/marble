@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "mrbl_topics")
-@JsonIgnoreProperties({ "changeSet" })
+@JsonIgnoreProperties({ "changeSet", "executions" })
 public class Topic implements Serializable {
     private static final long serialVersionUID = -4417618450499483945L;
 

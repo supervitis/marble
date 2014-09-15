@@ -27,9 +27,9 @@ public class ProcessedStatus {
     private Date originalCreatedAt;
 
     public ProcessedStatus() {
-    
+
     }
-    
+
     public ProcessedStatus(ProcessedStatus status) {
         this.topicId = status.getTopicId();
         this.polarity = status.getPolarity();

@@ -15,12 +15,15 @@ public class InformationServiceImpl implements InformationService {
     ExecutionService executionService;
     @Autowired
     DatastoreService datastoreService;
+    @Autowired
+    PlotService plotService;
 
     @Override
     public HomeInformation getHomeInformation() {
         HomeInformation homeInformation = new HomeInformation();
         homeInformation.setTopics(topicService.count());
         homeInformation.setExecutions(executionService.count());
+        homeInformation.setPlots(plotService.count());
         homeInformation.setStatuses(datastoreService.countAll(OriginalStatus.class));
         return homeInformation;
     }

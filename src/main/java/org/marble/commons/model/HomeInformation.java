@@ -4,6 +4,7 @@ public class HomeInformation {
     private Long topics;
     private Long executions;
     private Long statuses;
+    private Long plots;
 
     public Long getTopics() {
         return topics;
@@ -27,5 +28,13 @@ public class HomeInformation {
 
     public void setStatuses(Long statuses) {
         this.statuses = statuses;
+    }
+
+    public Long getPlots() {
+        return plots;
+    }
+
+    public void setPlots(Long plots) {
+        this.plots = plots;
     }
 }

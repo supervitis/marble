@@ -52,7 +52,7 @@ public class Execution implements Serializable {
     private ExecutionCommand command;
 
     @Column(length = 50000, name = "log")
-    private String log ="";
+    private String log = "";
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "topic_id")
@@ -60,11 +60,11 @@ public class Execution implements Serializable {
     @JsonBackReference
     private Topic topic;
 
-    @JsonSerialize(using=StringDateSerializer.class)
+    @JsonSerialize(using = StringDateSerializer.class)
     @Column(name = "created_at")
     public Date createdAt;
 
-    @JsonSerialize(using=StringDateSerializer.class)
+    @JsonSerialize(using = StringDateSerializer.class)
     @Column(name = "updated_at")
     public Date updatedAt;
 
@@ -113,7 +113,7 @@ public class Execution implements Serializable {
         if (this.log.length() > 50000) {
             this.log = this.log.substring(0, 50000);
             this.log = this.log.substring(0, this.log.lastIndexOf("\n"));
-                    
+
         }
     }
 

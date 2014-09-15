@@ -41,7 +41,7 @@
 <link href="<c:url value="resources/css/sb-admin-2.css"/>" rel="stylesheet">
 
 <!-- Morris Charts CSS -->
-<link href="<c:url value="resources/css/plugins/morris.css"/>" rel="stylesheet">
+<!-- <link href="<c:url value="resources/css/plugins/morris.css"/>" rel="stylesheet">-->
 
 
 <!-- Custom Fonts -->
@@ -112,6 +112,10 @@
 
 	<!-- Metis Menu Plugin JavaScript -->
 	<script src="<c:url value="resources/js/plugins/metisMenu/metisMenu.min.js"/>"></script>
+	
+	<!-- Flot Charts Javascript -->
+	<script src="resources/js/plugins/flot/jquery.flot.min.js"></script>
+	<script src="resources/js/plugins/flot/jquery.flot.resize.min.js"></script>
 
 	<!-- Morris Charts JavaScript -->
 	<!--

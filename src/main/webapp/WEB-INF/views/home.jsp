@@ -28,11 +28,11 @@
 			<div class="panel-heading">
 				<div class="row">
 					<div class="col-xs-3">
-						<i class="fa fa-rocket fa-5x"></i>
+						<i class="fa fa-bar-chart-o fa-5x"></i>
 					</div>
 					<div class="col-xs-9 text-right">
-						<div class="huge" id="info-executions">${info.executions}</div>
-						<div>Executions</div>
+						<div class="huge" id="info-plots">${info.plots}</div>
+						<div>Plots</div>
 					</div>
 				</div>
 			</div>
