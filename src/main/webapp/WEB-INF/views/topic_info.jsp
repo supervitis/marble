@@ -20,7 +20,7 @@
 </div>
 <!-- /.row -->
 <div class="row">
-	<div class="col-lg-12">
+	<div class="col-lg-8">
 		<div class="panel panel-default">
 			<div class="panel-heading">
 				<spring:message code="topic_info.information" />
@@ -72,6 +72,42 @@
 		</div>
 		<!-- /.panel -->
 	</div>
-	<!-- /.col-lg-12 -->
+	<!-- /.col-lg-8 -->
+
+	<div class="col-lg-4">
+		<div class="panel panel-default">
+			<div class="panel-heading">Actions</div>
+			<!-- /.panel-heading -->
+
+			<div class="panel-body">
+
+				<div class="table-responsive">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th><a href="<c:url value="topic/edit/${topicInfo.topicId}"/>" class="btn btn-default btn-block">
+										<i class="fa fa-pencil"></i>
+										<spring:message code="topic_info.actions.edit" />
+									</a></th>
+							</tr>
+							<tr>
+								<th><a href='<c:url value="topic/${topicInfo.topicId}/execution"/>' class="btn btn-default btn-block">
+										<i class="fa fa-rocket"></i>
+										<spring:message code="topic_info.actions.view_executions" />
+									</a></th>
+							</tr>
+						</thead>
+						<!-- <tbody>
+							<tr>
+								<td></td>
+							</tr>
+						</tbody>-->
+					</table>
+				</div>
+			</div>
+			<!-- .panel-body -->
+		</div>
+	</div>
+	<!-- /.col-lg-4 -->
 </div>
 <!-- /.row -->

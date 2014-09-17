@@ -10,6 +10,9 @@ import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidExecutionException;
 import org.marble.commons.exception.InvalidTopicException;
 import org.marble.commons.executor.Executor;
+import org.marble.commons.executor.extractor.ExtractorExecutor;
+import org.marble.commons.executor.plotter.PlotterExecutor;
+import org.marble.commons.executor.processor.ProcessorExecutor;
 import org.marble.commons.model.ExecutionStatus;
 import org.marble.commons.model.ExecutionType;
 
@@ -90,7 +93,7 @@ public class ExecutionServiceImpl implements ExecutionService {
         execution = this.save(execution);
 
         log.info("Starting execution <" + execution.getId() + ">... now!");
-        Executor executor = (Executor) context.getBean("twitterExtractionExecutor");
+        ExtractorExecutor executor = (ExtractorExecutor) context.getBean("twitterExtractionExecutor");
         executor.setExecution(execution);
         taskExecutor.execute(executor);
 
@@ -118,7 +121,36 @@ public class ExecutionServiceImpl implements ExecutionService {
         execution = this.save(execution);
 
         log.info("Starting execution <" + execution.getId() + ">... now!");
-        Executor executor = (Executor) context.getBean("bagOfWordsSenticProcessorExecutor");
+        ProcessorExecutor executor = (ProcessorExecutor) context.getBean("bagOfWordsSenticProcessorExecutor");
+        executor.setExecution(execution);
+        taskExecutor.execute(executor);
+
+        log.info("Executor launched.");
+
+        return execution.getId();
+    }
+    
+    @Override
+    @Transactional
+    public Integer executePlotter(Integer topicId) throws InvalidTopicException, InvalidExecutionException {
+        // Special function to perform special operations ;)
+        log.info("Executing the processor for topic <"+topicId +">.");
+
+        Execution execution = new Execution();
+
+        Topic topic = topicService.findOne(topicId);
+        
+        execution.setStatus(ExecutionStatus.Initialized);
+        execution.setType(ExecutionType.Processor);
+        topic.getExecutions().add(execution);
+        execution.setTopic(topic);
+        topic = topicService.save(topic);
+        
+        execution = this.save(execution);
+
+        log.info("Starting execution <" + execution.getId() + ">... now!");
+        PlotterExecutor executor = (PlotterExecutor) context.getBean("basePlotterExecutor");
+        executor.setOperation("plotAllOriginalStatuses");
         executor.setExecution(execution);
         taskExecutor.execute(executor);
 

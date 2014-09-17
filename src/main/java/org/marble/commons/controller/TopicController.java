@@ -12,8 +12,6 @@ import org.marble.commons.model.TopicInfo;
 import org.marble.commons.service.TopicService;
 import org.marble.commons.util.MarbleUtil;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -32,7 +30,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/topic")
 public class TopicController {
 
-    private static final Logger log = LoggerFactory.getLogger(TopicController.class);
+    // private static final Logger log =
+    // LoggerFactory.getLogger(TopicController.class);
 
     @Autowired
     TopicService topicService;
@@ -57,8 +56,8 @@ public class TopicController {
         modelAndView.addObject("topic", topic);
         return modelAndView;
     }
-    
-    @RequestMapping(value = "/info/{topicId:[0-9]+}", method = RequestMethod.GET)
+
+    @RequestMapping(value = "/{topicId:[0-9]+}", method = RequestMethod.GET)
     public ModelAndView info(@PathVariable Integer topicId) throws InvalidTopicException {
         ModelAndView modelAndView = new ModelAndView();
 
@@ -75,7 +74,6 @@ public class TopicController {
             throws InvalidTopicException {
 
         String basePath = MarbleUtil.getBasePath(request);
-        log.info("MFCCCCCC: " + basePath);
         ModelAndView modelAndView = new ModelAndView();
 
         if (result.hasErrors()) {
@@ -101,7 +99,7 @@ public class TopicController {
         ModelAndView modelAndView = new ModelAndView();
 
         Topic topic = new Topic();
-        modelAndView.setViewName("create_topic");
+        modelAndView.setViewName("topic_create");
         modelAndView.addObject("topic", topic);
         return modelAndView;
     }
@@ -118,7 +116,7 @@ public class TopicController {
             modelAndView.addObject("notificationMessage", "TopicController.addTopicError");
             modelAndView.addObject("notificationIcon", "fa-exclamation-triangle");
             modelAndView.addObject("notificationLevel", "danger");
-            modelAndView.setViewName("create_topic");
+            modelAndView.setViewName("topic_create");
             modelAndView.addObject("topic", topic);
             return modelAndView;
         }
@@ -136,8 +134,7 @@ public class TopicController {
     public String delete(@PathVariable Integer topicId, RedirectAttributes redirectAttributes,
             HttpServletRequest request)
             throws InvalidTopicException {
-        String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-                + request.getContextPath();
+        String basePath = MarbleUtil.getBasePath(request);
         topicService.delete(topicId);
         // Setting message
         redirectAttributes.addFlashAttribute("notificationMessage", "TopicController.topicDeleted");
@@ -164,6 +161,38 @@ public class TopicController {
     public ModelAndView executeProcessor(@PathVariable Integer topicId) throws InvalidTopicException {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("forward:/execution/topic/" + topicId + "/process");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/{topicId:[0-9]+}/execution/plot", method = RequestMethod.GET)
+    public ModelAndView executePlotter(@PathVariable Integer topicId) throws InvalidTopicException {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("forward:/execution/topic/" + topicId + "/plot");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/{topicId:[0-9]+}/plot", method = RequestMethod.GET)
+    public ModelAndView plot(@PathVariable Integer topicId) throws InvalidTopicException {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("forward:/plot/topic/" + topicId);
+        return modelAndView;
+    }
+
+    /*
+     * @RequestMapping(value = "/{topicId:[0-9]+}/plot/{plotId:[0-9]+}", method
+     * = RequestMethod.GET)
+     * public ModelAndView plot(@PathVariable Integer topicId, @PathVariable
+     * Integer plotId) throws InvalidTopicException {
+     * ModelAndView modelAndView = new ModelAndView();
+     * modelAndView.setViewName("forward:/plot/" + plotId);
+     * return modelAndView;
+     * }
+     */
+
+    @RequestMapping(value = "/{topicId:[0-9]+}/plot/create", method = RequestMethod.GET)
+    public ModelAndView createPlot(@PathVariable Integer topicId) throws InvalidTopicException {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("forward:/plot/topic/" + topicId + "/create");
         return modelAndView;
     }
 

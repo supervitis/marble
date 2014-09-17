@@ -23,7 +23,7 @@
 									<i class="fa fa-floppy-o"></i>
 									<spring:message code="topic_edit.form.save" />
 								</button>
-								<a href="<c:url value="topic"/>" class="btn btn-default pull-right"><i class="fa fa-times"></i> <spring:message
+								<a href="<c:url value="topic/${topic.id}"/>" class="btn btn-default pull-right"><i class="fa fa-times"></i> <spring:message
 										code="topic_edit.form.cancel" /></a>
 
 							</div>

@@ -48,6 +48,33 @@
 		</div>
 		<!-- /.panel -->
 
+		<div class="panel panel-default">
+			<div class="panel-heading">Actions</div>
+			<!-- /.panel-heading -->
+
+			<div class="panel-body">
+
+				<div class="table-responsive">
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th><a href='<c:url value="plot/delete/${plot.id}" />' class="btn btn-danger btn-block">
+										<i class="fa fa-trash-o"></i> Delete
+									</a></th>
+							</tr>
+						</thead>
+						<!-- <tbody>
+							<tr>
+								<td></td>
+							</tr>
+						</tbody>-->
+					</table>
+				</div>
+			</div>
+			<!-- .panel-body -->
+		</div>
+		<!-- /.panel -->
+
 	</div>
 	<!-- /.col-lg-4 -->
 

@@ -71,6 +71,7 @@ public class TopicServiceImpl implements TopicService {
         }
 
         TopicInfo topicInfo = new TopicInfo();
+        topicInfo.setTopicId(id);
         try {
             topicInfo.setTotalStatusesExtracted(datastoreService.countByTopicId(id, OriginalStatus.class));
             topicInfo.setTotalStatusesProcessed(datastoreService.countByTopicId(id, ProcessedStatus.class));

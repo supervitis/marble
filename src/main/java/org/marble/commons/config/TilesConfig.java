@@ -37,7 +37,7 @@ public class TilesConfig extends WebMvcConfigurerAdapter {
 
         // Topics Views
         addBaseDefinition("topic_edit", "Edit Topic", "<i class='fa fa-pencil fa-fw'></i>", Boolean.TRUE);
-        addBaseDefinition("create_topic", "topic_edit", "Create New Topic", "<i class='fa fa-file-o fa-fw'></i>",
+        addBaseDefinition("topic_create", "topic_edit", "Create New Topic", "<i class='fa fa-file-o fa-fw'></i>",
                 Boolean.TRUE);
         addBaseDefinition("topics_list", "Topics", "<i class='fa fa-tags fa-fw'></i>", Boolean.FALSE);
         addBaseDefinition("topic_info", "Topic Info", "<i class='fa fa-info-circle fa-fw'></i>", Boolean.FALSE);
@@ -56,6 +56,8 @@ public class TilesConfig extends WebMvcConfigurerAdapter {
         
         // Topics Views
         addBaseDefinition("plot_view", "Plot Detail", "<i class='fa fa-bar-chart-o fa-fw'></i>", Boolean.TRUE);
+        addBaseDefinition("plots_list", "Plots", "<i class='fa fa-bar-chart-o fa-fw'></i>", Boolean.FALSE);
+        addBaseDefinition("plot_create", "Create New Plot", "<i class='fa fa-bar-chart-o fa-fw'></i>", Boolean.TRUE);
 
         return tilesConfigurer;
     }

@@ -51,12 +51,6 @@ public class BagOfWordsSenticProcessorExecutor implements ProcessorExecutor {
     private Boolean ignoreNeutralSentences = Boolean.FALSE;
 
     @Override
-    public String getName() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public void setExecution(Execution execution) {
         this.execution = execution;
     }
@@ -93,7 +87,6 @@ public class BagOfWordsSenticProcessorExecutor implements ProcessorExecutor {
             log.info("Getting statuses for topic <" + topic.getId() + ">.");
 
             log.info("There are <" + datastoreService.countAll(OriginalStatus.class) + "> statuses to process.");
-            log.info("MFC: <" + OriginalStatus.class.getAnnotation(Document.class).toString() + ">");
 
             // List<OriginalStatus> statuses =
             // datastoreService.findByTopicId(topic.getId(),

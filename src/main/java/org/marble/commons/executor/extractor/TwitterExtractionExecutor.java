@@ -50,12 +50,6 @@ public class TwitterExtractionExecutor implements ExtractorExecutor {
     TwitterSearchService twitterSearchService;
 
     @Override
-    public String getName() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public void setExecution(Execution execution) {
         this.execution = execution;
     }

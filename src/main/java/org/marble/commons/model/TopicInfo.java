@@ -3,6 +3,8 @@ package org.marble.commons.model;
 import java.util.Date;
 
 public class TopicInfo {
+    
+    private Integer topicId;
 
     private Long totalStatusesExtracted;
     private Date oldestStatusDate;
@@ -10,6 +12,14 @@ public class TopicInfo {
     private Date newestStatusDate;
     private Long newestStatusId;
     private Long totalStatusesProcessed;
+
+    public Integer getTopicId() {
+        return topicId;
+    }
+
+    public void setTopicId(Integer topicId) {
+        this.topicId = topicId;
+    }
 
     public Long getTotalStatusesExtracted() {
         return totalStatusesExtracted;

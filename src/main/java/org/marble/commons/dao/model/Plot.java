@@ -48,7 +48,7 @@ public class Plot implements Serializable {
     private String description;
 
     @OneToOne()
-    @Cascade({ CascadeType.DELETE })
+    //@Cascade({ CascadeType.DELETE })
     private Topic topic;
 
     @Column(length = 1000, name = "main_options")

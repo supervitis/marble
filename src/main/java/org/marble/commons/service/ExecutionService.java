@@ -20,6 +20,7 @@ public interface ExecutionService {
 
     public Integer executeProcessor(Integer topicId) throws InvalidTopicException, InvalidExecutionException;
 
-    Long count();
+    public Integer executePlotter(Integer topicId) throws InvalidTopicException, InvalidExecutionException;
 
+    Long count();
 }

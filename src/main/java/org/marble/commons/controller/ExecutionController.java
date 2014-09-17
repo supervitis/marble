@@ -97,4 +97,25 @@ public class ExecutionController {
         redirectAttributes.addFlashAttribute("notificationLevel", "success");
         return "redirect:" + basePath + "/execution/" + executionId;
     }
+    
+    @RequestMapping(value = "/topic/{topicId:[0-9]+}/plot", method = RequestMethod.GET)
+    public String executePlotter(@PathVariable Integer topicId, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        String basePath = MarbleUtil.getBasePath(request);
+        Integer executionId = 0;
+        try {
+            executionId = executionService.executePlotter(topicId);
+        } catch (InvalidExecutionException | InvalidTopicException e) {
+            // Setting message
+            redirectAttributes.addFlashAttribute("notificationMessage", "ExecutionController.plotterExecutionFailed");
+            redirectAttributes.addFlashAttribute("notificationIcon", "fa-exclamation-triangle");
+            redirectAttributes.addFlashAttribute("notificationLevel", "danger");
+            return "redirect:" + basePath + "/topic/" + topicId + "/execution";
+        }
+
+        // Setting message
+        redirectAttributes.addFlashAttribute("notificationMessage", "ExecutionController.plotterExecuted");
+        redirectAttributes.addFlashAttribute("notificationIcon", "fa-sign-in");
+        redirectAttributes.addFlashAttribute("notificationLevel", "success");
+        return "redirect:" + basePath + "/execution/" + executionId;
+    }
 }

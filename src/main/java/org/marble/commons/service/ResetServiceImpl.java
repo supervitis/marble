@@ -1,14 +1,9 @@
 package org.marble.commons.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
-import java.util.Random;
-
 import org.marble.commons.dao.ConfigurationItemDao;
 import org.marble.commons.dao.ExecutionDao;
 import org.marble.commons.dao.TopicDao;
@@ -219,20 +214,6 @@ public class ResetServiceImpl implements ResetService {
         mainOptions.put("grid", grid);
 
         plot.setMainOptions(mainOptions);
-        /*
-         * var markings = [
-         * { color: "#f6f6f6", yaxis: { from: 1 } },
-         * { color: "#f6f6f6", yaxis: { to: -1 } },
-         * { color: "#000", lineWidth: 1, xaxis: { from: 2, to: 2 } },
-         * { color: "#000", lineWidth: 1, xaxis: { from: 8, to: 8 } }
-         * ];
-         * 
-         * $("#plot-placeholder").plot(data, {
-         * bars: { show: true, barWidth: 0.5, fill: 0.9 },
-         * xaxis: { ticks: [], autoscaleMargin: 0.02 },
-         * yaxis: { min: -2, max: 2 },
-         * grid: { markings: markings }
-         */
 
         try {
             plotService.save(plot);

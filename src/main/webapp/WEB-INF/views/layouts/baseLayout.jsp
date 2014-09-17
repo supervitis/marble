@@ -116,6 +116,7 @@
 	<!-- Flot Charts Javascript -->
 	<script src="resources/js/plugins/flot/jquery.flot.min.js"></script>
 	<script src="resources/js/plugins/flot/jquery.flot.resize.min.js"></script>
+	<script src="resources/js/plugins/flot/jquery.flot.time.min.js"></script>
 
 	<!-- Morris Charts JavaScript -->
 	<!--
