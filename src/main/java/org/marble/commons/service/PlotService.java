@@ -19,6 +19,4 @@ public interface PlotService {
 
     Long count();
 
-    List<PlotModule> getModules();
-
 }

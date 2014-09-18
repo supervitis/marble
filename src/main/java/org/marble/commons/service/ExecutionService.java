@@ -4,7 +4,10 @@ import java.util.List;
 
 import org.marble.commons.dao.model.Execution;
 import org.marble.commons.exception.InvalidExecutionException;
+import org.marble.commons.exception.InvalidModuleException;
+import org.marble.commons.exception.InvalidPlotParametersException;
 import org.marble.commons.exception.InvalidTopicException;
+import org.marble.commons.model.ExecutionCreationParameters;
 
 public interface ExecutionService {
 
@@ -20,7 +23,8 @@ public interface ExecutionService {
 
     public Integer executeProcessor(Integer topicId) throws InvalidTopicException, InvalidExecutionException;
 
-    public Integer executePlotter(Integer topicId) throws InvalidTopicException, InvalidExecutionException;
+    public Integer executePlotter(Integer topicId, ExecutionCreationParameters plotParameters) throws InvalidTopicException,
+            InvalidExecutionException, InvalidPlotParametersException, InvalidModuleException;
 
     Long count();
 }

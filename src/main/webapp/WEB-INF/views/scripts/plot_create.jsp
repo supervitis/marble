@@ -6,14 +6,15 @@
     $(function() {
         var modules = {};
         <c:forEach var="module" items="${modules}">
-        modules["${module.simpleName}"] = {};
-        modules["${module.simpleName}"]["operations"] = {};
+        modules["${module.name}"] = {};
+        modules["${module.name}"]["simpleName"] = "${module.simpleName}";
+        modules["${module.name}"]["operations"] = {};
         <c:forEach var="operation" items="${module.operations}">
-        modules["${module.simpleName}"]["operations"]["${operation.key}"] = "${operation.value}";
+        modules["${module.name}"]["operations"]["${operation.key}"] = "${operation.value}";
         </c:forEach>
-        modules["${module.simpleName}"]["parameters"] = {};
+        modules["${module.name}"]["parameters"] = {};
         <c:forEach var="parameter" items="${module.parameters}">
-        modules["${module.simpleName}"]["parameters"]["${parameter.key}"] = "${parameter.value}";
+        modules["${module.name}"]["parameters"]["${parameter.key}"] = "${parameter.value}";
         </c:forEach>
         </c:forEach>
 
@@ -23,7 +24,7 @@
         $moduleSelect.append(function() {
             var output = '<option value="">Select a module...</option>';
             $.each(modules, function(key, value) {
-                output += '<option value="' + key + '">' + key + '</option>';
+                output += '<option value="' + key + '">' + value["simpleName"] + '</option>';
             });
             return output;
         });
@@ -35,7 +36,7 @@
             else {
 	            // Create the operation select
 	            $("#operations-div").empty().append('<fieldset><legend>Operation</legend> '+
-	            '<select id="operations-select" class="form-control"></select></fieldset>');
+	            '<select name="operation" id="operations-select" class="form-control"></select></fieldset>');
 	            $("#operations-select").empty().append(function() {
 	                var output = '<option value="">Select an operation...</option>';
 	                $.each(modules[$moduleSelect.val()]["operations"], function(key, value) {
@@ -50,7 +51,7 @@
 	                $.each(modules[$moduleSelect.val()]["parameters"], function(key, value) {
 	                    output += '<div class="form-group">';
 	                    output += '<label for="' + key + '">' + value + '</label>';
-	                    output += '<input id="' + key + '" name="' + key + '" class="form-control" type="text">';
+	                    output += '<input id="' + key + '" name="parameters[' + key + ']" class="form-control" type="text">';
 	                    output += '<p class="help-block">' + value + '</p>';
 	                    output += '</div>';
 	                });

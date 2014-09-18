@@ -2,24 +2,37 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<div class="row">
-	<div class="col-lg-12">
-		<div class="panel panel-default">
-			<div class="panel-body">
-				<fieldset>
-					<p class="help-block">
-						<spring:message code="plot_create.form.informative_message" />
-					</p>
-				</fieldset>
-			</div>
-			<!-- .panel-body -->
-		</div>
-		<!-- /.panel -->
-	</div>
-	<!-- /.col-lg-12 -->
-</div>
+<form:form modelAttribute="plotCreate">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<fieldset>
+						<p class="help-block">
+							<spring:message code="plot_create.form.informative_message" />
+						</p>
+						<div class="form-group">
+							<div class="col-lg-offset-8 col-lg-4">
+								<button type="submit" id="save" class="btn btn-primary pull-right">
+									<i class="fa fa-floppy-o"></i>
+									<spring:message code="plot_create.form.create" />
+								</button>
+								<a href="<c:url value="topic/${topic.id}/plot"/>" class="btn btn-default pull-right">
+									<i class="fa fa-times"></i>
+									<spring:message code="plot_create.form.cancel" />
+								</a>
 
-<form:form modelAttribute="plot_create">
+							</div>
+						</div>
+					</fieldset>
+				</div>
+				<!-- .panel-body -->
+			</div>
+			<!-- /.panel -->
+		</div>
+		<!-- /.col-lg-12 -->
+	</div>
+
 	<div class="row">
 		<div class="col-lg-8">
 			<div class="panel panel-default">
@@ -27,10 +40,15 @@
 				<!-- /.panel-heading -->
 
 				<div class="panel-body">
+					<div class="form-group">
+						<label for="name">Name</label> <input id="plot-name" name="name" class="form-control" type="text">
+						<p class="help-block">Short name for the new plot.</p>
+					</div>
+					
 					<div class="form-group" id="modules-div">
 						<fieldset>
 							<legend>Module</legend>
-							<select id="modules-select" class="form-control">
+							<select name="module" id="modules-select" class="form-control">
 							</select>
 						</fieldset>
 					</div>

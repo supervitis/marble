@@ -2,7 +2,6 @@ package org.marble.commons.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -29,10 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/topic")
 public class TopicController {
-
-    // private static final Logger log =
-    // LoggerFactory.getLogger(TopicController.class);
-
+    
     @Autowired
     TopicService topicService;
 
@@ -191,6 +187,13 @@ public class TopicController {
 
     @RequestMapping(value = "/{topicId:[0-9]+}/plot/create", method = RequestMethod.GET)
     public ModelAndView createPlot(@PathVariable Integer topicId) throws InvalidTopicException {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("forward:/plot/topic/" + topicId + "/create");
+        return modelAndView;
+    }
+    
+    @RequestMapping(value = "/{topicId:[0-9]+}/plot/create", method = RequestMethod.POST)
+    public ModelAndView createPlotResponse(@PathVariable Integer topicId) throws InvalidTopicException {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("forward:/plot/topic/" + topicId + "/create");
         return modelAndView;

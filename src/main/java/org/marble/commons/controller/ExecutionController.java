@@ -98,13 +98,14 @@ public class ExecutionController {
         return "redirect:" + basePath + "/execution/" + executionId;
     }
     
+    @Deprecated
     @RequestMapping(value = "/topic/{topicId:[0-9]+}/plot", method = RequestMethod.GET)
     public String executePlotter(@PathVariable Integer topicId, RedirectAttributes redirectAttributes, HttpServletRequest request) {
         String basePath = MarbleUtil.getBasePath(request);
         Integer executionId = 0;
         try {
-            executionId = executionService.executePlotter(topicId);
-        } catch (InvalidExecutionException | InvalidTopicException e) {
+            //executionId = executionService.executePlotter(topicId, null);
+        } catch (Exception e) {
             // Setting message
             redirectAttributes.addFlashAttribute("notificationMessage", "ExecutionController.plotterExecutionFailed");
             redirectAttributes.addFlashAttribute("notificationIcon", "fa-exclamation-triangle");

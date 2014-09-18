@@ -37,41 +37,10 @@ import com.mongodb.DBObject;
 @Scope("prototype")
 public class BasePlotterExecutor implements PlotterExecutor {
 
-    private static final Logger log = LoggerFactory.getLogger(BasePlotterExecutor.class);
-
     public static final Map<String, String> availableOperations;
-    static {
-        Map<String, String> operations = new HashMap<>();
-        operations.put("plotAllOriginalStatuses", "Plots all the extracted statuses over time.");
-        operations.put("plotOriginalVsRetweetedStatuses", "Plots original statuses vs retweeted ones over time.");
-        availableOperations = Collections.unmodifiableMap(operations);
-    }
 
     public static final Map<String, String> availableParameters;
-    static {
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("Param1", "Param 1.");
-        parameters.put("Param2", "Param 2.");
-        availableParameters = Collections.unmodifiableMap(parameters);
-    }
-
-    @Autowired
-    ExecutionService executionService;
-
-    @Autowired
-    DatastoreService datastoreService;
-
-    @Autowired
-    TopicService topicService;
-
-    @Autowired
-    PlotService plotService;
-
-    private Execution execution;
-
-    private String operation;
-
-    private Map<String, String> parameters;
+    private static final Logger log = LoggerFactory.getLogger(BasePlotterExecutor.class);
 
     private static Comparator<List<Double>> sortComparator = new Comparator<List<Double>>() {
         @Override
@@ -79,6 +48,37 @@ public class BasePlotterExecutor implements PlotterExecutor {
             return arg0.get(0).compareTo(arg1.get(0));
         }
     };
+    static {
+        Map<String, String> operations = new TreeMap<>();
+        operations.put("plotAllOriginalStatuses", "Plots all the extracted statuses over time.");
+        availableOperations = Collections.unmodifiableMap(operations);
+    }
+
+    static {
+        Map<String, String> parameters = new TreeMap<>();
+        //parameters.put("Param1", "Param 1.");
+        availableParameters = Collections.unmodifiableMap(parameters);
+    }
+
+    @Autowired
+    DatastoreService datastoreService;
+
+    private Execution execution;
+
+    @Autowired
+    ExecutionService executionService;
+
+    private String name;
+
+    private String operation;
+    
+    private Map<String, String> parameters;
+
+    @Autowired
+    PlotService plotService;
+
+    @Autowired
+    TopicService topicService;
 
     private List<List<Double>> convertAndSortDataMap(HashMap<Long, Double> hashMap, Integer stepSize) {
         List<List<Double>> data = new ArrayList<List<Double>>();
@@ -134,9 +134,19 @@ public class BasePlotterExecutor implements PlotterExecutor {
         return mainOptions;
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public String getOperation() {
         return this.operation;
+    }
+
+    @Override
+    public Map<String, String> getParameters() {
+        // TODO Auto-generated method stub
+        return parameters;
     }
 
     /*
@@ -241,6 +251,45 @@ public class BasePlotterExecutor implements PlotterExecutor {
 
     }
 
+    public void plotAllOriginalStatuses() throws InvalidExecutionException {
+        Integer id = execution.getId();
+
+        String msg = "Starting plotter <" + id + ">.";
+        log.info(msg);
+        execution.appendLog(msg);
+
+        // Changing execution state
+        execution.setStatus(ExecutionStatus.Running);
+        execution = executionService.save(execution);
+
+        log.info("Creating plot...");
+
+        Topic topic = execution.getTopic();
+
+        // Here starts the execution
+
+        Plot plot = new Plot();
+        plot.setName(this.name);
+        plot.setTopic(topic);
+
+        plot.setData(getStatusesChartData(topic));
+        plot.setMainOptions(getMainOptions(1));
+
+        try {
+            plot = plotService.save(plot);
+        } catch (InvalidPlotException e) {
+            log.error("Couldn't create the plot.");
+        }
+
+        // Here finishes the execution
+
+        msg = "Plot generation has finished. The new plot was assigned the id <" + plot.getId() + ">.";
+        log.info(msg);
+        execution.appendLog(msg);
+        execution.setStatus(ExecutionStatus.Stopped);
+        execution = executionService.save(execution);
+    }
+
     @Override
     public void run() {
         String msg = "";
@@ -251,53 +300,14 @@ public class BasePlotterExecutor implements PlotterExecutor {
         }
 
         try {
-
-            Integer id = execution.getId();
-
-            msg = "Starting plotter <" + id + ">.";
-            log.info(msg);
-            execution.appendLog(msg);
-
-            // Changing execution state
-            execution.setStatus(ExecutionStatus.Running);
-            execution = executionService.save(execution);
-
-            log.info("Creating plot...");
-
-            Topic topic = execution.getTopic();
-
-            // Here starts the execution
-
-            Plot plot = new Plot();
-            plot.setName("My_Plot_" + RandomUtils.nextInt());
-            plot.setTopic(topic);
-
             try {
-                Method method;
-                method = this.getClass().getMethod(this.operation);
-                log.error((String) method.invoke(this, new Object[] {}));
+                Method method = this.getClass().getMethod(this.operation);
+                method.invoke(this, new Object[] {});
             } catch (SecurityException e) {
-                log.error("MFC 1", e);
+                log.error("SecurityException caught.", e);
             } catch (NoSuchMethodException e) {
-                log.error("MFC 2", e);
+                log.error("NoSuchMethodException caught.", e);
             }
-
-            plot.setData(getStatusesChartData(topic));
-            plot.setMainOptions(getMainOptions(1));
-
-            try {
-                plot = plotService.save(plot);
-            } catch (InvalidPlotException e) {
-                log.error("Couldn't create the plot.");
-            }
-
-            // Here finishes the execution
-
-            msg = "Plot generation has finished. The new plot was assigned the id <" + plot.getId() + ">.";
-            log.info(msg);
-            execution.appendLog(msg);
-            execution.setStatus(ExecutionStatus.Stopped);
-            execution = executionService.save(execution);
         } catch (Exception e) {
             msg = "An error ocurred while generating plot with execution <" + execution.getId()
                     + ">. Execution aborted.";
@@ -318,19 +328,13 @@ public class BasePlotterExecutor implements PlotterExecutor {
         this.execution = execution;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public void setOperation(String operation) {
         this.operation = operation;
-    }
-
-    public String plotAllOriginalStatuses() {
-        return "Hola wey!";
-    }
-
-    @Override
-    public Map<String, String> getParameters() {
-        // TODO Auto-generated method stub
-        return parameters;
     }
 
     @Override
