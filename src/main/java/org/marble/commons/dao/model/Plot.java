@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
 @Table(name = "mrbl_plots")
-@JsonIgnoreProperties({ "topic", "mainOptions", "overviewOptions", "data", "execution"})
+@JsonIgnoreProperties({ "topic", "mainOptions", "overviewOptions", "data", "execution" })
 public class Plot implements Serializable {
 
     private static final long serialVersionUID = 6936532299491147949L;
@@ -48,23 +48,23 @@ public class Plot implements Serializable {
     private String description;
 
     @OneToOne()
-    //@Cascade({ CascadeType.DELETE })
+    // @Cascade({ CascadeType.DELETE })
     private Topic topic;
-    
+
     @OneToOne()
-    @Cascade({CascadeType.PERSIST})
+    @Cascade({ CascadeType.PERSIST, CascadeType.REMOVE })
     private Execution execution;
 
     @Column(length = 2000, name = "main_options")
-    //@JsonRawValue
+    // @JsonRawValue
     private String mainOptions;
 
     @Column(length = 2000, name = "overview_options")
-    //@JsonRawValue
+    // @JsonRawValue
     private String overviewOptions;
 
     @Column(length = 200000, name = "plot_data")
-    //@JsonRawValue
+    // @JsonRawValue
     private String data;
 
     @JsonSerialize(using = StringDateSerializer.class)
@@ -110,9 +110,9 @@ public class Plot implements Serializable {
     public void setMainOptions(String mainOptions) {
         this.mainOptions = mainOptions;
     }
-    
+
     public void setMainOptions(Map<String, Object> mainOptions) {
-        ObjectMapper mapper = new ObjectMapper(); 
+        ObjectMapper mapper = new ObjectMapper();
         try {
             this.mainOptions = mapper.writeValueAsString(mainOptions);
         } catch (JsonProcessingException e) {
@@ -127,16 +127,16 @@ public class Plot implements Serializable {
     public void setOverviewOptions(String overviewOptions) {
         this.overviewOptions = overviewOptions;
     }
-    
+
     public void setOverviewOptions(Map<String, Object> overviewOptions) {
-        ObjectMapper mapper = new ObjectMapper(); 
+        ObjectMapper mapper = new ObjectMapper();
         try {
             this.overviewOptions = mapper.writeValueAsString(overviewOptions);
         } catch (JsonProcessingException e) {
             this.overviewOptions = null;
         }
     }
-    
+
     public String getData() {
         return data;
     }
@@ -144,9 +144,9 @@ public class Plot implements Serializable {
     public void setData(String data) {
         this.data = data;
     }
-    
+
     public void setData(List<Map<String, Object>> data) {
-        ObjectMapper mapper = new ObjectMapper(); 
+        ObjectMapper mapper = new ObjectMapper();
         try {
             this.data = mapper.writeValueAsString(data);
         } catch (JsonProcessingException e) {

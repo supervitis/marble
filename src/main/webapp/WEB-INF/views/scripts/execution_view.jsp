@@ -68,7 +68,7 @@
                                 if (!($("#view-plot-button").length > 0)) {
                                     $("#actions-table tbody:first")
                                             .prepend(
-                                                    '<tr><td><a id="view-plot-button" href="<c:url value="/plot/'+data.plot.id+'"/>"'
+                                                    '<tr><td><a id="view-plot-button" href="<c:url value="plot/'+data.plot.id+'"/>"'
                                                             + 'class="btn btn-default btn-block"><i class="fa fa-bar-chart-o"></i> '
                                                             + '<spring:message code="execution_view.actions.view_plot" /></a></td></tr>');
                                 }

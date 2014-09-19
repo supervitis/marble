@@ -59,7 +59,7 @@ public class Execution implements Serializable {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "topic_id")
-    @Cascade({ CascadeType.DELETE })
+    //@Cascade({ CascadeType.DELETE })
     @JsonBackReference
     private Topic topic;
 
