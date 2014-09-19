@@ -86,7 +86,7 @@ public class Topic implements Serializable {
 
     @Digits(fraction = 0, integer = 8)
     @Column(name = "plotter_step_size")
-    private Integer plotterStepSize;
+    private Long plotterStepSize;
 
     @OneToMany(mappedBy = "topic", fetch = FetchType.EAGER)
     @Cascade({ CascadeType.DELETE })
@@ -201,11 +201,11 @@ public class Topic implements Serializable {
         this.plotterRightDateBoundary = plotterRightDateBoundary;
     }
 
-    public Integer getPlotterStepSize() {
+    public Long getPlotterStepSize() {
         return plotterStepSize;
     }
 
-    public void setPlotterStepSize(Integer plotterStepSize) {
+    public void setPlotterStepSize(Long plotterStepSize) {
         this.plotterStepSize = plotterStepSize;
     }
 

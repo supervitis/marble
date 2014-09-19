@@ -2,15 +2,19 @@ package org.marble.commons.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidTopicException;
+import org.marble.commons.model.ExecutionModuleParameters;
 import org.marble.commons.model.TopicInfo;
 import org.marble.commons.service.TopicService;
 import org.marble.commons.util.MarbleUtil;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -28,7 +32,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequestMapping("/topic")
 public class TopicController {
-    
+
+    private static final Logger log =
+            LoggerFactory.getLogger(PlotController.class);
+
     @Autowired
     TopicService topicService;
 
@@ -174,27 +181,19 @@ public class TopicController {
         return modelAndView;
     }
 
-    /*
-     * @RequestMapping(value = "/{topicId:[0-9]+}/plot/{plotId:[0-9]+}", method
-     * = RequestMethod.GET)
-     * public ModelAndView plot(@PathVariable Integer topicId, @PathVariable
-     * Integer plotId) throws InvalidTopicException {
-     * ModelAndView modelAndView = new ModelAndView();
-     * modelAndView.setViewName("forward:/plot/" + plotId);
-     * return modelAndView;
-     * }
-     */
-
     @RequestMapping(value = "/{topicId:[0-9]+}/plot/create", method = RequestMethod.GET)
     public ModelAndView createPlot(@PathVariable Integer topicId) throws InvalidTopicException {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("forward:/plot/topic/" + topicId + "/create");
         return modelAndView;
     }
-    
+
     @RequestMapping(value = "/{topicId:[0-9]+}/plot/create", method = RequestMethod.POST)
-    public ModelAndView createPlotResponse(@PathVariable Integer topicId) throws InvalidTopicException {
+    public ModelAndView createPlotResponse(@PathVariable Integer topicId,
+             ExecutionModuleParameters moduleParameters) throws InvalidTopicException {
         ModelAndView modelAndView = new ModelAndView();
+
+
         modelAndView.setViewName("forward:/plot/topic/" + topicId + "/create");
         return modelAndView;
     }

@@ -3,7 +3,7 @@ package org.marble.commons.model;
 import java.util.List;
 import java.util.Map;
 
-public class PlotModule {
+public class ExecutionModuleDefinition {
     private String name;
     private String simpleName;
     private Map<String, String> operations;
@@ -49,7 +49,7 @@ public class PlotModule {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final PlotModule other = (PlotModule) obj;
+        final ExecutionModuleDefinition other = (ExecutionModuleDefinition) obj;
         if ((this.name == null) ? (other.name != null) : !this.name.equals(other.name)) {
             return false;
         }

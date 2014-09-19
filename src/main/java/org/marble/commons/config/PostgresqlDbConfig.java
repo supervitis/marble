@@ -75,7 +75,7 @@ public class PostgresqlDbConfig {
                 "org.hibernate.cache.ehcache.EhCacheRegionFactory");
         properties.setProperty("hibernate.cache.use_query_cache", "true");
         properties.setProperty("hibernate.generate_statistics", "false");
-        // properties.setProperty("hibernate.show_sql", "true");
+        //properties.setProperty("hibernate.show_sql", "true");
 
         factory.setJpaProperties(properties);
 

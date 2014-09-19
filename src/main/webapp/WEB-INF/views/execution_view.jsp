@@ -65,14 +65,16 @@
 			<div class="panel-body">
 
 				<div class="table-responsive">
-					<table class="table table-hover">
-						<thead>
+					<table class="table" id="actions-table">
+						<tbody>
 							<tr>
-								<th><div data-toggle="tooltip" title="Actions are not available right now.">
-										<a id="send-command-stop" class="btn btn-default btn-block disabled">Stop</a>
-									</div></th>
+								<td><div data-toggle="tooltip" title="This action is not available right now.">
+										<a id="send-command-stop" class="btn btn-default btn-block disabled">
+											<spring:message code="execution_view.actions.stop" />
+										</a>
+									</div></td>
 							</tr>
-						</thead>
+						</tbody>
 						<!-- <tbody>
 							<tr>
 								<td></td>

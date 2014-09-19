@@ -23,7 +23,6 @@ import org.marble.commons.service.ExecutionService;
 import org.marble.commons.service.PlotService;
 import org.marble.commons.service.TopicService;
 
-import org.apache.commons.lang.math.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +55,7 @@ public class BasePlotterExecutor implements PlotterExecutor {
 
     static {
         Map<String, String> parameters = new TreeMap<>();
-        //parameters.put("Param1", "Param 1.");
+        // parameters.put("Param1", "Param 1.");
         availableParameters = Collections.unmodifiableMap(parameters);
     }
 
@@ -70,8 +69,6 @@ public class BasePlotterExecutor implements PlotterExecutor {
 
     private String name;
 
-    private String operation;
-    
     private Map<String, String> parameters;
 
     @Autowired
@@ -80,7 +77,7 @@ public class BasePlotterExecutor implements PlotterExecutor {
     @Autowired
     TopicService topicService;
 
-    private List<List<Double>> convertAndSortDataMap(HashMap<Long, Double> hashMap, Integer stepSize) {
+    private List<List<Double>> convertAndSortDataMap(HashMap<Long, Double> hashMap, Long stepSize) {
         List<List<Double>> data = new ArrayList<List<Double>>();
         for (Entry<Long, Double> entry : hashMap.entrySet()) {
             List<Double> item = new ArrayList<Double>();
@@ -94,9 +91,10 @@ public class BasePlotterExecutor implements PlotterExecutor {
         return data;
     }
 
-    private Map<String, Object> getMainOptions(Integer stepSize) {
+    private Map<String, Object> getMainOptions(Topic topic) {
 
         Map<String, Object> mainOptions = new HashMap<>();
+        Long stepSize = topic.getPlotterStepSize();
 
         Map<String, Object> tooltipOpts = new HashMap<>();
         Map<String, Object> shifts = new HashMap<>();
@@ -139,11 +137,6 @@ public class BasePlotterExecutor implements PlotterExecutor {
     }
 
     @Override
-    public String getOperation() {
-        return this.operation;
-    }
-
-    @Override
     public Map<String, String> getParameters() {
         // TODO Auto-generated method stub
         return parameters;
@@ -163,8 +156,8 @@ public class BasePlotterExecutor implements PlotterExecutor {
         long leftDateBoundary = 0;
         long rightDateBoundary = 0;
 
-        Integer stepSize = topic.getPlotterStepSize();
-        stepSize = 1000;
+        Long stepSize = topic.getPlotterStepSize();
+        //stepSize = 1000;
 
         try {
             // leftDateBoundary =
@@ -269,23 +262,33 @@ public class BasePlotterExecutor implements PlotterExecutor {
         // Here starts the execution
 
         Plot plot = new Plot();
-        plot.setName(this.name);
+        plot.setName(execution.getModuleParameters().getName());
         plot.setTopic(topic);
 
         plot.setData(getStatusesChartData(topic));
-        plot.setMainOptions(getMainOptions(1));
+        plot.setMainOptions(getMainOptions(topic));
+        plot.setExecution(execution);
+        execution.setPlot(plot);
+        
 
         try {
-            plot = plotService.save(plot);
-        } catch (InvalidPlotException e) {
-            log.error("Couldn't create the plot.");
+            execution = executionService.save(execution);
+        } catch (Exception e) {
+            msg = "Couldn't create the plot. Aborting the operation.";
+            log.error(msg, e);
+            execution.appendLog(msg);
+            execution.setStatus(ExecutionStatus.Aborted);
+            execution.setPlot(null);
+            execution=executionService.save(execution);
+            throw new InvalidExecutionException();
         }
 
         // Here finishes the execution
 
-        msg = "Plot generation has finished. The new plot was assigned the id <" + plot.getId() + ">.";
+        msg = "Plot generation has finished. The new plot was assigned the id <" + execution.getPlot().getId() + ">.";
         log.info(msg);
         execution.appendLog(msg);
+        //execution.setPlot(plot);
         execution.setStatus(ExecutionStatus.Stopped);
         execution = executionService.save(execution);
     }
@@ -301,7 +304,7 @@ public class BasePlotterExecutor implements PlotterExecutor {
 
         try {
             try {
-                Method method = this.getClass().getMethod(this.operation);
+                Method method = this.getClass().getMethod(this.execution.getModuleParameters().getOperation());
                 method.invoke(this, new Object[] {});
             } catch (SecurityException e) {
                 log.error("SecurityException caught.", e);
@@ -330,11 +333,6 @@ public class BasePlotterExecutor implements PlotterExecutor {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public void setOperation(String operation) {
-        this.operation = operation;
     }
 
     @Override

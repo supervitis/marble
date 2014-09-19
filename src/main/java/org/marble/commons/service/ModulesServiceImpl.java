@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.marble.commons.executor.plotter.PlotterExecutor;
-import org.marble.commons.model.PlotModule;
+import org.marble.commons.model.ExecutionModuleDefinition;
 
 import org.reflections.Reflections;
 import org.slf4j.Logger;
@@ -22,15 +22,15 @@ public class ModulesServiceImpl implements ModuleService {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> List<PlotModule> getModules(String packageString, Class<T> superType) {
-        List<PlotModule> modules = new ArrayList<>();
+    public <T> List<ExecutionModuleDefinition> getModules(String packageString, Class<T> superType) {
+        List<ExecutionModuleDefinition> modules = new ArrayList<>();
 
         Reflections reflections = new Reflections(packageString);
         Set<Class<? extends T>> implementors = reflections.getSubTypesOf(superType);
 
         for (Class<? extends T> implementor : implementors) {
             // Get Name
-            PlotModule module = new PlotModule();
+            ExecutionModuleDefinition module = new ExecutionModuleDefinition();
             module.setName(implementor.getName());
             module.setSimpleName(implementor.getSimpleName());
             // Get Operations
@@ -57,13 +57,13 @@ public class ModulesServiceImpl implements ModuleService {
 
     @SuppressWarnings("unchecked")
     @Override
-    public <T> PlotModule getModule(String moduleName, String packageString, Class<T> superType) {
+    public <T> ExecutionModuleDefinition getModule(String moduleName, String packageString, Class<T> superType) {
         Reflections reflections = new Reflections(packageString);
         Set<Class<? extends T>> implementors = reflections.getSubTypesOf(superType);
-        PlotModule module = null;
+        ExecutionModuleDefinition module = null;
         for (Class<? extends T> implementor : implementors) {
             if (implementor.getName().equals(moduleName)) {
-                module = new PlotModule();
+                module = new ExecutionModuleDefinition();
                 module.setName(implementor.getName());
                 module.setSimpleName(implementor.getSimpleName());
                 // Get Operations
@@ -90,12 +90,12 @@ public class ModulesServiceImpl implements ModuleService {
     }
 
     @Override
-    public PlotModule getPlotterModule(String moduleName) {
+    public ExecutionModuleDefinition getPlotterModule(String moduleName) {
         return getModule(moduleName, this.plotterPackage, PlotterExecutor.class);
     }
 
     @Override
-    public List<PlotModule> getPlotterModules() {
+    public List<ExecutionModuleDefinition> getPlotterModules() {
         return getModules(this.plotterPackage, PlotterExecutor.class);
     }
 

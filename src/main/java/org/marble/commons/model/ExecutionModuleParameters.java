@@ -1,10 +1,23 @@
 package org.marble.commons.model;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class ExecutionCreationParameters {
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
+public class ExecutionModuleParameters implements Serializable {
+
+    private static final long serialVersionUID = 8266285660578157515L;
+    
+    @NotEmpty(message="{ExecutionModuleParameters.name.not_empty.validation}")
+    @Pattern(regexp = "[a-zA-Z_0-9- ]+", message="{ExecutionModuleParameters.name.pattern.validation}")
     private String name;
+    @NotEmpty(message="{ExecutionModuleParameters.module.validation}")
     private String module;
+    @NotEmpty(message="{ExecutionModuleParameters.operation.validation}")
     private String operation;
     private Map<String, String> parameters;
 

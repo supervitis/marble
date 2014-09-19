@@ -55,14 +55,14 @@
 			<div class="panel-body">
 
 				<div class="table-responsive">
-					<table class="table table-hover">
-						<thead>
+					<table class="table">
+						<tbody>
 							<tr>
-								<th><a href='<c:url value="plot/delete/${plot.id}" />' class="btn btn-danger btn-block">
+								<td><a href='<c:url value="plot/delete/${plot.id}" />' class="btn btn-danger btn-block">
 										<i class="fa fa-trash-o"></i> Delete
-									</a></th>
+									</a></td>
 							</tr>
-						</thead>
+						</tbody>
 						<!-- <tbody>
 							<tr>
 								<td></td>

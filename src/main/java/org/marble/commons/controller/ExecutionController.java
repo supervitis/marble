@@ -36,6 +36,7 @@ public class ExecutionController {
 
         Execution execution;
         execution = executionService.findOne(executionId);
+        modelAndView.addObject("topic", execution.getTopic());
         modelAndView.setViewName("execution_view");
         modelAndView.addObject("execution", execution);
         return modelAndView;
@@ -93,28 +94,6 @@ public class ExecutionController {
 
         // Setting message
         redirectAttributes.addFlashAttribute("notificationMessage", "ExecutionController.processorExecuted");
-        redirectAttributes.addFlashAttribute("notificationIcon", "fa-sign-in");
-        redirectAttributes.addFlashAttribute("notificationLevel", "success");
-        return "redirect:" + basePath + "/execution/" + executionId;
-    }
-    
-    @Deprecated
-    @RequestMapping(value = "/topic/{topicId:[0-9]+}/plot", method = RequestMethod.GET)
-    public String executePlotter(@PathVariable Integer topicId, RedirectAttributes redirectAttributes, HttpServletRequest request) {
-        String basePath = MarbleUtil.getBasePath(request);
-        Integer executionId = 0;
-        try {
-            //executionId = executionService.executePlotter(topicId, null);
-        } catch (Exception e) {
-            // Setting message
-            redirectAttributes.addFlashAttribute("notificationMessage", "ExecutionController.plotterExecutionFailed");
-            redirectAttributes.addFlashAttribute("notificationIcon", "fa-exclamation-triangle");
-            redirectAttributes.addFlashAttribute("notificationLevel", "danger");
-            return "redirect:" + basePath + "/topic/" + topicId + "/execution";
-        }
-
-        // Setting message
-        redirectAttributes.addFlashAttribute("notificationMessage", "ExecutionController.plotterExecuted");
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-sign-in");
         redirectAttributes.addFlashAttribute("notificationLevel", "success");
         return "redirect:" + basePath + "/execution/" + executionId;

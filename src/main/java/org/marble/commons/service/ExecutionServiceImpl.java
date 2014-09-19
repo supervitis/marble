@@ -10,15 +10,14 @@ import org.marble.commons.dao.model.Execution;
 import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidExecutionException;
 import org.marble.commons.exception.InvalidModuleException;
-import org.marble.commons.exception.InvalidPlotParametersException;
 import org.marble.commons.exception.InvalidTopicException;
 import org.marble.commons.executor.extractor.ExtractorExecutor;
 import org.marble.commons.executor.plotter.PlotterExecutor;
 import org.marble.commons.executor.processor.ProcessorExecutor;
 import org.marble.commons.model.ExecutionStatus;
 import org.marble.commons.model.ExecutionType;
-import org.marble.commons.model.ExecutionCreationParameters;
-import org.marble.commons.model.PlotModule;
+import org.marble.commons.model.ExecutionModuleParameters;
+import org.marble.commons.model.ExecutionModuleDefinition;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -140,20 +139,20 @@ public class ExecutionServiceImpl implements ExecutionService {
 
     @Override
     @Transactional
-    public Integer executePlotter(Integer topicId, ExecutionCreationParameters plotParameters) throws InvalidTopicException,
-            InvalidExecutionException, InvalidPlotParametersException, InvalidModuleException {
+    public Integer executePlotter(Integer topicId, ExecutionModuleParameters moduleParameters) throws InvalidTopicException,
+            InvalidExecutionException, InvalidModuleException {
         log.info("Executing the processor for topic <" + topicId + ">.");
 
         // First, a check is made in order to prevent Injection Attacks
-        PlotModule module = moduleService.getPlotterModule(plotParameters.getModule());
+        ExecutionModuleDefinition module = moduleService.getPlotterModule(moduleParameters.getModule());
         if (module == null) {
-            log.error("The module <" + plotParameters.getModule() + "> is invalid.");
+            log.error("The module <" + moduleParameters.getModule() + "> is invalid.");
             throw new InvalidModuleException();
         }
 
         // Second, check the operation is valid
-        if (plotParameters.getOperation() == null || !module.getOperations().containsKey(plotParameters.getOperation())) {
-            log.error("The operation <" + plotParameters.getOperation() + "> for module <" + plotParameters.getModule()
+        if (moduleParameters.getOperation() == null || !module.getOperations().containsKey(moduleParameters.getOperation())) {
+            log.error("The operation <" + moduleParameters.getOperation() + "> for module <" + moduleParameters.getModule()
                     + "> is invalid.");
             throw new InvalidModuleException();
         }
@@ -169,13 +168,14 @@ public class ExecutionServiceImpl implements ExecutionService {
         execution.setType(ExecutionType.Plotter);
         topic.getExecutions().add(execution);
         execution.setTopic(topic);
+        execution.setModuleParameters(moduleParameters);
         topic = topicService.save(topic);
 
         execution = this.save(execution);
 
         log.info("Starting execution <" + Introspector.decapitalize(module.getSimpleName())+"|"+ execution.getId() + ">... now!");
         PlotterExecutor executor = (PlotterExecutor) context.getBean(Introspector.decapitalize(module.getSimpleName()));
-        executor.setOperation(plotParameters.getOperation());
+        //executor.setOperation(moduleParameters.getOperation());
         executor.setExecution(execution);
         taskExecutor.execute(executor);
 

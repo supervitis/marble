@@ -1,9 +1,11 @@
 package org.marble.commons.service;
 
 import java.util.List;
+
 import org.marble.commons.dao.PlotDao;
 import org.marble.commons.dao.model.Plot;
 import org.marble.commons.exception.InvalidPlotException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +18,7 @@ public class PlotServiceImpl implements PlotService {
 
     @Autowired
     PlotDao plotDao;
-
+    
     @Override
     public Plot findOne(Integer id) throws InvalidPlotException {
         Plot plot = plotDao.findOne(id);

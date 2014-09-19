@@ -82,26 +82,21 @@
 			<div class="panel-body">
 
 				<div class="table-responsive">
-					<table class="table table-hover">
-						<thead>
+					<table class="table">
+						<tbody>
 							<tr>
-								<th><a href="<c:url value="topic/edit/${topicInfo.topicId}"/>" class="btn btn-default btn-block">
+								<td><a href="<c:url value="topic/edit/${topicInfo.topicId}"/>" class="btn btn-default btn-block">
 										<i class="fa fa-pencil"></i>
 										<spring:message code="topic_info.actions.edit" />
-									</a></th>
+									</a></td>
 							</tr>
 							<tr>
-								<th><a href='<c:url value="topic/${topicInfo.topicId}/execution"/>' class="btn btn-default btn-block">
+								<td><a href='<c:url value="topic/${topicInfo.topicId}/execution"/>' class="btn btn-default btn-block">
 										<i class="fa fa-rocket"></i>
 										<spring:message code="topic_info.actions.view_executions" />
-									</a></th>
+									</a></td>
 							</tr>
-						</thead>
-						<!-- <tbody>
-							<tr>
-								<td></td>
-							</tr>
-						</tbody>-->
+						</tbody>
 					</table>
 				</div>
 			</div>

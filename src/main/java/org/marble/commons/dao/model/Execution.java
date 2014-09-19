@@ -12,13 +12,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
+
 import org.marble.commons.model.ExecutionCommand;
+import org.marble.commons.model.ExecutionModuleParameters;
 import org.marble.commons.model.ExecutionStatus;
 import org.marble.commons.model.ExecutionType;
 import org.marble.commons.util.MarbleUtil;
@@ -67,6 +70,13 @@ public class Execution implements Serializable {
     @JsonSerialize(using = StringDateSerializer.class)
     @Column(name = "updated_at")
     public Date updatedAt;
+    
+    @Column(name = "module_parameters")
+    private ExecutionModuleParameters moduleParameters;
+    
+    @OneToOne()
+    @Cascade({ CascadeType.ALL })
+    private Plot plot;
 
     public Integer getId() {
         return id;
@@ -139,6 +149,22 @@ public class Execution implements Serializable {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public ExecutionModuleParameters getModuleParameters() {
+        return moduleParameters;
+    }
+
+    public void setModuleParameters(ExecutionModuleParameters moduleParameters) {
+        this.moduleParameters = moduleParameters;
+    }
+
+    public Plot getPlot() {
+        return plot;
+    }
+
+    public void setPlot(Plot plot) {
+        this.plot = plot;
     }
 
     @PrePersist

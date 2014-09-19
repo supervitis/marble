@@ -29,7 +29,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
 @Table(name = "mrbl_plots")
-@JsonIgnoreProperties({})
+@JsonIgnoreProperties({ "topic", "mainOptions", "overviewOptions", "data", "execution"})
 public class Plot implements Serializable {
 
     private static final long serialVersionUID = 6936532299491147949L;
@@ -39,9 +39,9 @@ public class Plot implements Serializable {
     @Column(unique = true, name = "id")
     private Integer id;
 
-    @Column(unique = true, name = "name")
+    @Column(name = "name")
     @NotEmpty
-    @Pattern(regexp = "[a-zA-Z_0-9-]+")
+    @Pattern(regexp = "[a-zA-Z_ 0-9-]+")
     private String name;
 
     @Column(name = "description")
@@ -50,17 +50,21 @@ public class Plot implements Serializable {
     @OneToOne()
     //@Cascade({ CascadeType.DELETE })
     private Topic topic;
+    
+    @OneToOne()
+    @Cascade({CascadeType.PERSIST})
+    private Execution execution;
 
-    @Column(length = 1000, name = "main_options")
-    @JsonRawValue
+    @Column(length = 2000, name = "main_options")
+    //@JsonRawValue
     private String mainOptions;
 
-    @Column(length = 1000, name = "overview_options")
-    @JsonRawValue
+    @Column(length = 2000, name = "overview_options")
+    //@JsonRawValue
     private String overviewOptions;
 
-    @Column(length = 50000, name = "plot_data")
-    @JsonRawValue
+    @Column(length = 200000, name = "plot_data")
+    //@JsonRawValue
     private String data;
 
     @JsonSerialize(using = StringDateSerializer.class)
@@ -156,6 +160,14 @@ public class Plot implements Serializable {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Execution getExecution() {
+        return execution;
+    }
+
+    public void setExecution(Execution execution) {
+        this.execution = execution;
     }
 
     @PrePersist

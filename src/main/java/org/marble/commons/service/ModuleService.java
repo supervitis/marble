@@ -5,16 +5,16 @@ import java.util.Set;
 
 import org.marble.commons.dao.model.Plot;
 import org.marble.commons.exception.InvalidPlotException;
-import org.marble.commons.model.PlotModule;
+import org.marble.commons.model.ExecutionModuleDefinition;
 
 public interface ModuleService {
 
-    List<PlotModule> getPlotterModules();
+    List<ExecutionModuleDefinition> getPlotterModules();
 
-    PlotModule getPlotterModule(String module);
+    ExecutionModuleDefinition getPlotterModule(String module);
 
-    <T> List<PlotModule> getModules(String packageString, Class<T> superType);
+    <T> List<ExecutionModuleDefinition> getModules(String packageString, Class<T> superType);
 
-    <T> PlotModule getModule(String moduleName, String packageString, Class<T> superType);
+    <T> ExecutionModuleDefinition getModule(String moduleName, String packageString, Class<T> superType);
 
 }

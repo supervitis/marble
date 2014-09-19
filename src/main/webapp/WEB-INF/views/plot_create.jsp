@@ -2,7 +2,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<form:form modelAttribute="plotCreate">
+<form:form commandName="executionModuleParameters" modelAttribute="executionModuleParameters">
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="panel panel-default">
@@ -40,11 +40,15 @@
 				<!-- /.panel-heading -->
 
 				<div class="panel-body">
+					<form:errors path="*" cssClass="alert alert-danger" element="div" />
 					<div class="form-group">
-						<label for="name">Name</label> <input id="plot-name" name="name" class="form-control" type="text">
-						<p class="help-block">Short name for the new plot.</p>
+						<fieldset>
+							<legend>Name</legend>
+							<input id="plot-name" name="name" class="form-control" type="text">
+							<p class="help-block">Short name for the new plot.</p>
+						</fieldset>
 					</div>
-					
+
 					<div class="form-group" id="modules-div">
 						<fieldset>
 							<legend>Module</legend>

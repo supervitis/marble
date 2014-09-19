@@ -45,19 +45,25 @@
 	                return output;
 	            });
 	            
-	         	// Create the parameters configuration
-	            $("#parameters-div").empty().append(function() {
-	                var output = '<fieldset><legend>Custom Parameters</legend>';
-	                $.each(modules[$moduleSelect.val()]["parameters"], function(key, value) {
-	                    output += '<div class="form-group">';
-	                    output += '<label for="' + key + '">' + value + '</label>';
-	                    output += '<input id="' + key + '" name="parameters[' + key + ']" class="form-control" type="text">';
-	                    output += '<p class="help-block">' + value + '</p>';
-	                    output += '</div>';
-	                });
-	                output += '</fieldset>';
-	                return output;
-	            });
+	            if(modules[$moduleSelect.val()]["parameters"].length > 0)
+                {
+		         	// Create the parameters configuration
+		            $("#parameters-div").empty().append(function() {
+		                var output = '<fieldset><legend>Custom Parameters</legend>';
+		                $.each(modules[$moduleSelect.val()]["parameters"], function(key, value) {
+		                    output += '<div class="form-group">';
+		                    output += '<label for="' + key + '">' + value + '</label>';
+		                    output += '<input id="' + key + '" name="parameters[' + key + ']" class="form-control" type="text">';
+		                    output += '<p class="help-block">' + value + '</p>';
+		                    output += '</div>';
+		                });
+		                output += '</fieldset>';
+		                return output;
+		            });
+                }
+	            else {
+	                $("#parameters-div").empty();
+	            }
             }
         });
     });

@@ -169,6 +169,14 @@ public class TwitterExtractionExecutor implements ExtractorExecutor {
                     }
 
                 }
+                else {
+                    // No statuses extracted, it might be out of availability.
+                    msg = "No statuses available for extraction at this point.";
+                    log.info(msg);
+                    execution.appendLog(msg);
+                    executionService.save(execution);
+                    break;
+                }
                 topicService.save(topic);
 
                 msg = "Statuses extracted so far: <" + count + ">";
