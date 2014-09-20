@@ -85,11 +85,32 @@
 					<table class="table">
 						<tbody>
 							<tr>
-								<td><a href="<c:url value="topic/edit/${topicInfo.topicId}"/>" class="btn btn-default btn-block">
+								<td><a href="<c:url value="topic/${topicInfo.topicId}/edit"/>" class="btn btn-default btn-block">
 										<i class="fa fa-pencil"></i>
 										<spring:message code="topic_info.actions.edit" />
 									</a></td>
 							</tr>
+							<tr>
+								<td><a href="<c:url value="topic/${topicInfo.topicId}/execution/extract"/>"
+										class="btn btn-default btn-light-green btn-block">
+										<i class="fa fa-sign-in"></i>
+										<spring:message code="topics_list.form.extract" />
+									</a></td>
+							</tr>
+							<tr>
+								<td><a href="<c:url value="topic/${topicInfo.topicId}/execution/process"/>"
+										class="btn btn-default btn-blue btn-block">
+										<i class="fa fa-scissors"></i>
+										<spring:message code="topics_list.form.process" />
+									</a></td>
+							</tr>
+							<tr>
+								<td><a href="<c:url value="topic/${topicInfo.topicId}/plot"/>" class="btn btn-default btn-orange btn-block">
+										<i class="fa fa-bar-chart-o"></i>
+										<spring:message code="topics_list.form.plot" />
+									</a></td>
+							</tr>
+
 							<tr>
 								<td><a href='<c:url value="topic/${topicInfo.topicId}/execution"/>' class="btn btn-default btn-block">
 										<i class="fa fa-rocket"></i>

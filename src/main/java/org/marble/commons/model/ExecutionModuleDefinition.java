@@ -1,6 +1,5 @@
 package org.marble.commons.model;
 
-import java.util.List;
 import java.util.Map;
 
 public class ExecutionModuleDefinition {

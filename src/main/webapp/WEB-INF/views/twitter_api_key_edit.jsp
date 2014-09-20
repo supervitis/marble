@@ -23,8 +23,10 @@
 									<i class="fa fa-floppy-o"></i>
 									<spring:message code="twitter_api_key_edit.form.save" />
 								</button>
-								<a href="<c:url value="admin/keys/twitter"/>" class="btn btn-default pull-right"><i class="fa fa-times"></i>
-									<spring:message code="twitter_api_key_edit.form.cancel" /></a>
+								<a href="<c:url value="admin/keys/twitter"/>" class="btn btn-default pull-right">
+									<i class="fa fa-times"></i>
+									<spring:message code="twitter_api_key_edit.form.cancel" />
+								</a>
 
 							</div>
 						</div>
@@ -57,7 +59,9 @@
 								<label for="description"><spring:message code="twitter_api_key.form.description.label" /></label>
 								<form:input id="description" path="description" type="text" class="form-control" />
 								<form:errors path="description" cssClass="text-danger" />
-								<p class="help-block">Example block-level help text here.</p>
+								<p class="help-block">
+									<spring:message code="twitter_api_key.form.description.help" />
+								</p>
 							</div>
 						</spring:bind>
 
@@ -66,7 +70,9 @@
 								<label for="consumerKey"><spring:message code="twitter_api_key.form.consumerKey.label" /></label>
 								<form:input id="consumerKey" path="consumerKey" type="text" class="form-control" />
 								<form:errors path="consumerKey" cssClass="text-danger" />
-								<p class="help-block">Example block-level help text here.</p>
+								<p class="help-block">
+									<spring:message code="twitter_api_key.form.consumerKey.help" />
+								</p>
 							</div>
 						</spring:bind>
 						<spring:bind path="consumerSecret">
@@ -74,7 +80,9 @@
 								<label for="consumerSecret"><spring:message code="twitter_api_key.form.consumerSecret.label" /></label>
 								<form:input id="consumerSecret" path="consumerSecret" type="text" class="form-control" />
 								<form:errors path="consumerSecret" cssClass="text-danger" />
-								<p class="help-block">Example block-level help text here.</p>
+								<p class="help-block">
+									<spring:message code="twitter_api_key.form.consumerSecret.help" />
+								</p>
 							</div>
 						</spring:bind>
 
@@ -83,7 +91,9 @@
 								<label for="accessToken"><spring:message code="twitter_api_key.form.accessToken.label" /></label>
 								<form:input id="accessToken" path="accessToken" type="text" class="form-control" />
 								<form:errors path="accessToken" cssClass="text-danger" />
-								<p class="help-block">Example block-level help text here.</p>
+								<p class="help-block">
+									<spring:message code="twitter_api_key.form.accessToken.help" />
+								</p>
 							</div>
 						</spring:bind>
 						<spring:bind path="accessTokenSecret">
@@ -91,20 +101,28 @@
 								<label for="accessTokenSecret"><spring:message code="twitter_api_key.form.accessTokenSecret.label" /></label>
 								<form:input id="accessTokenSecret" path="accessTokenSecret" type="text" class="form-control" />
 								<form:errors path="accessTokenSecret" cssClass="text-danger" />
-								<p class="help-block">Example block-level help text here.</p>
+								<p class="help-block">
+									<spring:message code="twitter_api_key.form.accessTokenSecret.help" />
+								</p>
 							</div>
 						</spring:bind>
 
 						<spring:bind path="enabled">
 							<div class="form-group ${status.error ? 'has-error': ''}">
-								<label><spring:message code="twitter_api_key.form.enabled.other" /></label>
-								<div class="checkbox">
-									<label for="enabled"> <form:checkbox path="enabled" /> <spring:message
-											code="twitter_api_key.form.enabled.label" />
-									</label>
-								</div>
-								<form:errors path="enabled" cssClass="text-danger" />
-								<p class="help-block">Example block-level help text here.</p>
+								<fieldset>
+									<legend>
+										<spring:message code="twitter_api_key.form.other" />
+									</legend>
+									<div class="checkbox">
+										<label for="enabled"> <form:checkbox path="enabled" /> <spring:message
+												code="twitter_api_key.form.enabled.label" />
+										</label>
+									</div>
+									<form:errors path="enabled" cssClass="text-danger" />
+									<p class="help-block">
+										<spring:message code="twitter_api_key.form.enabled.help" />
+									</p>
+								</fieldset>
 							</div>
 						</spring:bind>
 
@@ -131,8 +149,9 @@
 							way back!).</p>
 						<div class="form-group">
 							<div class="col-lg-offset-10 col-lg-2">
-								<a href="<c:url value="admin/keys/twitter/delete/${twitter_api_key.id}"/>" class="btn btn-danger pull-right"><i
-									class="fa fa-trash-o"></i> Delete</a>
+								<a href="<c:url value="admin/keys/twitter/delete/${twitter_api_key.id}"/>" class="btn btn-danger pull-right">
+									<i class="fa fa-trash-o"></i> Delete
+								</a>
 
 							</div>
 						</div>

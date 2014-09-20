@@ -14,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -60,21 +62,25 @@ public class Topic implements Serializable {
 
     @Pattern(regexp = "[a-zA-Z]{2}|")
     @Column(name = "language")
-    private String language;
+    private String language = "en";
 
-    @Digits(fraction = 0, integer = 3)
+    @Min(1)
+    @Max(100)
     @Column(name = "statuses_per_call")
     private Integer statusesPerCall;
 
-    @Digits(fraction = 0, integer = 8)
+    @NotNull
+    @Digits(fraction = 0, integer = 5)
     @Column(name = "statuses_per_full_extraction")
-    private Integer statusesPerFullExtraction;
+    private Integer statusesPerFullExtraction = 1000;
 
+    @NotNull
     @Column(name = "processor_positive_boundary")
-    private Double processorPositiveBoundary;
+    private Double processorPositiveBoundary = 0D;
 
+    @NotNull
     @Column(name = "processor_negative_boundary")
-    private Double processorNegativeBoundary;
+    private Double processorNegativeBoundary = 0D;
 
     @DateTimeFormat(iso = ISO.DATE_TIME)
     @Column(name = "plotter_left_date_boundary")
@@ -84,9 +90,10 @@ public class Topic implements Serializable {
     @Column(name = "plotter_right_date_boundary")
     private Date plotterRightDateBoundary;
 
-    @Digits(fraction = 0, integer = 8)
+    @Min(value = 60000)
+    @NotNull
     @Column(name = "plotter_step_size")
-    private Long plotterStepSize;
+    private Long plotterStepSize = 60000L;
 
     @OneToMany(mappedBy = "topic", fetch = FetchType.EAGER)
     @Cascade({ CascadeType.DELETE })

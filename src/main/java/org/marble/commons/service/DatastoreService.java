@@ -1,6 +1,7 @@
 package org.marble.commons.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.convert.MongoConverter;
@@ -42,5 +43,7 @@ public interface DatastoreService {
     MongoConverter getConverter();
 
     <T> T findOneByTopicIdSortBy(Integer topicId, String field, Direction direction, Class<T> entityClass);
+
+    <T> DBCursor findCursorByQuery(Map<String, Object> queryParameters, Class<T> entityClass);
 
 }

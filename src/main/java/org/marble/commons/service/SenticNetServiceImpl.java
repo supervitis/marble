@@ -2,7 +2,6 @@ package org.marble.commons.service;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +24,6 @@ import org.xml.sax.SAXException;
 
 import org.marble.commons.dao.model.SenticItem;
 import org.marble.commons.util.MarbleUtil;
-
-import com.mongodb.MongoException;
 
 @Service
 public class SenticNetServiceImpl implements SenticNetService {

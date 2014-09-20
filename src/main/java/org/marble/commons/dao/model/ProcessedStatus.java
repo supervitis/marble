@@ -48,11 +48,11 @@ public class ProcessedStatus {
         this.createdAt = status.getCreatedAt();
         this.id = status.getId();
         this.text = status.getText();
-        this.isRetweeted = status.isRetweeted();
         this.screenName = status.getUser().getScreenName();
         this.timeZone = status.getUser().getTimeZone();
         if (status.getRetweetedStatus() != null) {
             this.originalCreatedAt = status.getRetweetedStatus().getCreatedAt();
+            this.isRetweeted = true;
         }
     }
 

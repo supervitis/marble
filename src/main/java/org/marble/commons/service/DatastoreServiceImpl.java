@@ -1,11 +1,13 @@
 package org.marble.commons.service;
 
 import java.util.List;
+import java.util.Map;
+
+import javax.swing.RowFilter.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -30,7 +32,7 @@ public class DatastoreServiceImpl implements DatastoreService {
 
     @Autowired
     MongoOperations mongoOperations;
-    
+
     @Autowired
     MongoTemplate mongoTemplate;
 
@@ -44,10 +46,10 @@ public class DatastoreServiceImpl implements DatastoreService {
         Query query = new Query();
         return mongoOperations.count(query, entityClass);
     }
-    
+
     @Override
     public <T> List<T> findAll(Class<T> entityClass) {
-       return mongoOperations.findAll(entityClass);
+        return mongoOperations.findAll(entityClass);
     }
 
     @Override
@@ -69,19 +71,32 @@ public class DatastoreServiceImpl implements DatastoreService {
         }
         return result;
     }
-    
+
+    @Override
+    public <T> DBCursor findCursorByQuery(Map<String, Object> queryParameters, Class<T> entityClass) {
+        Document document = entityClass.getAnnotation(Document.class);
+        DBCollection collection = mongoOperations.getCollection(document.collection());
+        BasicDBObject searchQuery = new BasicDBObject();
+        for (java.util.Map.Entry<String, Object> entry : queryParameters.entrySet()) {
+            log.error("MFC query: " + entry.getKey() + ":"+ entry.getValue());
+        }
+        searchQuery.putAll(queryParameters);
+        DBCursor cursor = collection.find(searchQuery);
+        return cursor;
+    }
+
     @Override
     public <T> List<T> findByTopicId(Integer topicId, Class<T> entityClass) throws MongoException {
         Query query = new Query();
         query.addCriteria(Criteria.where("topicId").is(topicId));
         return this.findByQuery(query, entityClass);
     }
-    
+
     @Override
     public <T> DBCursor findCursorByTopicId(Integer topicId, Class<T> entityClass) {
         Document document = entityClass.getAnnotation(Document.class);
         DBCollection collection = mongoOperations.getCollection(document.collection());
-        
+
         BasicDBObject searchQuery = new BasicDBObject();
         searchQuery.put("topicId", topicId);
 
@@ -104,7 +119,7 @@ public class DatastoreServiceImpl implements DatastoreService {
         query.addCriteria(Criteria.where("text").is(text));
         return this.findOneByQuery(query, entityClass);
     }
-    
+
     @Override
     public <T> T findOneByTopicIdSortBy(Integer topicId, String field, Direction direction, Class<T> entityClass) {
         Query query = new Query();

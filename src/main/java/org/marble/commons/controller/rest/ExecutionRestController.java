@@ -5,8 +5,6 @@ import org.marble.commons.exception.InvalidExecutionException;
 import org.marble.commons.model.Command;
 import org.marble.commons.service.ExecutionService;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/rest/execution")
 public class ExecutionRestController {
 
-    private static final Logger log = LoggerFactory.getLogger(ExecutionRestController.class);
+    //private static final Logger log = LoggerFactory.getLogger(ExecutionRestController.class);
     
     @Autowired
     private ExecutionService executionService;

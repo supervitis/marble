@@ -3,7 +3,6 @@ package org.marble.commons.model;
 import java.io.Serializable;
 import java.util.Map;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -17,6 +16,7 @@ public class ExecutionModuleParameters implements Serializable {
     private String name;
     @NotEmpty(message="{ExecutionModuleParameters.module.validation}")
     private String module;
+    private String simpleModule;
     @NotEmpty(message="{ExecutionModuleParameters.operation.validation}")
     private String operation;
     private Map<String, String> parameters;
@@ -35,6 +35,11 @@ public class ExecutionModuleParameters implements Serializable {
 
     public void setModule(String module) {
         this.module = module;
+        this.simpleModule = module.replaceAll("^.*\\.([^.]+)$", "$1");
+    }
+
+    public String getSimpleModule() {
+        return simpleModule;
     }
 
     public String getOperation() {

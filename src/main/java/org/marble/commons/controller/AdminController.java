@@ -5,8 +5,6 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +22,8 @@ import org.marble.commons.util.MarbleUtil;
 @RequestMapping("/admin")
 public class AdminController {
 
-    private static final Logger log = LoggerFactory.getLogger(AdminController.class);
+    // private static final Logger log =
+    // LoggerFactory.getLogger(AdminController.class);
 
     @Autowired
     SenticNetService senticNetService;
@@ -37,7 +36,8 @@ public class AdminController {
 
     // TODO MFC: Move to some other place
     @RequestMapping(value = "/upload/sentic", method = RequestMethod.POST)
-    public String uploadSentic(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+    public String uploadSentic(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
 
         String basePath = MarbleUtil.getBasePath(request);
         try {

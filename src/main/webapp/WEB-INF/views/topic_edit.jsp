@@ -56,7 +56,7 @@
 								<label for="name"><spring:message code="topic.form.name.label" /></label>
 								<form:input id="name" path="name" type="text" class="form-control" />
 								<form:errors path="name" cssClass="text-danger" />
-								<p class="help-block">Example block-level help text here.</p>
+								<p class="help-block"><spring:message code="topic.form.name.help" /></p>
 							</div>
 						</spring:bind>
 
@@ -65,7 +65,7 @@
 								<label for="description"><spring:message code="topic.form.description.label" /></label>
 								<form:input id="description" path="description" type="text" class="form-control" />
 								<form:errors path="description" cssClass="text-danger" />
-								<p class="help-block">Example block-level help text here.</p>
+								<p class="help-block"><spring:message code="topic.form.description.help" /></p>
 							</div>
 						</spring:bind>
 
@@ -91,7 +91,7 @@
 								<label for="keywords"><spring:message code="topic.form.keywords.label" /></label>
 								<form:input id="keywords" path="keywords" type="text" class="form-control" />
 								<form:errors path="keywords" cssClass="text-danger" />
-								<p class="help-block">Example block-level help text here.</p>
+								<p class="help-block"><spring:message code="topic.form.keywords.help" /></p>
 							</div>
 						</spring:bind>
 						<spring:bind path="upperLimit">
@@ -99,7 +99,7 @@
 								<label for="upperLimit"><spring:message code="topic.form.upperLimit.label" /></label>
 								<form:input id="upperLimit" path="upperLimit" type="text" class="form-control" />
 								<form:errors path="upperLimit" cssClass="text-danger" />
-								<p class="help-block">Example block-level help text here.</p>
+								<p class="help-block"><spring:message code="topic.form.upperLimit.help" /></p>
 							</div>
 						</spring:bind>
 						<spring:bind path="lowerLimit">
@@ -107,7 +107,7 @@
 								<label for="lowerLimit"><spring:message code="topic.form.lowerLimit.label" /></label>
 								<form:input id="lowerLimit" path="lowerLimit" type="text" class="form-control" />
 								<form:errors path="lowerLimit" cssClass="text-danger" />
-								<p class="help-block">Example block-level help text here.</p>
+								<p class="help-block"><spring:message code="topic.form.lowerLimit.help" /></p>
 							</div>
 						</spring:bind>
 						<spring:bind path="language">
@@ -115,7 +115,7 @@
 								<label for="language"><spring:message code="topic.form.language.label" /></label>
 								<form:input id="language" path="language" type="text" class="form-control" />
 								<form:errors path="language" cssClass="text-danger" />
-								<p class="help-block">Example block-level help text here.</p>
+								<p class="help-block"><spring:message code="topic.form.language.help" /></p>
 							</div>
 						</spring:bind>
 						<spring:bind path="statusesPerCall">
@@ -123,7 +123,7 @@
 								<label for="statusesPerCall"><spring:message code="topic.form.statusesPerCall.label" /></label>
 								<form:input id="statusesPerCall" path="statusesPerCall" type="text" class="form-control" />
 								<form:errors path="statusesPerCall" cssClass="text-danger" />
-								<p class="help-block">Example block-level help text here.</p>
+								<p class="help-block"><spring:message code="topic.form.statusesPerCall.help" /></p>
 							</div>
 						</spring:bind>
 						<spring:bind path="statusesPerFullExtraction">
@@ -131,7 +131,7 @@
 								<label for="statusesPerFullExtraction"><spring:message code="topic.form.statusesPerFullExtraction.label" /></label>
 								<form:input id="statusesPerFullExtraction" path="statusesPerFullExtraction" type="text" class="form-control" />
 								<form:errors path="statusesPerFullExtraction" cssClass="text-danger" />
-								<p class="help-block">Example block-level help text here.</p>
+								<p class="help-block"><spring:message code="topic.form.statusesPerFullExtraction.help" /></p>
 							</div>
 						</spring:bind>
 					</fieldset>
@@ -154,7 +154,7 @@
 								<label for="processorPositiveBoundary"><spring:message code="topic.form.processorPositiveBoundary.label" /></label>
 								<form:input id="processorPositiveBoundary" path="processorPositiveBoundary" type="text" class="form-control" />
 								<form:errors path="processorPositiveBoundary" cssClass="text-danger" />
-								<p class="help-block">Example block-level help text here.</p>
+								<p class="help-block"><spring:message code="topic.form.processorPositiveBoundary.help" /></p>
 							</div>
 						</spring:bind>
 						<spring:bind path="processorNegativeBoundary">
@@ -162,7 +162,7 @@
 								<label for="processorNegativeBoundary"><spring:message code="topic.form.processorNegativeBoundary.label" /></label>
 								<form:input id="processorNegativeBoundary" path="processorNegativeBoundary" type="text" class="form-control" />
 								<form:errors path="processorNegativeBoundary" cssClass="text-danger" />
-								<p class="help-block">Example block-level help text here.</p>
+								<p class="help-block"><spring:message code="topic.form.processorNegativeBoundary.help" /></p>
 							</div>
 						</spring:bind>
 					</fieldset>
@@ -187,7 +187,7 @@
 								<label for="plotterLeftDateBoundary"><spring:message code="topic.form.plotterLeftDateBoundary.label" /></label>
 								<form:input id="plotterLeftDateBoundary" path="plotterLeftDateBoundary" type="text" class="form-control" />
 								<form:errors path="plotterLeftDateBoundary" cssClass="text-danger" />
-								<p class="help-block">Example block-level help text here.</p>
+								<p class="help-block"><spring:message code="topic.form.plotterLeftDateBoundary.help" /></p>
 							</div>
 						</spring:bind>
 
@@ -196,7 +196,7 @@
 								<label for="plotterRightDateBoundary"><spring:message code="topic.form.plotterRightDateBoundary.label" /></label>
 								<form:input id="plotterRightDateBoundary" path="plotterRightDateBoundary" type="text" class="form-control" />
 								<form:errors path="plotterRightDateBoundary" cssClass="text-danger" />
-								<p class="help-block">Example block-level help text here.</p>
+								<p class="help-block"><spring:message code="topic.form.plotterRightDateBoundary.help" /></p>
 							</div>
 						</spring:bind>
 
@@ -205,7 +205,7 @@
 								<label for="plotterStepSize"><spring:message code="topic.form.plotterStepSize.label" /></label>
 								<form:input id="plotterStepSize" path="plotterStepSize" type="text" class="form-control" />
 								<form:errors path="plotterStepSize" cssClass="text-danger" />
-								<p class="help-block">Example block-level help text here.</p>
+								<p class="help-block"><spring:message code="topic.form.plotterStepSize.help" /></p>
 							</div>
 						</spring:bind>
 					</fieldset>
@@ -230,7 +230,7 @@
 						<p class="help-block">If you want to delete this Topic, click the Delete button below (there is no way back!).</p>
 						<div class="form-group">
 							<div class="col-lg-offset-10 col-lg-2">
-								<a href="<c:url value="topic/delete/${topic.id}"/>" class="btn btn-danger pull-right"><i class="fa fa-trash-o"></i> Delete</a>
+								<a href="<c:url value="topic/${topic.id}/delete"/>" class="btn btn-danger pull-right"><i class="fa fa-trash-o"></i> Delete</a>
 
 							</div>
 						</div>

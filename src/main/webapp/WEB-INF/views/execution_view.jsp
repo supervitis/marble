@@ -68,6 +68,11 @@
 					<table class="table" id="actions-table">
 						<tbody>
 							<tr>
+								<td><a href='<c:url value="topic/${execution.topic.id}" />' class="btn btn-default btn-block">
+										<i class="fa fa-tags"></i> View Topic
+									</a></td>
+							</tr>
+							<tr>
 								<td><div data-toggle="tooltip" title="This action is not available right now.">
 										<a id="send-command-stop" class="btn btn-default btn-block disabled">
 											<spring:message code="execution_view.actions.stop" />
