@@ -65,6 +65,8 @@ public class TwitterExtractionExecutor implements ExtractorExecutor {
 
         try {
 
+            Boolean inRange = true;
+
             Integer id = execution.getId();
 
             msg = "Starting twitter extraction <" + id + ">.";
@@ -159,6 +161,15 @@ public class TwitterExtractionExecutor implements ExtractorExecutor {
                         topic.setUpperLimit(lastId);
                         // save
                         OriginalStatus originalStatus = new OriginalStatus(status, topic.getId());
+                        if(topic.getLowerLimit() != null && topic.getLowerLimit() >= originalStatus.getId()) {
+                            inRange = false;
+                            msg = "Reached the lower limit for this topic.";
+                            log.info(msg);
+                            execution.appendLog(msg);
+                            executionService.save(execution);
+                            break;
+                        }
+
                         datastoreService.insertOriginalStatus(originalStatus);
 
                         count++;
@@ -184,7 +195,7 @@ public class TwitterExtractionExecutor implements ExtractorExecutor {
                 execution.appendLog(msg);
                 executionService.save(execution);
 
-            } while (count < maxStatuses);
+            } while (count < maxStatuses && inRange);
 
             msg = "Extraction of this topic has finished.";
             log.info(msg);

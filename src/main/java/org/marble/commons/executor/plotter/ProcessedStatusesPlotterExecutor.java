@@ -239,7 +239,7 @@ public class ProcessedStatusesPlotterExecutor implements PlotterExecutor {
             break;
         case AVERAGE_POLARITY: {
             Map<String, Object> createdData = new HashMap<>();
-            createdData.put("data", getStatusesChartData(topic, DataType.AVERAGE_POLARITY));
+            createdData.put("data", getCalculatedChartData(topic, DataType.AVERAGE_POLARITY));
             createdData.put("label", "Average Polarity");
             data.add(createdData);
         }
