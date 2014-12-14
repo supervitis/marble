@@ -5,7 +5,7 @@
 
 	<groupId>org.marble</groupId>
 	<artifactId>marble-core</artifactId>
-	<version>0.2-Bravo</version>
+	<version>0.3-Charlie</version>
 	<packaging>war</packaging>
 
 	<properties>
@@ -491,6 +491,14 @@
 			<version>3.10.0</version>
 			<scope>provided</scope>
 		</dependency>
+
+		<!-- Validation Data Upload -->
+		<dependency>
+			<groupId>au.com.bytecode</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>2.4</version>
+		</dependency>
+
 	</dependencies>
 
 </project>

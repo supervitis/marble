@@ -34,6 +34,7 @@ public class ResetController {
         return "redirect:" + basePath + "/";
     }
 
+    /*
     @RequestMapping(value = "/special", method = RequestMethod.GET)
     public String special(RedirectAttributes redirectAttributes, HttpServletRequest request) {
         String basePath = MarbleUtil.getBasePath(request);
@@ -45,5 +46,5 @@ public class ResetController {
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-exclamation-triangle");
         redirectAttributes.addFlashAttribute("notificationLevel", "success");
         return "redirect:" + basePath + "/admin";
-    }
+    }*/
 }
