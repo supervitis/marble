@@ -18,6 +18,7 @@
 					<li><a href="<c:url value="admin/keys/twitter"/>"><i class="fa fa-key fa-fw"></i> Twitter API Keys</a></li>
 				</ul> <!-- /.nav-second-level --></li>
 			<li><a href="<c:url value="topic"/>"><i class="fa fa-tags fa-fw"></i> Topics</a></li>
+			<li><a href="<c:url value="validation"/>"><i class="fa fa-check-square-o fa-fw"></i> Validation</a></li> 
 		</ul>
 	</div>
 	<!-- /.sidebar-collapse -->

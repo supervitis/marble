@@ -112,7 +112,7 @@ public class ExecutionServiceImpl implements ExecutionService {
 
     @Override
     @Transactional
-    public Integer executeProcessor(Integer topicId) throws InvalidTopicException, InvalidExecutionException {
+    public Integer executeProcessor(Integer topicId, ExecutionModuleParameters plotParameters) throws InvalidTopicException, InvalidExecutionException {
         log.info("Executing the processor for topic <" + topicId + ">.");
 
         Execution execution = new Execution();

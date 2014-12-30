@@ -37,6 +37,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class Execution implements Serializable {
     private static final long serialVersionUID = -1285068636097871799L;
 
+    public static final Integer LOG_LIMIT = 50000; 
+    
     @Id
     @Column(unique = true, name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -120,8 +122,8 @@ public class Execution implements Serializable {
 
     public void appendLog(String log) {
         this.log = MarbleUtil.getDatedMessage(log) + "\n" + this.log;
-        if (this.log.length() > 50000) {
-            this.log = this.log.substring(0, 50000);
+        if (this.log.length() > LOG_LIMIT) {
+            this.log = this.log.substring(0, LOG_LIMIT);
             this.log = this.log.substring(0, this.log.lastIndexOf("\n"));
 
         }

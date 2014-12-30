@@ -165,6 +165,22 @@ public class TopicController {
         return modelAndView;
     }
 
+    @RequestMapping(value = "/{topicId:[0-9]+}/process/execute", method = RequestMethod.GET)
+    public ModelAndView processExecuteRequest(@PathVariable Integer topicId) throws InvalidTopicException {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("forward:/process/topic/" + topicId + "/execute");
+        return modelAndView;
+    }
+    
+    @RequestMapping(value = "/{topicId:[0-9]+}/process/execute", method = RequestMethod.POST)
+    public ModelAndView processExecuteResponse(@PathVariable Integer topicId,
+            ExecutionModuleParameters moduleParameters) throws InvalidTopicException {
+        ModelAndView modelAndView = new ModelAndView();
+
+        modelAndView.setViewName("forward:/process/topic/" + topicId + "/execute");
+        return modelAndView;
+    }
+    
     @RequestMapping(value = "/{topicId:[0-9]+}/execution/plot", method = RequestMethod.GET)
     public ModelAndView executePlotter(@PathVariable Integer topicId) throws InvalidTopicException {
         ModelAndView modelAndView = new ModelAndView();

@@ -499,6 +499,15 @@
 			<version>2.4</version>
 		</dependency>
 
+		<!-- Testing -->
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.8.8</version>
+		</dependency>
+
+
+
 	</dependencies>
 
 </project>

@@ -3,11 +3,17 @@ package org.marble.commons.executor.processor;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.marble.commons.dao.model.Execution;
 import org.marble.commons.dao.model.OriginalStatus;
 import org.marble.commons.dao.model.ProcessedStatus;
 import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidExecutionException;
+import org.marble.commons.exception.InvalidTopicException;
+import org.marble.commons.executor.plotter.OriginalStatusesPlotterExecutor;
 import org.marble.commons.model.Constants;
 import org.marble.commons.model.ExecutionStatus;
 import org.marble.commons.service.DatastoreService;
@@ -30,6 +36,28 @@ public class BagOfWordsSenticProcessorExecutor implements ProcessorExecutor {
 
     private static final Logger log = LoggerFactory.getLogger(BagOfWordsSenticProcessorExecutor.class);
 
+    public static final Map<String, String> availableOperations;
+
+    public static final Map<String, String> availableParameters;
+
+    static {
+        Map<String, String> operations = new TreeMap<>();
+        operations.put("basicProcessor", "Basic Processor.");
+        availableOperations = Collections.unmodifiableMap(operations);
+    }
+    
+    static {
+        Map<String, String> parameters = new TreeMap<>();
+        parameters.put("Param1", "Param 1.");
+        parameters.put("Param2", "Param 2.");
+        availableParameters = Collections.unmodifiableMap(parameters);
+    }
+
+    private enum OperationType
+    {
+        REGULAR
+    }
+    
     @Autowired
     ExecutionService executionService;
 
@@ -42,9 +70,9 @@ public class BagOfWordsSenticProcessorExecutor implements ProcessorExecutor {
     @Autowired
     SenticNetService senticNetService;
 
-    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-
-    Execution execution;
+    private Execution execution;
+    
+    private Map<String, String> parameters;
 
     // Custom parameters
     private Boolean ignoreNeutralSentences = Boolean.FALSE;
@@ -52,6 +80,17 @@ public class BagOfWordsSenticProcessorExecutor implements ProcessorExecutor {
     @Override
     public void setExecution(Execution execution) {
         this.execution = execution;
+    }
+    
+    @Override
+    public Map<String, String> getParameters() {
+        return parameters;
+    }
+
+    @Override
+    public void setParameters(Map<String, String> parameters) {
+        this.parameters = parameters;
+
     }
 
     @Override
@@ -67,81 +106,22 @@ public class BagOfWordsSenticProcessorExecutor implements ProcessorExecutor {
 
             Integer id = execution.getId();
 
-            msg = "Starting Bag of Words Sentic Processor <" + id + ">.";
+            msg = "Starting Bag of Words Sentic processor <" + id + ">.";
             log.info(msg);
             execution.appendLog(msg);
 
             // Changing execution state
             execution.setStatus(ExecutionStatus.Running);
             execution = executionService.save(execution);
-
-            // Get the associated topic
-            Topic topic = topicService.findOne(execution.getTopic().getId());
-
-            // Drop current processed statuses
-            datastoreService.findAllAndRemoveByTopicId(topic.getId(), ProcessedStatus.class);
-
-            // TODO Include ignore neutral sentences from global configuration
-            this.ignoreNeutralSentences = Boolean.FALSE;
-            log.info("Getting statuses for topic <" + topic.getId() + ">.");
-
-            log.info("There are <" + datastoreService.countAll(OriginalStatus.class) + "> statuses to process.");
-
-            // List<OriginalStatus> statuses =
-            // datastoreService.findByTopicId(topic.getId(),
-            // OriginalStatus.class);
-            DBCursor statusesCursor = datastoreService.findCursorByTopicId(topic.getId(), OriginalStatus.class);
-
-            log.info("There are <" + statusesCursor.count() + "> statuses to process.");
-            Integer count = 0;
-            while (statusesCursor.hasNext()) {
-            //for (OriginalStatus status : statuses) {
-                DBObject rawStatus = statusesCursor.next();
-                OriginalStatus status = datastoreService.getConverter().read(OriginalStatus.class, rawStatus);
-                log.debug("Status text is <" + status.getText() + ">");
-                if (status.getCreatedAt() == null) {
-                    continue;
-                }
-                String text = status.getText();
-                if (text == null) {
-                    log.debug("Status text for id <" + status.getId() + "> is null. Skipping...");
-                    continue;
-                }
-                log.debug("Analysing text: " + text.replaceAll("\n", ""));
-
-                Float polarity = this.processStatus(text);
-
-                log.debug("Polarity for text <" + text.replaceAll("\n", "") + "> is <" + polarity + ">");
-
-                ProcessedStatus processedStatus = new ProcessedStatus(status);
-                processedStatus.setPolarity(polarity);
-
-                datastoreService.save(processedStatus);
-
-                count++;
-
-                if ((count % 100) == 0) {
-                    msg = "Statuses processed so far: <" + count + ">";
-                    log.info(msg);
-                    execution.appendLog(msg);
-                    executionService.save(execution);
-                }
+            
+            switch (this.execution.getModuleParameters().getOperation()) {
+            case "plotAllStatuses":
+                process(OperationType.REGULAR);
+                break;
             }
-
-            log.info("The bag of words sentic processor operation for topic <" + topic.getName() + "> has finished.");
-
-            msg = "Total of statuses processed: <" + count + ">";
-            log.info(msg);
-            execution.appendLog(msg);
-
-            msg = "The Bag of Words Sentic Processor execution for this topic has finished.";
-            log.info(msg);
-            execution.appendLog(msg);
-            execution.setStatus(ExecutionStatus.Stopped);
-
-            execution = executionService.save(execution);
+            
         } catch (Exception e) {
-            msg = "An error ocurred while running execution <" + execution.getId() + ">. Execution aborted.";
+            msg = "An error ocurred while processing statuses with execution <" + execution.getId() + ">. Execution aborted.";
             log.error(msg, e);
             execution.appendLog(msg);
             execution.setStatus(ExecutionStatus.Aborted);
@@ -155,6 +135,76 @@ public class BagOfWordsSenticProcessorExecutor implements ProcessorExecutor {
         }
     }
 
+    public void process(OperationType operationType) throws InvalidExecutionException {
+        
+        String msg = "";
+        // Get the associated topic
+        Topic topic = execution.getTopic();
+
+        // Drop current processed statuses
+        datastoreService.findAllAndRemoveByTopicId(topic.getId(), ProcessedStatus.class);
+
+        // TODO Include ignore neutral sentences from global configuration
+        this.ignoreNeutralSentences = Boolean.FALSE;
+        log.info("Getting statuses for topic <" + topic.getId() + ">.");
+
+        log.info("There are <" + datastoreService.countAll(OriginalStatus.class) + "> statuses to process.");
+
+        // List<OriginalStatus> statuses =
+        // datastoreService.findByTopicId(topic.getId(),
+        // OriginalStatus.class);
+        DBCursor statusesCursor = datastoreService.findCursorByTopicId(topic.getId(), OriginalStatus.class);
+
+        log.info("There are <" + statusesCursor.count() + "> statuses to process.");
+        Integer count = 0;
+        while (statusesCursor.hasNext()) {
+        //for (OriginalStatus status : statuses) {
+            DBObject rawStatus = statusesCursor.next();
+            OriginalStatus status = datastoreService.getConverter().read(OriginalStatus.class, rawStatus);
+            log.debug("Status text is <" + status.getText() + ">");
+            if (status.getCreatedAt() == null) {
+                continue;
+            }
+            String text = status.getText();
+            if (text == null) {
+                log.debug("Status text for id <" + status.getId() + "> is null. Skipping...");
+                continue;
+            }
+            log.debug("Analysing text: " + text.replaceAll("\n", ""));
+
+            Float polarity = this.processStatus(text);
+
+            log.debug("Polarity for text <" + text.replaceAll("\n", "") + "> is <" + polarity + ">");
+
+            ProcessedStatus processedStatus = new ProcessedStatus(status);
+            processedStatus.setPolarity(polarity);
+
+            datastoreService.save(processedStatus);
+
+            count++;
+
+            if ((count % 100) == 0) {
+                msg = "Statuses processed so far: <" + count + ">";
+                log.info(msg);
+                execution.appendLog(msg);
+                executionService.save(execution);
+            }
+        }
+
+        log.info("The bag of words sentic processor operation for topic <" + topic.getName() + "> has finished.");
+
+        msg = "Total of statuses processed: <" + count + ">";
+        log.info(msg);
+        execution.appendLog(msg);
+
+        msg = "The Bag of Words Sentic Processor execution for this topic has finished.";
+        log.info(msg);
+        execution.appendLog(msg);
+        execution.setStatus(ExecutionStatus.Stopped);
+
+        execution = executionService.save(execution);
+        
+    }
     public Boolean getIgnoreNeutralSentences() {
         return ignoreNeutralSentences;
     }

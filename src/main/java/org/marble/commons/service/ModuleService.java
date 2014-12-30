@@ -8,6 +8,10 @@ public interface ModuleService {
     List<ExecutionModuleDefinition> getPlotterModules();
 
     ExecutionModuleDefinition getPlotterModule(String module);
+    
+    List<ExecutionModuleDefinition> getProcessorModules();
+    
+    ExecutionModuleDefinition getProcessorModule(String module);
 
     <T> List<ExecutionModuleDefinition> getModules(String packageString, Class<T> superType);
 

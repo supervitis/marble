@@ -54,7 +54,7 @@
 											<i class="fa fa-sign-in"></i><span class="hidden-xs hidden-sm"> <spring:message
 													code="topics_list.form.extract" />
 											</span>
-										</a> <a href="<c:url value="topic/${topic.id}/execution/process"/>" class="btn btn-default btn-blue">
+										</a> <a href="<c:url value="topic/${topic.id}/process/execute"/>" class="btn btn-default btn-blue">
 											<i class="fa fa-scissors"></i><span class="hidden-xs hidden-sm"> <spring:message
 													code="topics_list.form.process" /></span>
 										</a> <a href="<c:url value="topic/${topic.id}/plot"/>" class="btn btn-default btn-orange">

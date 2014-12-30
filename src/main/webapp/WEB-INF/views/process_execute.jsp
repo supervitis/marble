@@ -9,17 +9,17 @@
 				<div class="panel-body">
 					<fieldset>
 						<p class="help-block">
-							<spring:message code="plot_create.form.informative_message" />
+							<spring:message code="process_execute.form.informative_message" />
 						</p>
 						<div class="form-group">
 							<div class="col-lg-offset-8 col-lg-4">
 								<button type="submit" id="save" class="btn btn-primary pull-right">
-									<i class="fa fa-floppy-o"></i>
-									<spring:message code="plot_create.form.create" />
+									<i class="fa fa-rocket"></i>
+									<spring:message code="process_execute.form.create" />
 								</button>
-								<a href="<c:url value="topic/${topic.id}/plot"/>" class="btn btn-default pull-right">
+								<a href="<c:url value="topic/${topic.id}"/>" class="btn btn-default pull-right">
 									<i class="fa fa-times"></i>
-									<spring:message code="plot_create.form.cancel" />
+									<spring:message code="process_execute.form.cancel" />
 								</a>
 
 							</div>
@@ -43,15 +43,15 @@
 					<form:errors path="*" cssClass="alert alert-danger" element="div" />
 					<div class="form-group">
 						<fieldset>
-							<legend><spring:message code="plot_create.form.name" /></legend>
-							<input id="plot-name" name="name" class="form-control" type="text">
-							<p class="help-block"><spring:message code="plot_create.form.name.description" /></p>
+							<legend><spring:message code="process_execute.form.name" /></legend>
+							<input id="process-name" name="name" class="form-control" type="text">
+							<p class="help-block"><spring:message code="process_execute.form.name.description" /></p>
 						</fieldset>
 					</div>
 
 					<div class="form-group" id="modules-div">
 						<fieldset>
-							<legend><spring:message code="plot_create.form.module" /></legend>
+							<legend><spring:message code="process_execute.form.module" /></legend>
 							<select name="module" id="modules-select" class="form-control">
 							</select>
 						</fieldset>

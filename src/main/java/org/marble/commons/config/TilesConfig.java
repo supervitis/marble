@@ -58,6 +58,8 @@ public class TilesConfig extends WebMvcConfigurerAdapter {
         addBaseDefinition("plot_view", "Plot Detail", "<i class='fa fa-bar-chart-o fa-fw'></i>", Boolean.TRUE);
         addBaseDefinition("plots_list", "Plots", "<i class='fa fa-bar-chart-o fa-fw'></i>", Boolean.FALSE);
         addBaseDefinition("plot_create", "Create New Plot", "<i class='fa fa-bar-chart-o fa-fw'></i>", Boolean.TRUE);
+        
+        addBaseDefinition("process_execute", "Execute Processor", "<i class='fa fa-scissors fa-fw'></i>", Boolean.TRUE);
 
         return tilesConfigurer;
     }

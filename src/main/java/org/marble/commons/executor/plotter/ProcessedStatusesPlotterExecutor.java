@@ -52,27 +52,6 @@ public class ProcessedStatusesPlotterExecutor implements PlotterExecutor {
         availableOperations = Collections.unmodifiableMap(operations);
     }
 
-    /*
-     * case Constants.PLOTTER_TOTAL_DIFFERENCE:
-     * labels.add("(Positive - Negative) Statuses");
-     * dataMaps.add(new HashMap<Long, Double>());
-     * break;
-     * case Constants.PLOTTER_TOTAL_AVERAGE:
-     * labels.add("Raw Polarity Average");
-     * dataMaps.add(new HashMap<Long, Double>());
-     * dataMaps.add(new HashMap<Long, Double>());
-     * break;
-     * case Constants.PLOTTER_TOTAL:
-     * labels.add("1. Positive Statuses");
-     * labels.add("2. Negative Statuses");
-     * case Constants.PLOTTER_ONLY_ORIGINALS:
-     * labels.add("1. Positive Statuses (only Originals)");
-     * labels.add("2. Negative Statuses (only Originals)");
-     * case Constants.PLOTTER_ONLY_RETWEETS:
-     * labels.add("1. Positive Statuses (only Retweets)");
-     * labels.add("2. Negative Statuses (only Retweets)");
-     */
-
     static {
         Map<String, String> parameters = new TreeMap<>();
         // parameters.put("Param1", "Param 1.");

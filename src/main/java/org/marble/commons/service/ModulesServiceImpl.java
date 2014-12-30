@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.marble.commons.executor.plotter.PlotterExecutor;
+import org.marble.commons.executor.processor.ProcessorExecutor;
 import org.marble.commons.model.ExecutionModuleDefinition;
 
 import org.reflections.Reflections;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 public class ModulesServiceImpl implements ModuleService {
 
     private final String plotterPackage = "org.marble.commons.executor.plotter";
+    private final String processorPackage = "org.marble.commons.executor.processor";
     private static final Logger log = LoggerFactory.getLogger(ModulesServiceImpl.class);
 
     @SuppressWarnings("unchecked")
@@ -93,10 +95,20 @@ public class ModulesServiceImpl implements ModuleService {
     public ExecutionModuleDefinition getPlotterModule(String moduleName) {
         return getModule(moduleName, this.plotterPackage, PlotterExecutor.class);
     }
+    
+    @Override
+    public ExecutionModuleDefinition getProcessorModule(String moduleName) {
+        return getModule(moduleName, this.processorPackage, ProcessorExecutor.class);
+    }
 
     @Override
     public List<ExecutionModuleDefinition> getPlotterModules() {
         return getModules(this.plotterPackage, PlotterExecutor.class);
+    }
+    
+    @Override
+    public List<ExecutionModuleDefinition> getProcessorModules() {
+        return getModules(this.processorPackage, ProcessorExecutor.class);
     }
 
 }
