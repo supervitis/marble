@@ -103,6 +103,14 @@ public class DatastoreServiceImpl implements DatastoreService {
         DBCursor cursor = collection.find(searchQuery);
         return cursor;
     }
+    
+    @Override
+    public <T> DBCursor findCursorForAll(Class<T> entityClass) {
+        Document document = entityClass.getAnnotation(Document.class);
+        DBCollection collection = mongoOperations.getCollection(document.collection());
+        DBCursor cursor = collection.find();
+        return cursor;
+    }
 
     @Override
     public <T> T findOneByQuery(Query query, Class<T> entityClass) throws MongoException {

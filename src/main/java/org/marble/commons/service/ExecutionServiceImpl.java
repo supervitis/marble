@@ -112,18 +112,46 @@ public class ExecutionServiceImpl implements ExecutionService {
 
     @Override
     @Transactional
-    public Integer executeProcessor(Integer topicId, ExecutionModuleParameters plotParameters) throws InvalidTopicException, InvalidExecutionException {
-        log.info("Executing the processor for topic <" + topicId + ">.");
+    public Integer executeProcessor(Integer topicId, ExecutionModuleParameters moduleParameters) throws InvalidTopicException,
+            InvalidExecutionException, InvalidModuleException {
+        
+        if (topicId != null) {
+            log.info("Executing the processor for topic <" + topicId + ">.");
+        } else {
+            log.info("Executing the validation of this processor.");
+        }
+        
+        // First, a check is made in order to prevent Injection Attacks
+        ExecutionModuleDefinition module = moduleService.getProcessorModule(moduleParameters.getModule());
+        if (module == null) {
+            log.error("The module <" + moduleParameters.getModule() + "> is invalid.");
+            throw new InvalidModuleException();
+        }
+
+        // Second, check the operation is valid
+        if (moduleParameters.getOperation() == null || !module.getOperations().containsKey(moduleParameters.getOperation())) {
+            log.error("The operation <" + moduleParameters.getOperation() + "> for module <" + moduleParameters.getModule()
+                    + "> is invalid.");
+            throw new InvalidModuleException();
+        }
+        
+        // TODO CHECK Third, get the parameters
+
+
+        // Fourth, prepare the execution
 
         Execution execution = new Execution();
 
-        Topic topic = topicService.findOne(topicId);
-
         execution.setStatus(ExecutionStatus.Initialized);
         execution.setType(ExecutionType.Processor);
-        topic.getExecutions().add(execution);
-        execution.setTopic(topic);
-        topic = topicService.save(topic);
+        execution.setModuleParameters(moduleParameters);
+
+        if (topicId != null) {
+            Topic topic = topicService.findOne(topicId);
+            topic.getExecutions().add(execution);
+            execution.setTopic(topic);
+            topic = topicService.save(topic);
+        }
 
         execution = this.save(execution);
 
@@ -135,6 +163,13 @@ public class ExecutionServiceImpl implements ExecutionService {
         log.info("Executor launched.");
 
         return execution.getId();
+    }
+
+    @Override
+    @Transactional
+    public Integer executeProcessor(ExecutionModuleParameters processorParameters) throws InvalidTopicException,
+            InvalidExecutionException, InvalidModuleException {
+        return this.executeProcessor(null, processorParameters);
     }
 
     @Override
@@ -173,9 +208,9 @@ public class ExecutionServiceImpl implements ExecutionService {
 
         execution = this.save(execution);
 
-        log.info("Starting execution <" + Introspector.decapitalize(module.getSimpleName())+"|"+ execution.getId() + ">... now!");
+        log.info("Starting execution <" + Introspector.decapitalize(module.getSimpleName()) + "|" + execution.getId() + ">... now!");
         PlotterExecutor executor = (PlotterExecutor) context.getBean(Introspector.decapitalize(module.getSimpleName()));
-        //executor.setOperation(moduleParameters.getOperation());
+        // executor.setOperation(moduleParameters.getOperation());
         executor.setExecution(execution);
         taskExecutor.execute(executor);
 

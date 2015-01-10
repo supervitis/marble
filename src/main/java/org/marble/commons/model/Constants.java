@@ -9,7 +9,6 @@ public class Constants {
     final public static String MONGO_PASSWORD = "mongo_password";
     final public static String MONGO_DATABASE = "mongo_database";
     final public static String MONGO_SENTICNET_COLLECTION = "senticnet_collection";
-    final public static String MONGO_DATAFILE_LOCATION = "/var/tmp/data";
     
     final public static String MONGO_PROCESSED_SUFFIX = "_processed";
     
@@ -40,8 +39,8 @@ public class Constants {
     public static final int NOT_FOUND = -9999;
     
     // Little trick to make constants available in JSF
-    public String mongoDatafileLocation = MONGO_DATAFILE_LOCATION;
+    /*public String mongoDatafileLocation = MONGO_DATAFILE_LOCATION;
     public String getMongoDatafileLocation() {
         return mongoDatafileLocation;
-    }
+    }*/
 }

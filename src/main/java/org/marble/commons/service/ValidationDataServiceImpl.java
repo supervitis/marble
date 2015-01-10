@@ -48,7 +48,8 @@ public class ValidationDataServiceImpl implements ValidationDataService {
         csv.read(file, new CSVReadProc() {
             public void procRow(int rowIndex, String... values) {
                 ValidationItem item = new ValidationItem();
-                item.setPolarity(Float.parseFloat(values[0]));
+                item.setId(rowIndex);
+                item.setPolarity(Integer.parseInt(values[0]));
                 item.setText(values[1]);
                 datastoreService.save(item);
             }

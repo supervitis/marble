@@ -60,6 +60,8 @@ public class TilesConfig extends WebMvcConfigurerAdapter {
         addBaseDefinition("plot_create", "Create New Plot", "<i class='fa fa-bar-chart-o fa-fw'></i>", Boolean.TRUE);
         
         addBaseDefinition("process_execute", "Execute Processor", "<i class='fa fa-scissors fa-fw'></i>", Boolean.TRUE);
+        
+        addBaseDefinition("validation", "Validation", "<i class='fa fa-check-square-o fa-fw'></i>", Boolean.TRUE);
 
         return tilesConfigurer;
     }

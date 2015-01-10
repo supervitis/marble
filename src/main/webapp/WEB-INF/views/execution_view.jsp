@@ -40,8 +40,24 @@
 						</thead>
 						<tbody>
 							<tr>
+								<th>Execution Name</th>
+								<td id="execution-name">Unknown</td>
+							</tr>
+							<tr>
 								<th>Type</th>
 								<td id="execution-type">Unknown</td>
+							</tr>
+							<tr>
+								<th>Module</th>
+								<td id="execution-module">Unknown</td>
+							</tr>
+							<tr>
+								<th>Operation</th>
+								<td id="execution-operation">Unknown</td>
+							</tr>
+							<tr>
+								<th>Parameters</th>
+								<td id="execution-parameters">Unknown</td>
 							</tr>
 							<tr>
 								<th>Created At</th>

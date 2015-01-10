@@ -5,6 +5,8 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.xml.sax.SAXException;
-
 import org.marble.commons.service.SenticNetService;
 import org.marble.commons.service.ValidationDataService;
 import org.marble.commons.util.MarbleUtil;
@@ -23,23 +24,22 @@ import org.marble.commons.util.MarbleUtil;
 @RequestMapping("/admin")
 public class DataUploadController {
 
-    // private static final Logger log =
-    // LoggerFactory.getLogger(AdminController.class);
+    private static final Logger log = LoggerFactory.getLogger(DataUploadController.class);
 
     @Autowired
     SenticNetService senticNetService;
-    
+
     @Autowired
     ValidationDataService validationDataService;
 
     @RequestMapping(value = "/upload/sentic", method = RequestMethod.POST)
-    public String uploadSentic(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes,
-            HttpServletRequest request) {
+    public String uploadSentic(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes, HttpServletRequest request) {
 
         String basePath = MarbleUtil.getBasePath(request);
         try {
             senticNetService.insertDataFromFile(file);
         } catch (IllegalStateException | IOException | SAXException | ParserConfigurationException e) {
+            log.error("An error ocurred while inserting the sentic data into the system.", e);
             redirectAttributes.addFlashAttribute("notificationMessage", "AdminController.senticDataUploadError");
             redirectAttributes.addFlashAttribute("notificationIcon", "fa-exclamation-triangle");
             redirectAttributes.addFlashAttribute("notificationLevel", "danger");
@@ -51,7 +51,7 @@ public class DataUploadController {
         redirectAttributes.addFlashAttribute("notificationLevel", "success");
         return "redirect:" + basePath + "/admin";
     }
-    
+
     @RequestMapping(value = "/upload/validationData", method = RequestMethod.POST)
     public String uploadValidationData(@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes,
             HttpServletRequest request) {
@@ -60,6 +60,7 @@ public class DataUploadController {
         try {
             validationDataService.insertDataFromFile(file);
         } catch (IllegalStateException | IOException | SAXException | ParserConfigurationException e) {
+            log.error("An error ocurred while inserting the validation data into the system.", e);
             redirectAttributes.addFlashAttribute("notificationMessage", "AdminController.validationDataUploadError");
             redirectAttributes.addFlashAttribute("notificationIcon", "fa-exclamation-triangle");
             redirectAttributes.addFlashAttribute("notificationLevel", "danger");

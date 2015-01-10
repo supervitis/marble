@@ -16,11 +16,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ModulesServiceImpl implements ModuleService {
+public class ModuleServiceImpl implements ModuleService {
 
     private final String plotterPackage = "org.marble.commons.executor.plotter";
     private final String processorPackage = "org.marble.commons.executor.processor";
-    private static final Logger log = LoggerFactory.getLogger(ModulesServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ModuleServiceImpl.class);
 
     @SuppressWarnings("unchecked")
     @Override

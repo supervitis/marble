@@ -11,11 +11,14 @@ import org.marble.commons.dao.model.Execution;
 import org.marble.commons.dao.model.OriginalStatus;
 import org.marble.commons.dao.model.ProcessedStatus;
 import org.marble.commons.dao.model.Topic;
+import org.marble.commons.dao.model.ValidationItem;
 import org.marble.commons.exception.InvalidExecutionException;
 import org.marble.commons.exception.InvalidTopicException;
 import org.marble.commons.executor.plotter.OriginalStatusesPlotterExecutor;
 import org.marble.commons.model.Constants;
 import org.marble.commons.model.ExecutionStatus;
+import org.marble.commons.model.SymplifiedProcessingItem;
+import org.marble.commons.model.ValidationResult;
 import org.marble.commons.service.DatastoreService;
 import org.marble.commons.service.ExecutionService;
 import org.marble.commons.service.SenticNetService;
@@ -45,19 +48,18 @@ public class BagOfWordsSenticProcessorExecutor implements ProcessorExecutor {
         operations.put("basicProcessor", "Basic Processor.");
         availableOperations = Collections.unmodifiableMap(operations);
     }
-    
+
     static {
         Map<String, String> parameters = new TreeMap<>();
-        parameters.put("Param1", "Param 1.");
-        parameters.put("Param2", "Param 2.");
+        parameters.put("positiveBoundary", "Positive Boundary.");
+        parameters.put("negativeBoundary", "Negative Boundary.");
         availableParameters = Collections.unmodifiableMap(parameters);
     }
 
-    private enum OperationType
-    {
+    private enum OperationType {
         REGULAR
     }
-    
+
     @Autowired
     ExecutionService executionService;
 
@@ -71,7 +73,7 @@ public class BagOfWordsSenticProcessorExecutor implements ProcessorExecutor {
     SenticNetService senticNetService;
 
     private Execution execution;
-    
+
     private Map<String, String> parameters;
 
     // Custom parameters
@@ -81,7 +83,7 @@ public class BagOfWordsSenticProcessorExecutor implements ProcessorExecutor {
     public void setExecution(Execution execution) {
         this.execution = execution;
     }
-    
+
     @Override
     public Map<String, String> getParameters() {
         return parameters;
@@ -113,13 +115,21 @@ public class BagOfWordsSenticProcessorExecutor implements ProcessorExecutor {
             // Changing execution state
             execution.setStatus(ExecutionStatus.Running);
             execution = executionService.save(execution);
-            
+
+            OperationType operationType = null;
             switch (this.execution.getModuleParameters().getOperation()) {
-            case "plotAllStatuses":
-                process(OperationType.REGULAR);
+            case "basicProcessor":
+                operationType = OperationType.REGULAR;
                 break;
             }
-            
+            if (operationType != null) {
+                if (execution.getTopic() != null) {
+                    process(operationType);
+                } else {
+                    validate(operationType);
+                }
+            }
+
         } catch (Exception e) {
             msg = "An error ocurred while processing statuses with execution <" + execution.getId() + ">. Execution aborted.";
             log.error(msg, e);
@@ -135,39 +145,42 @@ public class BagOfWordsSenticProcessorExecutor implements ProcessorExecutor {
         }
     }
 
-    public void process(OperationType operationType) throws InvalidExecutionException {
-        
-        String msg = "";
-        // Get the associated topic
-        Topic topic = execution.getTopic();
-
-        // Drop current processed statuses
-        datastoreService.findAllAndRemoveByTopicId(topic.getId(), ProcessedStatus.class);
+    private void process(OperationType operationType) throws InvalidExecutionException {
 
         // TODO Include ignore neutral sentences from global configuration
         this.ignoreNeutralSentences = Boolean.FALSE;
+
+        // Get the associated topic
+        Topic topic = execution.getTopic();
+
+        String msg = "";
+
+        DBCursor processingItemsCursor;
+
+        // This is a regular process
+
+        // Drop current processed statuses
+        datastoreService.findAllAndRemoveByTopicId(topic.getId(), ProcessedStatus.class);
+        // Get original Statuses
         log.info("Getting statuses for topic <" + topic.getId() + ">.");
+        processingItemsCursor = datastoreService.findCursorByTopicId(topic.getId(), OriginalStatus.class);
 
-        log.info("There are <" + datastoreService.countAll(OriginalStatus.class) + "> statuses to process.");
-
-        // List<OriginalStatus> statuses =
-        // datastoreService.findByTopicId(topic.getId(),
-        // OriginalStatus.class);
-        DBCursor statusesCursor = datastoreService.findCursorByTopicId(topic.getId(), OriginalStatus.class);
-
-        log.info("There are <" + statusesCursor.count() + "> statuses to process.");
+        log.info("There are <" + processingItemsCursor.count() + "> items to process.");
         Integer count = 0;
-        while (statusesCursor.hasNext()) {
-        //for (OriginalStatus status : statuses) {
-            DBObject rawStatus = statusesCursor.next();
+        while (processingItemsCursor.hasNext()) {
+
+            DBObject rawStatus = processingItemsCursor.next();
+
             OriginalStatus status = datastoreService.getConverter().read(OriginalStatus.class, rawStatus);
-            log.debug("Status text is <" + status.getText() + ">");
-            if (status.getCreatedAt() == null) {
+            SymplifiedProcessingItem symplifiedProcessingItem = status.getSymplifiedProcessingItem();
+
+            log.debug("Item text is <" + symplifiedProcessingItem.getText() + ">");
+            if (symplifiedProcessingItem.getCreatedAt() == null) {
                 continue;
             }
-            String text = status.getText();
+            String text = symplifiedProcessingItem.getText();
             if (text == null) {
-                log.debug("Status text for id <" + status.getId() + "> is null. Skipping...");
+                log.debug("Status text for id <" + symplifiedProcessingItem.getId() + "> is null. Skipping...");
                 continue;
             }
             log.debug("Analysing text: " + text.replaceAll("\n", ""));
@@ -176,35 +189,127 @@ public class BagOfWordsSenticProcessorExecutor implements ProcessorExecutor {
 
             log.debug("Polarity for text <" + text.replaceAll("\n", "") + "> is <" + polarity + ">");
 
+            // If this is a regular process, results will be save to the
+            // database
             ProcessedStatus processedStatus = new ProcessedStatus(status);
             processedStatus.setPolarity(polarity);
-
             datastoreService.save(processedStatus);
 
             count++;
 
             if ((count % 100) == 0) {
-                msg = "Statuses processed so far: <" + count + ">";
+                msg = "Items processed so far: <" + count + ">";
                 log.info(msg);
                 execution.appendLog(msg);
                 executionService.save(execution);
             }
         }
 
-        log.info("The bag of words sentic processor operation for topic <" + topic.getName() + "> has finished.");
-
-        msg = "Total of statuses processed: <" + count + ">";
+        msg = "Total of items processed: <" + count + ">";
         log.info(msg);
         execution.appendLog(msg);
 
-        msg = "The Bag of Words Sentic Processor execution for this topic has finished.";
+        msg = "The bag of words sentic processor operation for topic <" + topic.getName() + "> has finished.";
+
         log.info(msg);
         execution.appendLog(msg);
         execution.setStatus(ExecutionStatus.Stopped);
 
         execution = executionService.save(execution);
-        
     }
+
+    public void validate(OperationType operationType) throws InvalidExecutionException {
+        // TODO Include ignore neutral sentences from global configuration
+        this.ignoreNeutralSentences = Boolean.FALSE;
+
+        String msg = "";
+
+        ValidationResult validationResult = new ValidationResult();
+
+        // Define Boundaries
+        Float positiveBoundary, negativeBoundary;
+        try {
+            positiveBoundary = Float.parseFloat(this.execution.getModuleParameters().getParameters().get("positiveBoundary"));
+        } catch (Exception e) {
+            positiveBoundary = 0F;
+            this.execution.getModuleParameters().getParameters().put("positiveBoundary", positiveBoundary.toString());
+        }
+        try {
+            negativeBoundary = Float.parseFloat(this.execution.getModuleParameters().getParameters().get("negativeBoundary"));
+        } catch (Exception e) {
+            negativeBoundary = 0F;
+            this.execution.getModuleParameters().getParameters().put("negativeBoundary", negativeBoundary.toString());
+        }
+
+        DBCursor processingItemsCursor;
+
+        // This is a validation
+        processingItemsCursor = datastoreService.findCursorForAll(ValidationItem.class);
+
+        log.info("There are <" + processingItemsCursor.count() + "> items to validate.");
+
+        Integer count = 0;
+        while (processingItemsCursor.hasNext()) {
+
+            DBObject rawStatus = processingItemsCursor.next();
+
+            ValidationItem item = datastoreService.getConverter().read(ValidationItem.class, rawStatus);
+            SymplifiedProcessingItem symplifiedProcessingItem = item.getSymplifiedProcessingItem();
+
+            log.debug("Item text is <" + symplifiedProcessingItem.getText() + ">");
+            if (symplifiedProcessingItem.getCreatedAt() == null) {
+                continue;
+            }
+            String text = symplifiedProcessingItem.getText();
+            if (text == null) {
+                log.debug("Status text for id <" + symplifiedProcessingItem.getId() + "> is null. Skipping...");
+                continue;
+            }
+            log.debug("Analysing text: " + text.replaceAll("\n", ""));
+
+            Float polarity = this.processStatus(text);
+
+            log.debug("Polarity for text <" + text.replaceAll("\n", "") + "> is <" + polarity + ">");
+
+            // In case of validation, results will be shown in screen and in
+            // counters
+            if (polarity > positiveBoundary) {
+                validationResult.addPositiveResult(symplifiedProcessingItem.getExpectedPolarity());
+            } else if (polarity < negativeBoundary) {
+                validationResult.addNegativeResult(symplifiedProcessingItem.getExpectedPolarity());
+            } else {
+                validationResult.addNeutralResult(symplifiedProcessingItem.getExpectedPolarity());
+            }
+            msg = "Polarity: " + polarity + ". Expected: " + symplifiedProcessingItem.getExpectedPolarity() + ".";
+            log.debug(msg);
+
+            count++;
+
+            if ((count % 100) == 0) {
+                msg = "Items processed so far: <" + count + ">";
+                log.info(msg);
+                execution.appendLog(msg);
+                executionService.save(execution);
+            }
+        }
+
+        msg = "Total of items processed: <" + count + ">";
+        log.info(msg);
+        execution.appendLog(msg);
+
+        msg = validationResult.getResults();
+        log.info(msg);
+        execution.appendLog(msg);
+        msg = "The bag of words sentic processor validation has finished.";
+
+        log.info(msg);
+        execution.appendLog(msg);
+        execution.setStatus(ExecutionStatus.Stopped);
+
+        execution = executionService.save(execution);
+
+    }
+
     public Boolean getIgnoreNeutralSentences() {
         return ignoreNeutralSentences;
     }

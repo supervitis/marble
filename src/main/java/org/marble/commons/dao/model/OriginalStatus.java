@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Id;
 
+import org.marble.commons.model.SymplifiedProcessingItem;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -359,6 +360,14 @@ public class OriginalStatus {
 
     public void setWithheldInCountries(String[] withheldInCountries) {
         this.withheldInCountries = withheldInCountries;
+    }
+    
+    public SymplifiedProcessingItem getSymplifiedProcessingItem() {
+        SymplifiedProcessingItem symplifiedProcessingItem = new SymplifiedProcessingItem();
+        symplifiedProcessingItem.setId(this.id);
+        symplifiedProcessingItem.setCreatedAt(this.createdAt);
+        symplifiedProcessingItem.setText(this.text);
+        return symplifiedProcessingItem;
     }
 
 }

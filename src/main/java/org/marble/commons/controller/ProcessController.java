@@ -47,7 +47,7 @@ public class ProcessController {
     TopicService topicService;
 
     @Autowired
-    ModuleService modulesService;
+    ModuleService moduleService;
 
     @Autowired
     ExecutionService executionService;
@@ -60,7 +60,7 @@ public class ProcessController {
         ModelAndView modelAndView = new ModelAndView();
 
         Topic topic = topicService.findOne(topicId);
-        List<ExecutionModuleDefinition> modules = modulesService.getProcessorModules();
+        List<ExecutionModuleDefinition> modules = moduleService.getProcessorModules();
         modelAndView.setViewName("process_execute");
         modelAndView.addObject("modules", modules);
         modelAndView.addObject("topic", topic);
@@ -84,7 +84,7 @@ public class ProcessController {
         Integer executionId;
         try {
             executionId = executionService.executeProcessor(topicId, moduleParameters);
-        } catch (InvalidTopicException | InvalidExecutionException e) {
+        } catch (InvalidTopicException | InvalidExecutionException | InvalidModuleException e) {
             redirectAttributes.addFlashAttribute("notificationMessage", "ProcessController.processorExecutionFailed");
             redirectAttributes.addFlashAttribute("notificationIcon", "fa-exclamation-triangle");
             redirectAttributes.addFlashAttribute("notificationLevel", "danger");

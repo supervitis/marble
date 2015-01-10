@@ -6,7 +6,6 @@ import java.util.Map;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.convert.MongoConverter;
 import org.springframework.data.mongodb.core.query.Query;
-
 import org.marble.commons.dao.model.OriginalStatus;
 
 import com.mongodb.DBCursor;
@@ -45,5 +44,7 @@ public interface DatastoreService {
     <T> T findOneByTopicIdSortBy(Integer topicId, String field, Direction direction, Class<T> entityClass);
 
     <T> DBCursor findCursorByQuery(Map<String, Object> queryParameters, Class<T> entityClass);
+
+    <T> DBCursor findCursorForAll(Class<T> entityClass);
 
 }

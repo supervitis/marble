@@ -50,7 +50,7 @@ public class PlotController {
     TopicService topicService;
 
     @Autowired
-    ModuleService modulesService;
+    ModuleService moduleService;
 
     @Autowired
     ExecutionService executionService;
@@ -102,7 +102,7 @@ public class PlotController {
         ModelAndView modelAndView = new ModelAndView();
 
         Topic topic = topicService.findOne(topicId);
-        List<ExecutionModuleDefinition> modules = modulesService.getPlotterModules();
+        List<ExecutionModuleDefinition> modules = moduleService.getPlotterModules();
         modelAndView.setViewName("plot_create");
         modelAndView.addObject("modules", modules);
         modelAndView.addObject("topic", topic);

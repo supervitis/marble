@@ -30,12 +30,12 @@
         }).done(
                 function() {
                     notification = '<div class="alert alert-success alert-dismissable"><button type="button" class="close" data-dismiss="alert" '+
-                    'aria-hidden="true">×</button><i class="fa fa-crosshairs"></i> Command <'+command+'> sent.</div>';
+                    'aria-hidden="true">ï¿½</button><i class="fa fa-crosshairs"></i> Command <'+command+'> sent.</div>';
                     $($.parseHTML(notification)).appendTo("#notifications");
         }).fail(
                 function() {
                     notification = '<div class="alert alert-danger alert-dismissable"><button type="button" class="close" data-dismiss="alert"  '+
-                    'aria-hidden="true">×</button><i class="fa fa-crosshairs"></i> Command <'+command+'> could not be sent.</div>';
+                    'aria-hidden="true">ï¿½</button><i class="fa fa-crosshairs"></i> Command <'+command+'> could not be sent.</div>';
                     $($.parseHTML(notification)).appendTo("#notifications");
                 });
 
@@ -55,9 +55,20 @@
                         function(data) {
                             $("#execution-log").html(data.log);
                             $("#execution-status").html(data.status);
+                            $("#execution-name").html(data.moduleParameters.name);
                             $("#execution-type").html(data.type);
                             $("#execution-created-at").html(data.createdAt);
                             $("#execution-updated-at").html(data.updatedAt);
+                            $("#execution-module").html(/\.([^\.]+)$/.exec(data.moduleParameters.module)[1]);
+                            $("#execution-operation").html(data.moduleParameters.operation);
+                            console.error(data.moduleParameters.parameters);
+                            var parametersString = "<ul>";
+                            for (var parameter in data.moduleParameters.parameters) {
+                            	parametersString += "<li><strong>" + parameter + "</strong>:<br/>";
+                            	parametersString += data.moduleParameters.parameters[parameter] + "</li>"; 
+                            }
+                            parametersString += "</ul>";
+                            $("#execution-parameters").html(parametersString);
 
                             $("#updated").removeClass("alert-warning");
                             $("#updated").addClass("alert-success");

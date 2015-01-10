@@ -21,11 +21,14 @@ public interface ExecutionService {
     public Integer executeExtractor(Integer topicId) throws InvalidTopicException, InvalidExecutionException;
 
     public Integer executeProcessor(Integer topicId, ExecutionModuleParameters plotParameters)
-            throws InvalidTopicException, InvalidExecutionException;
+            throws InvalidTopicException, InvalidExecutionException, InvalidModuleException;
 
     public Integer executePlotter(Integer topicId, ExecutionModuleParameters plotParameters)
             throws InvalidTopicException,
             InvalidExecutionException, InvalidModuleException;
 
     Long count();
+
+    Integer executeProcessor(ExecutionModuleParameters plotParameters) throws InvalidTopicException,
+            InvalidExecutionException, InvalidModuleException;
 }

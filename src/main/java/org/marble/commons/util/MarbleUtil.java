@@ -27,8 +27,8 @@ public class MarbleUtil {
     };
 
     public static File multipartToFile(MultipartFile multipart) throws IllegalStateException, IOException
-    {
-        File convFile = new File(multipart.getOriginalFilename());
+    {   
+        File convFile = File.createTempFile(multipart.getOriginalFilename(), ".tmp");
         multipart.transferTo(convFile);
         return convFile;
     }

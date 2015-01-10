@@ -37,8 +37,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public class Execution implements Serializable {
     private static final long serialVersionUID = -1285068636097871799L;
 
-    public static final Integer LOG_LIMIT = 50000; 
-    
+    public static final Integer LOG_LIMIT = 50000;
+
     @Id
     @Column(unique = true, name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,9 +59,9 @@ public class Execution implements Serializable {
     @Column(length = 50000, name = "log")
     private String log = "";
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = true)
     @JoinColumn(name = "topic_id")
-    //@Cascade({ CascadeType.DELETE })
+    // @Cascade({ CascadeType.DELETE })
     @JsonBackReference
     private Topic topic;
 
@@ -72,10 +72,10 @@ public class Execution implements Serializable {
     @JsonSerialize(using = StringDateSerializer.class)
     @Column(name = "updated_at")
     public Date updatedAt;
-    
+
     @Column(name = "module_parameters")
     private ExecutionModuleParameters moduleParameters;
-    
+
     @OneToOne()
     @Cascade({ CascadeType.ALL })
     private Plot plot;
@@ -180,5 +180,4 @@ public class Execution implements Serializable {
     public void preUpdate() {
         this.updatedAt = new Date();
     }
-
 }

@@ -98,7 +98,7 @@
 									</a></td>
 							</tr>
 							<tr>
-								<td><a href="<c:url value="topic/${topicInfo.topicId}/execution/process"/>"
+								<td><a href="<c:url value="topic/${topicInfo.topicId}/process/execute"/>"
 										class="btn btn-default btn-blue btn-block">
 										<i class="fa fa-scissors"></i>
 										<spring:message code="topics_list.form.process" />
