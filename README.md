@@ -28,7 +28,7 @@ mvn package
 
 Finally, drop the generated WAR file into the deployment area of your WAS (in wildfly this will be standalone/deployments), and the system should go up in no time.
 
-#Some notes
+###Some notes
 
 In wildfly you will need to increase the post size in the standalone.xml file. Look for the http-listener line, and add the max-post-size parameter with the value recommended, like in the following example:
 
