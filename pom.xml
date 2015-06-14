@@ -506,7 +506,12 @@
 			<version>6.8.8</version>
 		</dependency>
 
-
+		<!-- Stanford POS Tagging -->
+		<dependency>
+			<groupId>edu.stanford.nlp</groupId>
+			<artifactId>stanford-parser</artifactId>
+			<version>3.5.0</version>
+		</dependency>
 
 	</dependencies>
 
