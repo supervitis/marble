@@ -156,7 +156,7 @@ public class ExecutionServiceImpl implements ExecutionService {
         execution = this.save(execution);
 
         log.info("Starting execution <" + execution.getId() + ">... now!");
-        ProcessorExecutor executor = (ProcessorExecutor) context.getBean("bagOfWordsSenticProcessorExecutor");
+        ProcessorExecutor executor = (ProcessorExecutor) context.getBean(Introspector.decapitalize(module.getSimpleName()));
         executor.setExecution(execution);
         taskExecutor.execute(executor);
 
