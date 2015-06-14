@@ -356,6 +356,11 @@ public class BagOfWordsSenticProcessorExecutor implements ProcessorExecutor {
             }
 
             if (results != null) {
+                // Added no/not modifier (TODO Expand lists of modifiers)
+                if (i > 0 && words[i-1] != null && words[i-1].matches("no[t]?")) {
+                    results = (-1) * results;
+                }
+                
                 polarity += results;
                 log.trace("Result for this group: " + results);
             } else {
