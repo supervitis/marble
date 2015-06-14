@@ -31,7 +31,7 @@ public class ValidationDataServiceImpl implements ValidationDataService {
     @Override
     public void insertDataFromFile(MultipartFile file) throws IllegalStateException, IOException, SAXException,
             ParserConfigurationException {
-        log.warn("Processing uploaded sentic information from file <" + file.getOriginalFilename() + ">");
+        log.warn("Processing uploaded validation data from file <" + file.getOriginalFilename() + ">");
         insertDataFromFile(MarbleUtil.multipartToFile(file));
 
     }
