@@ -17,8 +17,6 @@ public class ValidationResult {
 	private Integer totalProcessedPositiveItems = 0;
 	private Integer totalProcessedNeutralItems = 0;
 	private Integer totalProcessedNegativeItems = 0;
-	// MFC TODO Para manana Tal parece que estos de abajo son los aciertos
-	// especificos segun el expected.
 	private Integer totalPositiveSuccesses = 0;
 	private Integer totalNeutralSuccesses = 0;
 	private Integer totalNegativeSuccesses = 0;
