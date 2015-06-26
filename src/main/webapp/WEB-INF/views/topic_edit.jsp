@@ -110,6 +110,55 @@
 								<p class="help-block"><spring:message code="topic.form.lowerLimit.help" /></p>
 							</div>
 						</spring:bind>
+						
+						<spring:bind path="sinceDate">
+							<div class="form-group ${status.error ? 'has-error': ''}">
+								<label for="sinceDate"><spring:message code="topic.form.sinceDate.label" /></label>
+								<form:input id="sinceDate" path="sinceDate" type="text" class="form-control" />
+								<form:errors path="sinceDate" cssClass="text-danger" />
+								<p class="help-block"><spring:message code="topic.form.sinceDate.help" /></p>
+							</div>
+						</spring:bind>
+						<spring:bind path="untilDate">
+							<div class="form-group ${status.error ? 'has-error': ''}">
+								<label for="untilDate"><spring:message code="topic.form.untilDate.label" /></label>
+								<form:input id="untilDate" path="untilDate" type="text" class="form-control" />
+								<form:errors path="untilDate" cssClass="text-danger" />
+								<p class="help-block"><spring:message code="topic.form.untilDate.help" /></p>
+							</div>
+						</spring:bind>
+						<spring:bind path="geoLatitude">
+							<div class="form-group ${status.error ? 'has-error': ''}">
+								<label for="geoLatitude"><spring:message code="topic.form.geoLatitude.label" /></label>
+								<form:input id="geoLatitude" path="geoLatitude" type="text" class="form-control" />
+								<form:errors path="geoLatitude" cssClass="text-danger" />
+								<p class="help-block"><spring:message code="topic.form.geoLatitude.help" /></p>
+							</div>
+						</spring:bind>
+						<spring:bind path="geoLongitude">
+							<div class="form-group ${status.error ? 'has-error': ''}">
+								<label for="geoLongitude"><spring:message code="topic.form.geoLongitude.label" /></label>
+								<form:input id="geoLongitude" path="geoLongitude" type="text" class="form-control" />
+								<form:errors path="geoLongitude" cssClass="text-danger" />
+								<p class="help-block"><spring:message code="topic.form.geoLongitude.help" /></p>
+							</div>
+						</spring:bind>
+						<spring:bind path="geoRadius">
+							<div class="form-group ${status.error ? 'has-error': ''}">
+								<label for="geoRadius"><spring:message code="topic.form.geoRadius.label" /></label>
+								<form:input id="geoRadius" path="geoRadius" type="text" class="form-control" />
+								<form:errors path="geoRadius" cssClass="text-danger" />
+								<p class="help-block"><spring:message code="topic.form.geoRadius.help" /></p>
+							</div>
+						</spring:bind>
+						<spring:bind path="geoUnit">
+							<div class="form-group ${status.error ? 'has-error': ''}">
+								<label for="geoUnit"><spring:message code="topic.form.geoUnit.label" /></label>
+								<form:input id="geoUnit" path="geoUnit" type="text" class="form-control" />
+								<form:errors path="geoUnit" cssClass="text-danger" />
+								<p class="help-block"><spring:message code="topic.form.geoUnit.help" /></p>
+							</div> 
+						</spring:bind>
 						<spring:bind path="language">
 							<div class="form-group ${status.error ? 'has-error': ''}">
 								<label for="language"><spring:message code="topic.form.language.label" /></label>

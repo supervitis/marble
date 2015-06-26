@@ -3,10 +3,11 @@ package org.marble.commons.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-
 import org.marble.commons.dao.model.TwitterApiKey;
 
+import twitter4j.GeoLocation;
 import twitter4j.Query;
+import twitter4j.Query.Unit;
 import twitter4j.QueryResult;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -88,6 +89,27 @@ public class TwitterSearchServiceImpl implements TwitterSearchService {
             query.setMaxId(maxId - 1);
         }
         query.setCount(this.statusesPerCall);
+        result = twitter.search(query);
+        return result.getTweets();
+    }
+    
+    @Override
+    public List<Status> search(String keyword, long maxId, String since, String until, GeoLocation geolocation, Double radius,Unit unit) throws TwitterException {
+        // TODO Multiple keywords
+
+        QueryResult result = null;
+
+        Query query = new Query(keyword);
+        if (maxId != this.DEFAULT_MAX_ID) {
+            query.setMaxId(maxId - 1);
+        }
+        query.setCount(this.statusesPerCall);
+        if(since != null)
+        	query.setSince(since);
+        if(until != null)
+        	query.setUntil(until);
+        if(geolocation != null && radius != null && unit != null)
+        	query.setGeoCode(geolocation,radius.doubleValue(),unit);
 
         result = twitter.search(query);
         return result.getTweets();

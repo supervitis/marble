@@ -25,6 +25,8 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import twitter4j.Query.Unit;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -59,6 +61,27 @@ public class Topic implements Serializable {
     @Digits(fraction = 0, integer = 24)
     @Column(name = "lower_limit")
     private Long lowerLimit;
+    
+    //Dates and geolocation
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "sinceDate")
+    private Date sinceDate;
+    
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Column(name = "untilDate")
+    private Date untilDate;
+    
+    @Column(name = "geoLatitude")
+    private Double geoLatitude;
+    
+    @Column(name = "geoLongitude")
+    private Double geoLongitude;
+    
+    @Column(name = "geoRadius")
+    private Double geoRadius;
+    
+    @Column(name = "geoUnit")
+    private Unit geoUnit;
 
     @Pattern(regexp = "[a-zA-Z]{2}|")
     @Column(name = "language")
@@ -158,9 +181,57 @@ public class Topic implements Serializable {
 
     public void setLanguage(String language) {
         this.language = language;
-    }
+    }   
 
-    public Integer getStatusesPerCall() {
+    public Date getSinceDate() {
+		return sinceDate;
+	}
+
+	public void setSinceDate(Date sinceDate) {
+		this.sinceDate = sinceDate;
+	}
+
+	public Date getUntilDate() {
+		return untilDate;
+	}
+
+	public void setUntilDate(Date untilDate) {
+		this.untilDate = untilDate;
+	}
+
+	public Double getGeoLatitude() {
+		return geoLatitude;
+	}
+
+	public void setGeoLatitude(Double geoLatitude) {
+		this.geoLatitude = geoLatitude;
+	}
+
+	public Double getGeoLongitude() {
+		return geoLongitude;
+	}
+
+	public void setGeoLongitude(Double geoLongitude) {
+		this.geoLongitude = geoLongitude;
+	}
+
+	public Double getGeoRadius() {
+		return geoRadius;
+	}
+
+	public void setGeoRadius(Double geoRadius) {
+		this.geoRadius = geoRadius;
+	}
+
+	public Unit getGeoUnit() {
+		return geoUnit;
+	}
+
+	public void setGeoUnit(Unit geoUnit) {
+		this.geoUnit = geoUnit;
+	}
+
+	public Integer getStatusesPerCall() {
         return statusesPerCall;
     }
 

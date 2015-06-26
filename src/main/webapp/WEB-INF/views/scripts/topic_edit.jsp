@@ -5,4 +5,6 @@
 <script type="text/javascript">
 $("#plotterLeftDateBoundary").datetimepicker();
 $("#plotterRightDateBoundary").datetimepicker();
+$("#sinceDate").datetimepicker();
+$("#untilDate").datetimepicker();
 </script>

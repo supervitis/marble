@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.marble.commons.dao.model.TwitterApiKey;
 
+import twitter4j.GeoLocation;
+import twitter4j.Query.Unit;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 
@@ -23,5 +25,7 @@ public interface TwitterSearchService {
     public List<Status> search(String keyword) throws TwitterException;
 
     public List<Status> search(String keyword, long maxId) throws TwitterException;
+    
+    public List<Status> search(String keyword, long maxId, String since, String until, GeoLocation geolocation, Double radius, Unit unit) throws TwitterException;
 
 }

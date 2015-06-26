@@ -2,6 +2,7 @@ package org.marble.commons.executor.extractor;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.marble.commons.dao.model.Execution;
@@ -21,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import twitter4j.GeoLocation;
+import twitter4j.Query.Unit;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 
@@ -43,6 +46,7 @@ public class TwitterExtractionExecutor implements ExtractorExecutor {
     DatastoreService datastoreService;
 
     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    DateFormat dateOnlyFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     Execution execution;
 
@@ -115,13 +119,32 @@ public class TwitterExtractionExecutor implements ExtractorExecutor {
             if (topic.getStatusesPerFullExtraction() != null) {
                 maxStatuses = topic.getStatusesPerFullExtraction();
             }
+            
+            String sinceDate = null;
+            if(topic.getSinceDate() != null)
+            	sinceDate = dateOnlyFormat.format(topic.getSinceDate());
+            
+            String untilDate = null;
+            if(topic.getUntilDate() != null)
+            	untilDate = dateOnlyFormat.format(topic.getUntilDate());
+            
+            Double longitude = topic.getGeoLongitude();
+            Double latitude = topic.getGeoLatitude();
+            Double radius = topic.getGeoRadius();
+            Unit unit = topic.getGeoUnit();
+            
+            GeoLocation geoLoc = null;
+            if (longitude != null && latitude != null){
+            	geoLoc = new GeoLocation(latitude.doubleValue(), longitude.doubleValue());
+            }
+            
 
             int count = 0;
             do {
                 List<Status> statusList;
 
                 try {
-                    statusList = twitterSearchService.search(keyword, lastId);
+                    statusList = twitterSearchService.search(keyword, lastId, sinceDate, untilDate, geoLoc, radius, unit );
                 } catch (TwitterException e) {
                     // TODO Auto-generated catch block
 
