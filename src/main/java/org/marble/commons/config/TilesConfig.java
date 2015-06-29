@@ -62,7 +62,14 @@ public class TilesConfig extends WebMvcConfigurerAdapter {
         addBaseDefinition("process_execute", "Execute Processor", "<i class='fa fa-scissors fa-fw'></i>", Boolean.TRUE);
         
         addBaseDefinition("validation", "Validation", "<i class='fa fa-check-square-o fa-fw'></i>", Boolean.TRUE);
-        addBaseDefinition("datasets", "Datasets", "<i class='fa fa-check-square-o fa-fw'></i>", Boolean.FALSE);
+        
+        addBaseDefinition("dataset_edit", "Edit Dataset", "<i class='fa fa-pencil fa-fw'></i>",
+                Boolean.FALSE);
+        addBaseDefinition("create_dataset", "dataset_edit", "Create New Dataset",
+                "<i class='fa fa-file-o fa-fw'></i>", Boolean.FALSE);
+        addBaseDefinition("datasets", "datasets_list", "Datasets", "<i class='fa fa-key fa-fw'></i>", Boolean.FALSE);
+        
+        
 
         return tilesConfigurer;
     }
