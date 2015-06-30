@@ -30,7 +30,7 @@
 	<div class="col-lg-12">
 		<div class="panel panel-default">
 			<div class="panel-heading">
-				<spring:message code="datasets_list.form.keys" />
+				<spring:message code="datasets_list.form.datasets" />
 			</div>
 			<!-- .panel-heading -->
 			<div class="panel-body">
@@ -40,7 +40,7 @@
 							<thead>
 								<tr>
 									<th scope="col"><spring:message code="datasets_list.form.description" /></th>
-									<th scope="col"><spring:message code="datasets_list.form.consumerKey" /></th>
+									<th scope="col"><spring:message code="datasets_list.form.name" /></th>
 									<th scope="col"><spring:message code="datasets_list.form.actions" /></th>
 								</tr>
 							</thead>

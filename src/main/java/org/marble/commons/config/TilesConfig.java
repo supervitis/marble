@@ -67,7 +67,7 @@ public class TilesConfig extends WebMvcConfigurerAdapter {
                 Boolean.FALSE);
         addBaseDefinition("create_dataset", "dataset_edit", "Create New Dataset",
                 "<i class='fa fa-file-o fa-fw'></i>", Boolean.FALSE);
-        addBaseDefinition("datasets", "datasets_list", "Datasets", "<i class='fa fa-key fa-fw'></i>", Boolean.FALSE);
+        addBaseDefinition("datasets", "datasets_list", "Datasets", "<i class='fa fa-file fa-fw'></i>", Boolean.FALSE);
         
         
 
