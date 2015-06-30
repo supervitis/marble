@@ -17,6 +17,7 @@ import javax.validation.constraints.Digits;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.annotations.Cascade;
@@ -71,9 +72,13 @@ public class Topic implements Serializable {
     @Column(name = "untilDate")
     private Date untilDate;
     
+    @Min(-90)
+    @Max(90)
     @Column(name = "geoLatitude")
     private Double geoLatitude;
     
+    @Min(-180)
+    @Max(180)
     @Column(name = "geoLongitude")
     private Double geoLongitude;
     
