@@ -2,6 +2,9 @@ package org.marble.commons.controller;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -12,7 +15,6 @@ import org.marble.commons.model.ExecutionModuleParameters;
 import org.marble.commons.model.TopicInfo;
 import org.marble.commons.service.TopicService;
 import org.marble.commons.util.MarbleUtil;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -26,6 +28,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import twitter4j.GeoLocation;
+import twitter4j.Query.Unit;
 
 @Controller
 @RequestMapping("/topic")
@@ -66,6 +71,11 @@ public class TopicController {
         topic = topicService.findOne(topicId);
         modelAndView.setViewName("topic_edit");
         modelAndView.addObject("topic", topic);
+
+    	Map<String,String> geoUnits= new LinkedHashMap<String,String>();
+    	geoUnits.put("km", "Kilometers");
+    	geoUnits.put("mi", "Miles");
+    	modelAndView.addObject("geoUnits", geoUnits);
         return modelAndView;
     }
 
@@ -102,6 +112,10 @@ public class TopicController {
         Topic topic = new Topic();
         modelAndView.setViewName("topic_create");
         modelAndView.addObject("topic", topic);
+    	Map<String,String> geoUnits= new LinkedHashMap<String,String>();
+    	geoUnits.put("km", "Kilometers");
+    	geoUnits.put("mi", "Miles");
+    	modelAndView.addObject("geoUnits", geoUnits);
         return modelAndView;
     }
 

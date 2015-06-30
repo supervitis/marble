@@ -3,8 +3,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <script type="text/javascript">
+$(function() {
 $("#plotterLeftDateBoundary").datetimepicker();
 $("#plotterRightDateBoundary").datetimepicker();
 $("#sinceDate").datetimepicker();
 $("#untilDate").datetimepicker();
+})
 </script>

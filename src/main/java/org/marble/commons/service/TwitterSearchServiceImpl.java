@@ -104,6 +104,7 @@ public class TwitterSearchServiceImpl implements TwitterSearchService {
             query.setMaxId(maxId - 1);
         }
         query.setCount(this.statusesPerCall);
+
         if(since != null)
         	query.setSince(since);
         if(until != null)

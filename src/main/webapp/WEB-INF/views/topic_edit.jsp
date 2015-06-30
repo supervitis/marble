@@ -154,7 +154,7 @@
 						<spring:bind path="geoUnit">
 							<div class="form-group ${status.error ? 'has-error': ''}">
 								<label for="geoUnit"><spring:message code="topic.form.geoUnit.label" /></label>
-								<form:input id="geoUnit" path="geoUnit" type="text" class="form-control" />
+								<form:select id="geoUnit-select" path="geoUnit" items="${geoUnits}" class="form-control" />
 								<form:errors path="geoUnit" cssClass="text-danger" />
 								<p class="help-block"><spring:message code="topic.form.geoUnit.help" /></p>
 							</div> 
