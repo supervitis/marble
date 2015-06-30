@@ -54,6 +54,8 @@ public class DatasetServiceImpl implements DatasetService {
 		dataset = datasetDao.save(dataset);
 		if (dataset == null) {
 			throw new InvalidDatasetException();
+		}else{
+			//Código para correr el script? Debe de ser aquí supongo
 		}
 		return dataset;
 	}
