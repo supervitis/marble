@@ -37,26 +37,54 @@ public class DatasetServiceImpl implements DatasetService {
 			throw new InvalidDatasetException();
 		}
 		File file = MarbleUtil.multipartToFile(mfile);
-		/*
-		 * File file = MarbleUtil.multipartToFile(mfile); FileWriter fileWriter
-		 * = new FileWriter("datasetupload.txt");
-		 * 
-		 * // Always wrap FileWriter in BufferedWriter. BufferedWriter
-		 * bufferedWriter = new BufferedWriter(fileWriter); try { String line =
-		 * null; // Always wrap FileReader in BufferedReader. BufferedReader
-		 * bufferedReader = new BufferedReader(new FileReader(file));
-		 * 
-		 * while((line = bufferedReader.readLine()) != null) {
-		 * bufferedWriter.write(line); bufferedWriter.newLine(); }
-		 * 
-		 * // Always close files. bufferedReader.close();
-		 * bufferedWriter.close(); } catch(FileNotFoundException ex) {
-		 * 
-		 * } catch(IOException ex) {
-		 * 
-		 * // Or we could just do this: // ex.printStackTrace(); }
-		 */
-		// Guardar el fichero
+		try {
+		    MongoClient mongoClient = new MongoClient("polux.det.uvigo.es",
+		      27117);
+
+		    // Now connect to your databases
+		    DB db = mongoClient.getDB("datasets");
+		    // System.out.println("Connect to database successfully");
+		    String oldName = null;
+		    try {
+		     oldName = getDataset(dataset.getId()).getName();
+		    } catch (Exception e) {
+		     // TODO Auto-generated catch block
+		    }
+		    String newName = dataset.getName();
+		    if(oldName == null){
+		     DBCollection collection = db.getCollection(newName);
+		     // Always wrap FileReader in BufferedReader.
+		     BufferedReader bufferedReader = new BufferedReader(
+		       new FileReader(file));
+
+		     String line = null;
+		     while ((line = bufferedReader.readLine()) != null) {
+		      DBObject dbObject = (DBObject) JSON.parse(line);
+		      collection.insert(dbObject);
+		     }
+
+		     bufferedReader.close();
+
+		    }else {
+		     DBCollection collection = db.getCollection(oldName);
+		     collection.rename(newName);
+		     // Always wrap FileReader in BufferedReader.
+		     BufferedReader bufferedReader = new BufferedReader(
+		       new FileReader(file));
+
+		     String line = null;
+		     while ((line = bufferedReader.readLine()) != null) {
+		      DBObject dbObject = (DBObject) JSON.parse(line);
+		      collection.insert(dbObject);
+		     }
+
+		     bufferedReader.close();
+		    }
+
+		   
+
+		    // Always close files.
+		   } catch (FileNotFoundException ex) {}
 		return dataset;
 	}
 
