@@ -1,7 +1,17 @@
 package test;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.util.JSON;
@@ -21,17 +31,48 @@ public class Test {
 	         DB db = mongoClient.getDB("datasets");
 	         System.out.println("Connect to database successfully");
 
-	         DBCollection school = db.getCollection("vamosalla");
+	         DBCollection collection = db.getCollection("prueba_rubius_file");
 	         System.out.println("Collection test created successfully");
 	         
+	        /*
+	        FileInputStream fis = new FileInputStream("C:\\Users\\David\\Desktop\\test.json");
+	        
+	    	//Construct BufferedReader from InputStreamReader
+	    	BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+	     
+	    	String line = null;
+	    	while ((line = br.readLine()) != null) {
+	    		DBObject dbObject = (DBObject)JSON.parse(line);  
+				collection.insert(dbObject);
+	    	}
+	     
+	    	br.close();
+	        */
+	        
+	         File file = new File("C:\\Users\\David\\Desktop\\test.json");
+	         
+	         BufferedReader br = new BufferedReader(new FileReader(file));
+	         
+	     	String line = null;
+	     	while ((line = br.readLine()) != null) {
+	     		DBObject dbObject = (DBObject)JSON.parse(line);  
+				collection.insert(dbObject);
+	     	}
+	      
+	     	br.close();
+	         
+	         
+	         
+	        PrintWriter out = new PrintWriter("C:\\Users\\David\\Desktop\\rubius.json");
+	        
+	        
+	        DBCursor cursor = collection.find();
+	        while( cursor.hasNext() ){
+	            DBObject obj = cursor.next();
+	  	      	out.println(obj.toString());
 
-				String json = "{'database' : 'dineshonjavaDB','table' : 'employees'," +  
-			 "'detail' : {'empId' : 10001, 'empName' : 'Dinesh', 'salary' : 70000}}}";  
-			  
-			DBObject dbObject = (DBObject)JSON.parse(json);  
-			   
-			school.insert(dbObject);
-	        System.out.println("a tope"); 
+	        }
+	        
 
 	       }catch(Exception e){
 	         System.err.println( e.getClass().getName() + ": " + e.getMessage() );
