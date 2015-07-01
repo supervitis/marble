@@ -56,7 +56,7 @@
 									<td><a href="<c:url value="datasets/edit/${dataset.id}"/>"
 										class="btn btn-default"><i class="fa fa-pencil"></i> <spring:message
 												code="datasets_list.form.edit" /></a><a
-										href="<c:url value="download"/>"
+										href="<c:url value="datasets/download/${dataset.id}"/>"
 										class="btn btn-default"><i class="fa fa-download"></i> <spring:message
 												code="datasets_list.form.download" /></a></td>
 								</tr>

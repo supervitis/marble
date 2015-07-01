@@ -67,17 +67,18 @@ public class DatasetController {
 			MongoClient mongoClient = new MongoClient("polux.det.uvigo.es",
 					27117);
 			DB db = mongoClient.getDB("datasets");
-
+			response.setHeader("Content-Disposition",
+                    "attachment;filename=" + dataset.getName() + ".json");
 			DBCollection collection = db.getCollection(dataset.getName());
 			// get your file as InputStream
-			ServletOutputStream out = response.getOutputStream();
+			PrintWriter out = response.getWriter();
 			DBCursor cursor = collection.find();
 			while (cursor.hasNext()) {
 				DBObject obj = cursor.next();
 				out.println(obj.toString());
 
 			}
-			response.flushBuffer();
+			out.close();
 
 		} catch (IOException ex) {
 			throw new RuntimeException("IOError writing file to output stream");
