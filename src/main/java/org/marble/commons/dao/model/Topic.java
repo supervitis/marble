@@ -64,11 +64,11 @@ public class Topic implements Serializable {
     private Long lowerLimit;
     
     //Dates and geolocation
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    
     @Column(name = "sinceDate")
     private Date sinceDate;
     
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    
     @Column(name = "untilDate")
     private Date untilDate;
     
