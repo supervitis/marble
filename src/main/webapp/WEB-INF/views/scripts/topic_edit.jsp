@@ -6,7 +6,7 @@
 $(function() {
 $("#plotterLeftDateBoundary").datetimepicker();
 $("#plotterRightDateBoundary").datetimepicker();
-$("#sinceDate").datetimepicker(picktime =  false);
-$("#untilDate").datetimepicker(picktime = false);
+$("#sinceDate").datetimepicker();
+$("#untilDate").datetimepicker();
 })
 </script>

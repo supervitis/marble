@@ -1,5 +1,7 @@
 package org.marble.commons.controller;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -7,13 +9,14 @@ import org.marble.commons.dao.model.Dataset;
 import org.marble.commons.exception.InvalidDatasetException;
 import org.marble.commons.service.DatasetService;
 import org.marble.commons.util.MarbleUtil;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -44,8 +47,9 @@ public class DatasetController {
 
     @RequestMapping(value = "/edit/{datasetId}", method = RequestMethod.POST)
     public ModelAndView save(@PathVariable Integer datasetId, @Valid Dataset dataset,
-            BindingResult result) throws InvalidDatasetException {
+            BindingResult result,@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes, HttpServletRequest request) throws InvalidDatasetException {
 
+    	
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("dataset_edit");
         modelAndView.addObject("dataset", dataset);
@@ -57,7 +61,14 @@ public class DatasetController {
             return modelAndView;
         }
 
-        datasetService.updateDataset(dataset);
+        try {
+			datasetService.updateDataset(dataset,file);
+		} catch (IllegalStateException | IOException e) {
+			modelAndView.addObject("notificationMessage", "DatasetController.editDatasetError");
+            modelAndView.addObject("notificationIcon", "fa-exclamation-triangle");
+            modelAndView.addObject("notificationLevel", "danger");
+            return modelAndView;
+		}
 
         modelAndView.addObject("notificationMessage", "DatasetController.datasetModified");
         modelAndView.addObject("notificationIcon", "fa-check-circle");
@@ -80,7 +91,8 @@ public class DatasetController {
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public ModelAndView create(@Valid Dataset dataset, BindingResult result,
-            RedirectAttributes redirectAttributes, HttpServletRequest request) throws InvalidDatasetException {
+            RedirectAttributes redirectAttributes, HttpServletRequest request,
+            @RequestParam("file") MultipartFile file) throws InvalidDatasetException {
 
         String basePath = MarbleUtil.getBasePath(request);
         ModelAndView modelAndView = new ModelAndView();
@@ -93,8 +105,14 @@ public class DatasetController {
             modelAndView.addObject("dataset", dataset);
             return modelAndView;
         }
-
-        dataset = datasetService.createDataset(dataset);
+        try{
+        dataset = datasetService.createDataset(dataset, file);
+	    } catch (IllegalStateException | IOException e) {
+			modelAndView.addObject("notificationMessage", "DatasetController.editDatasetError");
+	        modelAndView.addObject("notificationIcon", "fa-exclamation-triangle");
+	        modelAndView.addObject("notificationLevel", "danger");
+	        return modelAndView;
+		}
         // Setting message
         redirectAttributes.addFlashAttribute("notificationMessage", "DatasetController.datasetCreated");
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");

@@ -2,7 +2,15 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<form:form modelAttribute="dataset">
+
+<c:if test="${not empty dataset.id}">
+	<c:url value='/datasets/${dataset.id}/edit?${_csrf.parameterName}=${_csrf.token}' var="uploadDatasetUrl" />
+</c:if>
+<c:if test="${empty dataset.id}">
+	<c:url value='/datasets/create?${_csrf.parameterName}=${_csrf.token}' var="uploadDatasetUrl" />
+</c:if>
+
+<form:form modelAttribute="dataset" enctype="multipart/form-data" action='${uploadDatasetUrl}'>
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="panel panel-default">
@@ -75,6 +83,11 @@
 								</p>
 							</div>
 						</spring:bind>
+						
+						<div class="form-group">
+						<p>Select the file containing the data in json format and click upload. Previous data on this dataset will be removed</p>
+						<input name="file" type="file" class="form-control" />
+						</div>
 
 					</fieldset>
 

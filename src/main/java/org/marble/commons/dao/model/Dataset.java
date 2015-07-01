@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.web.multipart.MultipartFile;
 
 @Entity
 @Table(name = "mrbl_datasets")
@@ -23,8 +24,6 @@ public class Dataset implements Serializable {
     @NotNull
     @NotEmpty
     private String name;
-
-  
 
     public Dataset() {
         this.description = null;
