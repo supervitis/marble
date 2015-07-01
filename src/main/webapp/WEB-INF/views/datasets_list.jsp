@@ -12,8 +12,9 @@
 					</p>
 					<div class="form-group">
 						<div class="col-lg-offset-10 col-lg-2">
-							<a href="<c:url value="datasets/create"/>" class="btn btn-primary pull-right"><i class="fa fa-file-o"></i> <spring:message
-									code="datasets_list.form.create" /></a>
+							<a href="<c:url value="datasets/create"/>"
+								class="btn btn-primary pull-right"><i class="fa fa-file-o"></i>
+								<spring:message code="datasets_list.form.create" /></a>
 
 						</div>
 					</div>
@@ -36,20 +37,28 @@
 			<div class="panel-body">
 				<c:if test="${not empty datasets}">
 					<div class="table-responsive">
-						<table class="table data-table table-striped table-bordered table-hover">
+						<table
+							class="table data-table table-striped table-bordered table-hover">
 							<thead>
 								<tr>
-									<th scope="col"><spring:message code="datasets_list.form.description" /></th>
-									<th scope="col"><spring:message code="datasets_list.form.name" /></th>
-									<th scope="col"><spring:message code="datasets_list.form.actions" /></th>
+									<th scope="col"><spring:message
+											code="datasets_list.form.description" /></th>
+									<th scope="col"><spring:message
+											code="datasets_list.form.name" /></th>
+									<th scope="col"><spring:message
+											code="datasets_list.form.actions" /></th>
 								</tr>
 							</thead>
 							<c:forEach var="dataset" items="${datasets}">
 								<tr>
 									<td>${dataset.description}</td>
 									<td>${dataset.name}</td>
-									<td><a href="<c:url value="datasets/edit/${dataset.id}"/>" class="btn btn-default"><i
-											class="fa fa-pencil"></i> <spring:message code="datasets_list.form.edit" /></a></td>
+									<td><a href="<c:url value="datasets/edit/${dataset.id}"/>"
+										class="btn btn-default"><i class="fa fa-pencil"></i> <spring:message
+												code="datasets_list.form.edit" /></a><a
+										href="<c:url value="download"/>"
+										class="btn btn-default"><i class="fa fa-download"></i> <spring:message
+												code="datasets_list.form.download" /></a></td>
 								</tr>
 							</c:forEach>
 						</table>
