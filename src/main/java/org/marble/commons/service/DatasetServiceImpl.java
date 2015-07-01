@@ -17,6 +17,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.util.JSON;
+
 @Service
 public class DatasetServiceImpl implements DatasetService {
 
@@ -31,43 +37,31 @@ public class DatasetServiceImpl implements DatasetService {
 			throw new InvalidDatasetException();
 		}
 		File file = MarbleUtil.multipartToFile(mfile);
-		/*File file = MarbleUtil.multipartToFile(mfile);
-		FileWriter fileWriter =
-                new FileWriter("datasetupload.txt");
-
-            // Always wrap FileWriter in BufferedWriter.
-            BufferedWriter bufferedWriter =
-                new BufferedWriter(fileWriter);
-        try {
-        	String line = null;
-            // Always wrap FileReader in BufferedReader.
-            BufferedReader bufferedReader = 
-                new BufferedReader(new FileReader(file));
-
-            while((line = bufferedReader.readLine()) != null) {
-                bufferedWriter.write(line);
-                bufferedWriter.newLine();
-            }    
-
-            // Always close files.
-            bufferedReader.close();     
-            bufferedWriter.close();
-        }
-        catch(FileNotFoundException ex) {
-                     
-        }
-        catch(IOException ex) {
-                              
-            // Or we could just do this: 
-            // ex.printStackTrace();
-        }*/
-		//Guardar el fichero
+		/*
+		 * File file = MarbleUtil.multipartToFile(mfile); FileWriter fileWriter
+		 * = new FileWriter("datasetupload.txt");
+		 * 
+		 * // Always wrap FileWriter in BufferedWriter. BufferedWriter
+		 * bufferedWriter = new BufferedWriter(fileWriter); try { String line =
+		 * null; // Always wrap FileReader in BufferedReader. BufferedReader
+		 * bufferedReader = new BufferedReader(new FileReader(file));
+		 * 
+		 * while((line = bufferedReader.readLine()) != null) {
+		 * bufferedWriter.write(line); bufferedWriter.newLine(); }
+		 * 
+		 * // Always close files. bufferedReader.close();
+		 * bufferedWriter.close(); } catch(FileNotFoundException ex) {
+		 * 
+		 * } catch(IOException ex) {
+		 * 
+		 * // Or we could just do this: // ex.printStackTrace(); }
+		 */
+		// Guardar el fichero
 		return dataset;
 	}
 
 	@Override
-	public Dataset getDataset(Integer id)
-			throws InvalidDatasetException {
+	public Dataset getDataset(Integer id) throws InvalidDatasetException {
 		Dataset dataset = datasetDao.findOne(id);
 		if (dataset == null) {
 			throw new InvalidDatasetException();
@@ -80,7 +74,6 @@ public class DatasetServiceImpl implements DatasetService {
 		List<Dataset> datasets = datasetDao.findAll();
 		return datasets;
 	}
-	
 
 	@Override
 	public void deleteDataset(Integer id) {
@@ -94,39 +87,44 @@ public class DatasetServiceImpl implements DatasetService {
 		dataset = datasetDao.save(dataset);
 		if (dataset == null) {
 			throw new InvalidDatasetException();
-		}else{
-			/*File file = MarbleUtil.multipartToFile(mfile);
-			FileWriter fileWriter =
-	                new FileWriter("datasetupload.txt");
+		} else {
+			File file = MarbleUtil.multipartToFile(mfile);
 
-	            // Always wrap FileWriter in BufferedWriter.
-	            BufferedWriter bufferedWriter =
-	                new BufferedWriter(fileWriter);
-	        try {
-	        	String line = null;
-	            // Always wrap FileReader in BufferedReader.
-	            BufferedReader bufferedReader = 
-	                new BufferedReader(new FileReader(file));
+			// Always wrap FileWriter in BufferedWriter.
 
-	            while((line = bufferedReader.readLine()) != null) {
-	                bufferedWriter.write(line);
-	                bufferedWriter.newLine();
-	            }    
+			try {
+				MongoClient mongoClient = new MongoClient("polux.det.uvigo.es",
+						27117);
 
-	            // Always close files.
-	            bufferedReader.close();     
-	            bufferedWriter.close();
-	        }
-	        catch(FileNotFoundException ex) {
-	                     
-	        }
-	        catch(IOException ex) {
-	                              
-	            // Or we could just do this: 
-	            // ex.printStackTrace();
-	        }*/
-			//Guardar el fichero
-			//Código para correr el script? Debe de ser aquí supongo
+				// Now connect to your databases
+				DB db = mongoClient.getDB("datasets");
+				// System.out.println("Connect to database successfully");
+
+				DBCollection collection = db.getCollection(dataset.getName());
+				// System.out.println("Collection test created successfully");
+
+				// Always wrap FileReader in BufferedReader.
+				BufferedReader bufferedReader = new BufferedReader(
+						new FileReader(file));
+
+				String line = null;
+				while ((line = bufferedReader.readLine()) != null) {
+					DBObject dbObject = (DBObject) JSON.parse(line);
+					collection.insert(dbObject);
+				}
+
+				bufferedReader.close();
+
+				// Always close files.
+			} catch (FileNotFoundException ex) {
+
+			} catch (IOException ex) {
+
+				// Or we could just do this:
+				// ex.printStackTrace();
+			}
+			// Guardar el fichero
+			// Código para correr el script? Debe de ser aquí supongo
 		}
 		return dataset;
 	}
