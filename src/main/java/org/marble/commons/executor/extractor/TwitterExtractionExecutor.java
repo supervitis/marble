@@ -2,7 +2,6 @@ package org.marble.commons.executor.extractor;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import org.marble.commons.dao.model.Execution;
