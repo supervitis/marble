@@ -4,7 +4,7 @@
 
 
 <c:if test="${not empty dataset.id}">
-	<c:url value='/datasets/${dataset.id}/edit?${_csrf.parameterName}=${_csrf.token}' var="uploadDatasetUrl" />
+	<c:url value='/datasets/edit/${dataset.id}?${_csrf.parameterName}=${_csrf.token}' var="uploadDatasetUrl" />
 </c:if>
 <c:if test="${empty dataset.id}">
 	<c:url value='/datasets/create?${_csrf.parameterName}=${_csrf.token}' var="uploadDatasetUrl" />

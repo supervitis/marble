@@ -86,12 +86,14 @@ public class DatasetController {
 	}
 
 	@RequestMapping(value = "/edit/{datasetId}", method = RequestMethod.POST)
-	public ModelAndView save(@PathVariable Integer datasetId,
+	public String save(@PathVariable Integer datasetId,
 			@Valid Dataset dataset, BindingResult result,
 			@RequestParam("file") MultipartFile file,
 			RedirectAttributes redirectAttributes, HttpServletRequest request)
 			throws InvalidDatasetException {
 
+		String basePath = MarbleUtil.getBasePath(request);
+		
 		ModelAndView modelAndView = new ModelAndView();
 		modelAndView.setViewName("dataset_edit");
 		modelAndView.addObject("dataset", dataset);
@@ -102,7 +104,7 @@ public class DatasetController {
 			modelAndView.addObject("notificationIcon",
 					"fa-exclamation-triangle");
 			modelAndView.addObject("notificationLevel", "danger");
-			return modelAndView;
+			return "redirect:" + basePath + "/datasets";
 		}
 
 		try {
@@ -113,7 +115,7 @@ public class DatasetController {
 			modelAndView.addObject("notificationIcon",
 					"fa-exclamation-triangle");
 			modelAndView.addObject("notificationLevel", "danger");
-			return modelAndView;
+			return "redirect:" + basePath + "/datasets";
 		}
 
 		modelAndView.addObject("notificationMessage",
@@ -121,9 +123,7 @@ public class DatasetController {
 		modelAndView.addObject("notificationIcon", "fa-check-circle");
 		modelAndView.addObject("notificationLevel", "success");
 
-		// TODO Set list view as return
-
-		return modelAndView;
+		return "redirect:" + basePath + "/datasets";
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.GET)

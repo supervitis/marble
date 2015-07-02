@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.List;
 
 import org.marble.commons.dao.DatasetDao;
@@ -32,60 +33,54 @@ public class DatasetServiceImpl implements DatasetService {
 	@Override
 	public Dataset updateDataset(Dataset dataset, MultipartFile mfile)
 			throws InvalidDatasetException, IllegalStateException, IOException {
-		dataset = datasetDao.save(dataset);
-		if (dataset == null) {
-			throw new InvalidDatasetException();
-		}
-		File file = MarbleUtil.multipartToFile(mfile);
-		try {
-		    MongoClient mongoClient = new MongoClient("polux.det.uvigo.es",
-		      27117);
+		
+		
+		  
+		  try {
+			   
+		   MongoClient mongoClient = new MongoClient("polux.det.uvigo.es",
+		     27117);
 
-		    // Now connect to your databases
-		    DB db = mongoClient.getDB("datasets");
-		    // System.out.println("Connect to database successfully");
-		    String oldName = null;
-		    try {
-		     oldName = getDataset(dataset.getId()).getName();
-		    } catch (Exception e) {
-		     // TODO Auto-generated catch block
+		   // Now connect to your databases
+		   DB db = mongoClient.getDB("datasets");
+		   String oldName = null;
+		   try {
+		    oldName = getDataset(dataset.getId()).getName();
+		   } catch (Exception e) {
+		    // TODO Auto-generated catch block
+		   }
+		   String newName = dataset.getName();
+		   DBCollection collection = null;
+		   DBCollection newCollection = null;
+		   if(!oldName.equals(newName)){
+			   collection = db.getCollection(oldName);
+			   newCollection = collection.rename(newName,true);
+		   }
+		   // Always wrap FileReader in BufferedReader.
+		   File file = MarbleUtil.multipartToFile(mfile);
+		   BufferedReader bufferedReader = new BufferedReader(new FileReader(
+		     file));
+
+		   String line = null;
+		   while ((line = bufferedReader.readLine()) != null) {
+		    DBObject dbObject = (DBObject) JSON.parse(line);
+		    try{
+		    	newCollection.insert(dbObject);
+		    }catch(Exception e){
+		    	
 		    }
-		    String newName = dataset.getName();
-		    if(oldName == null){
-		     DBCollection collection = db.getCollection(newName);
-		     // Always wrap FileReader in BufferedReader.
-		     BufferedReader bufferedReader = new BufferedReader(
-		       new FileReader(file));
+		   }
 
-		     String line = null;
-		     while ((line = bufferedReader.readLine()) != null) {
-		      DBObject dbObject = (DBObject) JSON.parse(line);
-		      collection.insert(dbObject);
-		     }
+		   bufferedReader.close();
+		  } catch (Exception ex) {
 
-		     bufferedReader.close();
-
-		    }else {
-		     DBCollection collection = db.getCollection(oldName);
-		     collection.rename(newName);
-		     // Always wrap FileReader in BufferedReader.
-		     BufferedReader bufferedReader = new BufferedReader(
-		       new FileReader(file));
-
-		     String line = null;
-		     while ((line = bufferedReader.readLine()) != null) {
-		      DBObject dbObject = (DBObject) JSON.parse(line);
-		      collection.insert(dbObject);
-		     }
-
-		     bufferedReader.close();
-		    }
-
-		   
-
-		    // Always close files.
-		   } catch (FileNotFoundException ex) {}
-		return dataset;
+		  } 
+		  dataset = datasetDao.save(dataset);
+		  if (dataset == null) {
+		   throw new InvalidDatasetException();
+		  }
+		  return dataset;
+	
 	}
 
 	@Override
@@ -105,22 +100,44 @@ public class DatasetServiceImpl implements DatasetService {
 
 	@Override
 	public void deleteDataset(Integer id) {
-		datasetDao.delete(id);
-		return;
+		 try {
+			   MongoClient mongoClient = new MongoClient("polux.det.uvigo.es",
+			     27117);
+			   DB db = mongoClient.getDB("datasets");
+			   String oldName = null;
+			   try {
+			    oldName = getDataset(id).getName();
+			   } catch (InvalidDatasetException e) {
+			    // TODO Auto-generated catch block
+			    e.printStackTrace();
+			   }
+			   DBCollection collection = db.getCollection(oldName);
+			   collection.drop();
+			  } catch (UnknownHostException e) {
+			   // TODO Auto-generated catch block
+			   e.printStackTrace();
+			  }
+
+			  // Now connect to your databases
+			 
+			  datasetDao.delete(id);
+			  return;
 	}
 
 	@Override
 	public Dataset createDataset(Dataset dataset, MultipartFile mfile)
 			throws InvalidDatasetException, IllegalStateException, IOException {
 		dataset = datasetDao.save(dataset);
-		if (dataset == null) {
+		if (dataset == null ) {
 			throw new InvalidDatasetException();
 		} else {
-			File file = MarbleUtil.multipartToFile(mfile);
-
+		
+			
+			
 			// Always wrap FileWriter in BufferedWriter.
 
 			try {
+				File file = MarbleUtil.multipartToFile(mfile);
 				MongoClient mongoClient = new MongoClient("polux.det.uvigo.es",
 						27117);
 
@@ -144,13 +161,9 @@ public class DatasetServiceImpl implements DatasetService {
 				bufferedReader.close();
 
 				// Always close files.
-			} catch (FileNotFoundException ex) {
+			} catch (Exception ex) {
 
-			} catch (IOException ex) {
-
-				// Or we could just do this:
-				// ex.printStackTrace();
-			}
+			} 
 			// Guardar el fichero
 			// Código para correr el script? Debe de ser aquí supongo
 		}
