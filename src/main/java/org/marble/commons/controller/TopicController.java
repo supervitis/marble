@@ -1,5 +1,7 @@
 package org.marble.commons.controller;
 
+import java.io.IOException;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -9,10 +11,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.marble.commons.dao.model.Dataset;
 import org.marble.commons.dao.model.Topic;
+import org.marble.commons.exception.InvalidDatasetException;
 import org.marble.commons.exception.InvalidTopicException;
 import org.marble.commons.model.ExecutionModuleParameters;
 import org.marble.commons.model.TopicInfo;
+import org.marble.commons.service.DatasetService;
+import org.marble.commons.service.DatasetServiceImpl;
 import org.marble.commons.service.TopicService;
 import org.marble.commons.util.MarbleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +34,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.MongoClient;
 
 import twitter4j.GeoLocation;
 import twitter4j.Query.Unit;
@@ -122,7 +132,7 @@ public class TopicController {
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public ModelAndView create(@ModelAttribute("topic") @Valid Topic topic, BindingResult result,
             RedirectAttributes redirectAttributes, HttpServletRequest request)
-            throws InvalidTopicException {
+            throws InvalidTopicException, IllegalStateException, InvalidDatasetException, IOException {
 
         String basePath = MarbleUtil.getBasePath(request);
         ModelAndView modelAndView = new ModelAndView();
@@ -137,6 +147,12 @@ public class TopicController {
         }
 
         topic = topicService.save(topic);
+        Dataset dataset = new Dataset();
+        dataset.setDescription(topic.getDescription());
+        dataset.setName(topic.getName());
+        DatasetService datasetService = new DatasetServiceImpl();
+        datasetService.createDataset(dataset, null);
+        
         // Setting message
         redirectAttributes.addFlashAttribute("notificationMessage", "TopicController.topicCreated");
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
