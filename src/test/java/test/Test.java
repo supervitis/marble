@@ -1,86 +1,48 @@
 package test;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-import com.mongodb.util.JSON;
-
+import twitter4j.StallWarning;
+import twitter4j.Status;
+import twitter4j.StatusDeletionNotice;
+import twitter4j.StatusListener;
+import twitter4j.TwitterStream;
+import twitter4j.TwitterStreamFactory;
 public class Test {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		
-		
-		try{   
+			TwitterStream twitterStream = new TwitterStreamFactory().getInstance();
+	        StatusListener listener = new StatusListener() {
+	            @Override
+	            public void onStatus(Status status) {
+	                System.out.println("@" + status.getUser().getScreenName() + " - " + status.getText());
+	            }
 
-	         // To connect to mongodb server
-	         MongoClient mongoClient = new MongoClient( "polux.det.uvigo.es" , 27117 );
+	            @Override
+	            public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
+	                System.out.println("Got a status deletion notice id:" + statusDeletionNotice.getStatusId());
+	            }
 
-	         // Now connect to your databases
-	         DB db = mongoClient.getDB("datasets");
-	         System.out.println("Connect to database successfully");
+	            @Override
+	            public void onTrackLimitationNotice(int numberOfLimitedStatuses) {
+	                System.out.println("Got track limitation notice:" + numberOfLimitedStatuses);
+	            }
 
-	         DBCollection collection = db.getCollection("prueba_rubius_file");
-	         System.out.println("Collection test created successfully");
-	         
-	        /*
-	        FileInputStream fis = new FileInputStream("C:\\Users\\David\\Desktop\\test.json");
-	        
-	    	//Construct BufferedReader from InputStreamReader
-	    	BufferedReader br = new BufferedReader(new InputStreamReader(fis));
-	     
-	    	String line = null;
-	    	while ((line = br.readLine()) != null) {
-	    		DBObject dbObject = (DBObject)JSON.parse(line);  
-				collection.insert(dbObject);
-	    	}
-	     
-	    	br.close();
-	        */
-	        
-	         File file = new File("C:\\Users\\David\\Desktop\\test.json");
-	         
-	         BufferedReader br = new BufferedReader(new FileReader(file));
-	         
-	     	String line = null;
-	     	while ((line = br.readLine()) != null) {
-	     		DBObject dbObject = (DBObject)JSON.parse(line);  
-				collection.insert(dbObject);
-	     	}
-	      
-	     	br.close();
-	         
-	         
-	         
-	        PrintWriter out = new PrintWriter("C:\\Users\\David\\Desktop\\rubius.json");
-	        
-	        
-	        DBCursor cursor = collection.find();
-	        while( cursor.hasNext() ){
-	            DBObject obj = cursor.next();
-	  	      	out.println(obj.toString());
+	            @Override
+	            public void onScrubGeo(long userId, long upToStatusId) {
+	                System.out.println("Got scrub_geo event userId:" + userId + " upToStatusId:" + upToStatusId);
+	            }
 
-	        }
-	        
+	            @Override
+	            public void onStallWarning(StallWarning warning) {
+	                System.out.println("Got stall warning:" + warning);
+	            }
 
-	       }catch(Exception e){
-	         System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-	       }
-		
-		
-		
-		
-	}
+	            @Override
+	            public void onException(Exception ex) {
+	                ex.printStackTrace();
+	            }
+	        };
+	        twitterStream.addListener(listener);
+	        twitterStream.sample();
+		}
 
 }

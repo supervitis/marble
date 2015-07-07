@@ -85,7 +85,7 @@
 						</spring:bind>
 						
 						<div class="form-group">
-						<p>Select the file containing the data in json format and click upload. Previous data on this dataset will be removed</p>
+						<p>Select the file containing the data in json format and click upload. New entries will be added to the previous dataset</p>
 						<input name="file" type="file" class="form-control" />
 						</div>
 
@@ -97,7 +97,7 @@
 			</div>
 			<!-- /.panel -->
 		</div>
-		<!-- /.col-lg-6 -->
+		<!-- /.col-leg-6 -->
 	</div>
 	<!-- /.row -->
 </form:form>
