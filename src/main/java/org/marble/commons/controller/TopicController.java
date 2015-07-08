@@ -3,9 +3,11 @@ package org.marble.commons.controller;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,6 +50,8 @@ public class TopicController {
 
     // private static final Logger log =
     // LoggerFactory.getLogger(PlotController.class);
+	@Autowired
+	DatasetService datasetService;
 
     @Autowired
     TopicService topicService;
@@ -150,7 +154,6 @@ public class TopicController {
         Dataset dataset = new Dataset();
         dataset.setDescription(topic.getDescription());
         dataset.setName(topic.getName());
-        DatasetService datasetService = new DatasetServiceImpl();
         datasetService.createDataset(dataset, null);
         
         // Setting message

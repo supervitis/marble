@@ -1,5 +1,8 @@
 package org.marble.commons.executor.extractor;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -10,18 +13,27 @@ import org.marble.commons.dao.model.Topic;
 import org.marble.commons.dao.model.TwitterApiKey;
 import org.marble.commons.exception.InvalidExecutionException;
 import org.marble.commons.model.ExecutionStatus;
+import org.marble.commons.service.DatasetService;
 import org.marble.commons.service.DatastoreService;
 import org.marble.commons.service.ExecutionService;
 import org.marble.commons.service.TopicService;
 import org.marble.commons.service.TwitterApiKeyService;
 import org.marble.commons.service.TwitterSearchService;
+import org.marble.commons.util.MarbleUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.mongodb.DB;
+import com.mongodb.DBCollection;
+import com.mongodb.DBObject;
+import com.mongodb.MongoClient;
+import com.mongodb.util.JSON;
+
 import twitter4j.GeoLocation;
+import twitter4j.JSONObject;
 import twitter4j.Query.Unit;
 import twitter4j.Status;
 import twitter4j.TwitterException;
@@ -37,6 +49,9 @@ public class TwitterExtractionExecutor implements ExtractorExecutor {
 
     @Autowired
     TopicService topicService;
+    
+    @Autowired
+    DatasetService datasetService;
 
     @Autowired
     TwitterApiKeyService twitterApiKeyService;
@@ -193,7 +208,28 @@ public class TwitterExtractionExecutor implements ExtractorExecutor {
                         }
 
                         datastoreService.insertOriginalStatus(originalStatus);
+                        
+                        //TODO: GUARDAR EN LA COLECCION DE DATASETS
+                        try {
 
+                			MongoClient mongoClient = new MongoClient("polux.det.uvigo.es",
+                					27117);
+
+                			// Now connect to your databases
+                			DB db = mongoClient.getDB("datasets");
+                			String oldName = topic.getName();
+                			
+                			DBCollection collection = db.getCollection(oldName);
+
+                			JSONObject jsonObject = new JSONObject(originalStatus);
+	        				DBObject dbObject = (DBObject) JSON.parse(jsonObject.toString());
+	        		
+	        					collection.insert(dbObject);
+	        				
+	        			
+                		} catch (Exception ex) {
+                			log.error(ex.getMessage());
+                		}
                         count++;
                         if (count >= maxStatuses) {
                             break;
