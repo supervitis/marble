@@ -96,7 +96,7 @@ public class TopicController {
     @RequestMapping(value = "/{topicId:[0-9]+}/edit", method = RequestMethod.POST)
     public ModelAndView save(@Valid Topic topic, BindingResult result, @PathVariable Integer topicId,
             RedirectAttributes redirectAttributes, HttpServletRequest request)
-            throws InvalidTopicException {
+            throws InvalidTopicException, IllegalStateException, InvalidDatasetException, IOException {
 
         String basePath = MarbleUtil.getBasePath(request);
         ModelAndView modelAndView = new ModelAndView();
@@ -109,8 +109,21 @@ public class TopicController {
             modelAndView.addObject("topic", topic);
             return modelAndView;
         }
-
+        String oldName = topicService.findOne(topic.getId()).getName();
         topic = topicService.save(topic);
+        Dataset dataset = datasetService.getDatasetByName(oldName);
+        if(dataset != null){
+        	dataset.setName(topic.getName());
+    		dataset.setDescription(topic.getDescription());
+        	datasetService.updateDataset(dataset, null);
+        }
+        else{
+        	dataset = new Dataset();
+        	dataset.setName(topic.getName());
+        	dataset.setDescription(topic.getDescription());
+        	datasetService.createDataset(dataset,null);
+        }
+        
 
         redirectAttributes.addFlashAttribute("notificationMessage", "TopicController.topicModified");
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");

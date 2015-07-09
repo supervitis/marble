@@ -20,4 +20,6 @@ public interface DatasetService {
 
 	public Dataset createDataset(Dataset dataset, MultipartFile file) throws InvalidDatasetException, IllegalStateException, IOException;
 
+	public Dataset getDatasetByName(String name) throws InvalidDatasetException;
+
 }
