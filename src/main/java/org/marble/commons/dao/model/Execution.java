@@ -64,6 +64,13 @@ public class Execution implements Serializable {
     // @Cascade({ CascadeType.DELETE })
     @JsonBackReference
     private Topic topic;
+    
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "streaming_topic_id")
+    // @Cascade({ CascadeType.DELETE })
+    @JsonBackReference
+    private StreamingTopic streamingTopic ;
+    
 
     @JsonSerialize(using = StringDateSerializer.class)
     @Column(name = "created_at")
