@@ -8,4 +8,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface DatasetDao extends CrudRepository<Dataset,Integer> {
 	List<Dataset> findAll();
+	Dataset findDatasetByName(String name);
 }

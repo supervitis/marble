@@ -94,15 +94,7 @@ public class DatasetServiceImpl implements DatasetService {
 	
 	@Override
 	public Dataset getDatasetByName(String name) throws InvalidDatasetException {
-		List<Dataset> datasets = datasetDao.findAll();
-		
-		
-		for (Dataset dataset : datasets){
-			if(dataset.getName().equals(name)){
-				return dataset;
-			}
-		}
-		return null;
+		return datasetDao.findDatasetByName(name);
 		
 	}
 
