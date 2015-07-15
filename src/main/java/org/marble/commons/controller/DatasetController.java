@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import org.marble.commons.dao.model.Dataset;
 import org.marble.commons.exception.InvalidDatasetException;
 import org.marble.commons.service.DatasetService;
+import org.marble.commons.service.TopicService;
 import org.marble.commons.util.MarbleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,29 +38,23 @@ public class DatasetController {
 
 	@Autowired
 	DatasetService datasetService;
+	
+	@Autowired
+	TopicService topicService;
 
 	@RequestMapping
 	public ModelAndView home() {
 		ModelAndView modelAndView = new ModelAndView("datasets_list");
 		modelAndView.addObject("datasets", datasetService.getDatasets());
+		modelAndView.addObject("topics",topicService.findAll());
 		return modelAndView;
 	}
 
-	@RequestMapping(value = "/edit/{datasetId}", method = RequestMethod.GET)
-	public ModelAndView edit(@PathVariable Integer datasetId)
-			throws InvalidDatasetException {
-		ModelAndView modelAndView = new ModelAndView();
-
-		Dataset dataset;
-		dataset = datasetService.getDataset(datasetId);
-		modelAndView.setViewName("dataset_edit");
-		modelAndView.addObject("dataset", dataset);
-		return modelAndView;
-	}
-
+	
 	@RequestMapping(value = "/download/{datasetId}", method = RequestMethod.GET)
-	public void getDataset(@PathVariable Integer datasetId,
-			HttpServletResponse response) throws InvalidDatasetException {
+	public ModelAndView getDataset(@PathVariable Integer datasetId, HttpServletRequest request,	HttpServletResponse response) throws InvalidDatasetException {
+		String basePath = MarbleUtil.getBasePath(request);
+        ModelAndView modelAndView = new ModelAndView();
 		try {
 			Dataset dataset;
 			dataset = datasetService.getDataset(datasetId);
@@ -83,6 +78,21 @@ public class DatasetController {
 		} catch (IOException ex) {
 			throw new RuntimeException("IOError writing file to output stream");
 		}
+		
+		modelAndView.setViewName("redirect:" + basePath + "/datasets");
+        return modelAndView;
+	}
+	
+	@RequestMapping(value = "/edit/{datasetId}", method = RequestMethod.GET)
+	public ModelAndView edit(@PathVariable Integer datasetId)
+			throws InvalidDatasetException {
+		ModelAndView modelAndView = new ModelAndView();
+
+		Dataset dataset;
+		dataset = datasetService.getDataset(datasetId);
+		modelAndView.setViewName("dataset_edit");
+		modelAndView.addObject("dataset", dataset);
+		return modelAndView;
 	}
 
 	@RequestMapping(value = "/edit/{datasetId}", method = RequestMethod.POST)

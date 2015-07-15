@@ -5,8 +5,9 @@ import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.web.multipart.MultipartFile;
 
 @Entity
 @Table(name = "mrbl_datasets")
@@ -25,21 +26,19 @@ public class Dataset implements Serializable {
     @NotEmpty
     private String name;
 
+    
     public Dataset() {
         this.description = null;
         this.name = null;
-    }
-
-   
+    } 
 
     public Dataset(Integer id, String description, String name) {
 		super();
 		this.id = id;
 		this.description = description;
 		this.name = name;
-	}
 
-    
+	}
 
 
 	public Integer getId() {
@@ -81,4 +80,6 @@ public class Dataset implements Serializable {
 	public String toString() {
         return ("Name: " + this.name + ", Description: " + this.description);
     }
+
+	
 }

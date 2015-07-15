@@ -1,6 +1,7 @@
 package org.marble.commons.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -11,9 +12,11 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.marble.commons.dao.model.Dataset;
+import org.marble.commons.dao.model.OriginalStatus;
 import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidDatasetException;
 import org.marble.commons.exception.InvalidTopicException;
@@ -39,9 +42,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
+import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
 import twitter4j.GeoLocation;
+import twitter4j.JSONObject;
 import twitter4j.Query.Unit;
 
 @Controller
@@ -77,6 +83,32 @@ public class TopicController {
         return modelAndView;
     }
     
+    @RequestMapping(value = "/{topicId:[0-9]+}/download", method = RequestMethod.GET)
+    public ModelAndView downloadTopic(@PathVariable Integer topicId, HttpServletRequest request, HttpServletResponse response) throws InvalidTopicException {
+
+        String basePath = MarbleUtil.getBasePath(request);
+        ModelAndView modelAndView = new ModelAndView();
+        try {
+        	Topic topic;
+            topic = topicService.findOne(topicId);
+			response.setHeader("Content-Disposition",
+                    "attachment;filename=" + topic.getName() + ".json");
+			
+			
+			PrintWriter out = response.getWriter();
+			List<OriginalStatus> statuses = topicService.findAllStatusByTopicId(topic.getId());
+			for(OriginalStatus originalStatus : statuses){
+				JSONObject jsonObject = new JSONObject(originalStatus);
+				out.println(jsonObject.toString());
+			}
+			out.close();
+		} catch (IOException ex) {
+			throw new RuntimeException("IOError writing file to output stream");
+		}
+        modelAndView.setViewName("redirect:" + basePath + "/datasets");
+        return modelAndView;
+    }
+    
     @RequestMapping(value = "/{topicId:[0-9]+}/edit", method = RequestMethod.GET)
     public ModelAndView edit(@PathVariable Integer topicId) throws InvalidTopicException {
         ModelAndView modelAndView = new ModelAndView();
@@ -109,22 +141,7 @@ public class TopicController {
             modelAndView.addObject("topic", topic);
             return modelAndView;
         }
-        String oldName = topicService.findOne(topic.getId()).getName();
-        topic = topicService.save(topic);
-        Dataset dataset = datasetService.getDatasetByName(oldName);
-        if(dataset != null){
-        	dataset.setName(topic.getName());
-    		dataset.setDescription(topic.getDescription());
-        	datasetService.updateDataset(dataset, null);
-        }
-        else{
-        	dataset = new Dataset();
-        	dataset.setName(topic.getName());
-        	dataset.setDescription(topic.getDescription());
-        	datasetService.createDataset(dataset,null);
-        }
-        
-
+       
         redirectAttributes.addFlashAttribute("notificationMessage", "TopicController.topicModified");
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
         redirectAttributes.addFlashAttribute("notificationLevel", "success");
@@ -163,11 +180,6 @@ public class TopicController {
             return modelAndView;
         }
 
-        topic = topicService.save(topic);
-        Dataset dataset = new Dataset();
-        dataset.setDescription(topic.getDescription());
-        dataset.setName(topic.getName());
-        datasetService.createDataset(dataset, null);
         
         // Setting message
         redirectAttributes.addFlashAttribute("notificationMessage", "TopicController.topicCreated");

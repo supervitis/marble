@@ -33,9 +33,7 @@ public class DatasetServiceImpl implements DatasetService {
 	@Override
 	public Dataset updateDataset(Dataset dataset, MultipartFile mfile)
 			throws InvalidDatasetException, IllegalStateException, IOException {
-
 		try {
-
 			MongoClient mongoClient = new MongoClient("polux.det.uvigo.es",
 					27117);
 
@@ -67,13 +65,11 @@ public class DatasetServiceImpl implements DatasetService {
 				try {
 					newCollection.insert(dbObject);
 				} catch (Exception e) {
-
 				}
 			}
 
 			bufferedReader.close();
 		} catch (Exception ex) {
-
 		}
 		dataset = datasetDao.save(dataset);
 		if (dataset == null) {
@@ -91,11 +87,11 @@ public class DatasetServiceImpl implements DatasetService {
 		}
 		return dataset;
 	}
-	
+
 	@Override
 	public Dataset getDatasetByName(String name) throws InvalidDatasetException {
 		return datasetDao.findDatasetByName(name);
-		
+
 	}
 
 	@Override
@@ -137,29 +133,28 @@ public class DatasetServiceImpl implements DatasetService {
 		if (dataset == null) {
 			throw new InvalidDatasetException();
 		} else {
-			try {
-				//TODO: Poner los parametros en pom.properties
-				File file = MarbleUtil.multipartToFile(mfile);
-				MongoClient mongoClient = new MongoClient("polux.det.uvigo.es",
-						27117); 
-				DB db = mongoClient.getDB("datasets");
+				try {
+					// TODO: Poner los parametros en pom.properties
+					File file = MarbleUtil.multipartToFile(mfile);
+					MongoClient mongoClient = new MongoClient(
+							"polux.det.uvigo.es", 27117);
+					DB db = mongoClient.getDB("datasets");
 
-				DBCollection collection = db.getCollection(dataset.getName());
-				BufferedReader bufferedReader = new BufferedReader(
-						new FileReader(file));
+					DBCollection collection = db.getCollection(dataset
+							.getName());
+					BufferedReader bufferedReader = new BufferedReader(
+							new FileReader(file));
 
-				String line = null;
-				while ((line = bufferedReader.readLine()) != null) {
-					DBObject dbObject = (DBObject) JSON.parse(line);
-					collection.insert(dbObject);
-				}
+					String line = null;
+					while ((line = bufferedReader.readLine()) != null) {
+						DBObject dbObject = (DBObject) JSON.parse(line);
+						collection.insert(dbObject);
+					}
 
-				bufferedReader.close();
-			} catch (Exception ex) {
-
-			}
-		}
+					bufferedReader.close();
+				} catch (Exception ex) {}
 		return dataset;
+		}
 	}
 
 }
