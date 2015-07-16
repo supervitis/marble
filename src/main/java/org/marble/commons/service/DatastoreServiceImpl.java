@@ -18,8 +18,8 @@ import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-
 import org.marble.commons.dao.model.OriginalStatus;
+import org.marble.commons.dao.model.UploadedStatus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.BasicDBObject;
@@ -64,6 +64,12 @@ public class DatastoreServiceImpl implements DatastoreService {
     }
 
     @Override
+    public <T> void findAllAndRemoveByDatasetId(Integer datasetId, Class<T> entityClass) throws MongoException {
+        Query query = new BasicQuery("{'datasetId': " + datasetId + "}");
+        this.findAllAndRemove(query, entityClass);
+    }
+    
+    @Override
     public <T> List<T> findByQuery(Query query, Class<T> entityClass) throws MongoException {
         List<T> result = mongoOperations.find(query, entityClass);
         if (result == null) {
@@ -93,12 +99,31 @@ public class DatastoreServiceImpl implements DatastoreService {
     }
 
     @Override
+    public <T> List<T> findByDatasetId(Integer datasetId, Class<T> entityClass) throws MongoException {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("datasetId").is(datasetId));
+        return this.findByQuery(query, entityClass);
+    }
+
+    @Override
     public <T> DBCursor findCursorByTopicId(Integer topicId, Class<T> entityClass) {
         Document document = entityClass.getAnnotation(Document.class);
         DBCollection collection = mongoOperations.getCollection(document.collection());
 
         BasicDBObject searchQuery = new BasicDBObject();
         searchQuery.put("topicId", topicId);
+
+        DBCursor cursor = collection.find(searchQuery);
+        return cursor;
+    }
+    
+    @Override
+    public <T> DBCursor findCursorByDatasetId(Integer datasetId, Class<T> entityClass) {
+        Document document = entityClass.getAnnotation(Document.class);
+        DBCollection collection = mongoOperations.getCollection(document.collection());
+
+        BasicDBObject searchQuery = new BasicDBObject();
+        searchQuery.put("datasetId", datasetId);
 
         DBCursor cursor = collection.find(searchQuery);
         return cursor;
@@ -137,6 +162,14 @@ public class DatastoreServiceImpl implements DatastoreService {
     }
 
     @Override
+    public <T> T findOneByDatasetIdSortBy(Integer datasetId, String field, Direction direction, Class<T> entityClass) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("datasetId").is(datasetId));
+        query.with(new Sort(direction, field));
+        return this.findOneByQuery(query, entityClass);
+    }
+    
+    @Override
     public MongoConverter getConverter() {
         return mongoOperations.getConverter();
     }
@@ -144,6 +177,11 @@ public class DatastoreServiceImpl implements DatastoreService {
     @Override
     public void insertOriginalStatus(OriginalStatus originalStatus) {
         mongoOperations.save(originalStatus);
+    }
+    
+    @Override
+    public void insertUploadedStatus(UploadedStatus uploadedStatus) {
+        mongoOperations.save(uploadedStatus);
     }
 
     @Override

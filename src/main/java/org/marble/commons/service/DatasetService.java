@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.marble.commons.dao.model.Dataset;
+import org.marble.commons.dao.model.UploadedStatus;
 import org.marble.commons.exception.InvalidDatasetException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,5 +22,10 @@ public interface DatasetService {
 	public Dataset createDataset(Dataset dataset, MultipartFile file) throws InvalidDatasetException, IllegalStateException, IOException;
 
 	public Dataset getDatasetByName(String name) throws InvalidDatasetException;
+
+	public List<UploadedStatus> downloadDataset(
+			Integer datasetId);
+
+
 
 }

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.convert.MongoConverter;
 import org.springframework.data.mongodb.core.query.Query;
 import org.marble.commons.dao.model.OriginalStatus;
+import org.marble.commons.dao.model.UploadedStatus;
 
 import com.mongodb.DBCursor;
 import com.mongodb.MongoException;
@@ -46,5 +47,18 @@ public interface DatastoreService {
     <T> DBCursor findCursorByQuery(Map<String, Object> queryParameters, Class<T> entityClass);
 
     <T> DBCursor findCursorForAll(Class<T> entityClass);
+
+	<T> List<T> findByDatasetId(Integer datasetId, Class<T> entityClass)
+			throws MongoException;
+
+	<T> void findAllAndRemoveByDatasetId(Integer datasetId, Class<T> entityClass)
+			throws MongoException;
+
+	<T> T findOneByDatasetIdSortBy(Integer datasetId, String field,
+			Direction direction, Class<T> entityClass);
+
+	void insertUploadedStatus(UploadedStatus uploadedStatus);
+
+	<T> DBCursor findCursorByDatasetId(Integer datasetId, Class<T> entityClass);
 
 }

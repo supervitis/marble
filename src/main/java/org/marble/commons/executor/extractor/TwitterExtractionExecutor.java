@@ -10,7 +10,6 @@ import org.marble.commons.dao.model.Topic;
 import org.marble.commons.dao.model.TwitterApiKey;
 import org.marble.commons.exception.InvalidExecutionException;
 import org.marble.commons.model.ExecutionStatus;
-import org.marble.commons.service.DatasetService;
 import org.marble.commons.service.DatastoreService;
 import org.marble.commons.service.ExecutionService;
 import org.marble.commons.service.TopicService;
@@ -39,9 +38,6 @@ public class TwitterExtractionExecutor implements ExtractorExecutor {
     @Autowired
     TopicService topicService;
     
-    @Autowired
-    DatasetService datasetService;
-
     @Autowired
     TwitterApiKeyService twitterApiKeyService;
 

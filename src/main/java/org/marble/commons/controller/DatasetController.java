@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.marble.commons.dao.model.Dataset;
+import org.marble.commons.dao.model.UploadedStatus;
 import org.marble.commons.exception.InvalidDatasetException;
 import org.marble.commons.service.DatasetService;
 import org.marble.commons.service.TopicService;
@@ -25,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import twitter4j.JSONObject;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -56,22 +60,15 @@ public class DatasetController {
 		String basePath = MarbleUtil.getBasePath(request);
         ModelAndView modelAndView = new ModelAndView();
 		try {
-			Dataset dataset;
-			dataset = datasetService.getDataset(datasetId);
-
-			MongoClient mongoClient = new MongoClient("polux.det.uvigo.es",
-					27117);
-			DB db = mongoClient.getDB("datasets");
+		
+		List<UploadedStatus> uploadedStatuses = datasetService.downloadDataset(datasetId);
 			response.setHeader("Content-Disposition",
-                    "attachment;filename=" + dataset.getName() + ".json");
-			DBCollection collection = db.getCollection(dataset.getName());
-			// get your file as InputStream
+                    "attachment;filename=" + datasetService.getDataset(datasetId).getName() + ".json");		
 			PrintWriter out = response.getWriter();
-			DBCursor cursor = collection.find();
-			while (cursor.hasNext()) {
-				DBObject obj = cursor.next();
-				out.println(obj.toString());
 
+			for(UploadedStatus uploadedStatus : uploadedStatuses){
+				JSONObject jsonObject = new JSONObject(uploadedStatus);
+				out.println(jsonObject.toString());
 			}
 			out.close();
 
