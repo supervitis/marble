@@ -15,6 +15,7 @@ public class UploadedStatus {
 	 @Indexed
 	 private Integer datasetId;
 
+	
 	 private Object status;
 	 
 	 public UploadedStatus() {
