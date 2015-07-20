@@ -89,7 +89,7 @@ public class TwitterStreamingExecutor implements ExtractorExecutor {
 
 	            Integer id = execution.getId();
 
-	            msg = "Starting twitter extraction <" + id + ">.";
+	            msg = "Starting twitter streaming extraction <" + id + ">.";
 	            log.info(msg);
 	            execution.appendLog(msg);
 
@@ -217,7 +217,7 @@ public class TwitterStreamingExecutor implements ExtractorExecutor {
 
 	                        datastoreService.insertOriginalStatus(originalStatus);
 	                        
-	                        
+	                        //Con esto llega? 
 	                        count++;
 	                        if (count >= maxStatuses) {
 	                            break;
@@ -234,7 +234,9 @@ public class TwitterStreamingExecutor implements ExtractorExecutor {
 	                    executionService.save(execution);
 	                    break;
 	                }
-	                streamingTopicService.save(topic);
+	                
+	                //Supongo que no pero este puede fallar 
+	                streamingTopicService.save(streamingTopic);
 
 	                msg = "Statuses extracted so far: <" + count + ">";
 	                log.info(msg);
@@ -243,7 +245,7 @@ public class TwitterStreamingExecutor implements ExtractorExecutor {
 
 	            } while (count < maxStatuses && inRange);
 
-	            msg = "Extraction of this topic has finished.";
+	            msg = "Extraction of this streaming topic has finished.";
 	            log.info(msg);
 	            execution.appendLog(msg);
 	            execution.setStatus(ExecutionStatus.Stopped);
