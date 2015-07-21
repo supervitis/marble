@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.util.List;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -11,8 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.marble.commons.dao.model.Dataset;
+import org.marble.commons.dao.model.UploadedStatus;
 import org.marble.commons.exception.InvalidDatasetException;
 import org.marble.commons.service.DatasetService;
+import org.marble.commons.service.TopicService;
 import org.marble.commons.util.MarbleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,6 +27,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import twitter4j.JSONObject;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -37,14 +42,44 @@ public class DatasetController {
 
 	@Autowired
 	DatasetService datasetService;
+	
+	@Autowired
+	TopicService topicService;
 
 	@RequestMapping
 	public ModelAndView home() {
 		ModelAndView modelAndView = new ModelAndView("datasets_list");
 		modelAndView.addObject("datasets", datasetService.getDatasets());
+		modelAndView.addObject("topics",topicService.findAll());
 		return modelAndView;
 	}
 
+	
+	@RequestMapping(value = "/download/{datasetId}", method = RequestMethod.GET)
+	public ModelAndView getDataset(@PathVariable Integer datasetId, HttpServletRequest request,	HttpServletResponse response) throws InvalidDatasetException {
+		String basePath = MarbleUtil.getBasePath(request);
+        ModelAndView modelAndView = new ModelAndView();
+		try {
+		
+		List<UploadedStatus> uploadedStatuses = datasetService.downloadDataset(datasetId);
+			response.setHeader("Content-Disposition",
+                    "attachment;filename=" + datasetService.getDataset(datasetId).getName() + ".json");		
+			PrintWriter out = response.getWriter();
+
+			for(UploadedStatus uploadedStatus : uploadedStatuses){
+				JSONObject jsonObject = new JSONObject(uploadedStatus);
+				out.println(jsonObject.toString());
+			}
+			out.close();
+
+		} catch (IOException ex) {
+			throw new RuntimeException("IOError writing file to output stream");
+		}
+		
+		modelAndView.setViewName("redirect:" + basePath + "/datasets");
+        return modelAndView;
+	}
+	
 	@RequestMapping(value = "/edit/{datasetId}", method = RequestMethod.GET)
 	public ModelAndView edit(@PathVariable Integer datasetId)
 			throws InvalidDatasetException {
@@ -55,34 +90,6 @@ public class DatasetController {
 		modelAndView.setViewName("dataset_edit");
 		modelAndView.addObject("dataset", dataset);
 		return modelAndView;
-	}
-
-	@RequestMapping(value = "/download/{datasetId}", method = RequestMethod.GET)
-	public void getDataset(@PathVariable Integer datasetId,
-			HttpServletResponse response) throws InvalidDatasetException {
-		try {
-			Dataset dataset;
-			dataset = datasetService.getDataset(datasetId);
-
-			MongoClient mongoClient = new MongoClient("polux.det.uvigo.es",
-					27117);
-			DB db = mongoClient.getDB("datasets");
-			response.setHeader("Content-Disposition",
-                    "attachment;filename=" + dataset.getName() + ".json");
-			DBCollection collection = db.getCollection(dataset.getName());
-			// get your file as InputStream
-			PrintWriter out = response.getWriter();
-			DBCursor cursor = collection.find();
-			while (cursor.hasNext()) {
-				DBObject obj = cursor.next();
-				out.println(obj.toString());
-
-			}
-			out.close();
-
-		} catch (IOException ex) {
-			throw new RuntimeException("IOError writing file to output stream");
-		}
 	}
 
 	@RequestMapping(value = "/edit/{datasetId}", method = RequestMethod.POST)

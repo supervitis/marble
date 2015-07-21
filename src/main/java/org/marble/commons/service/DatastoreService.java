@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.convert.MongoConverter;
 import org.springframework.data.mongodb.core.query.Query;
 import org.marble.commons.dao.model.OriginalStatus;
 import org.marble.commons.dao.model.StreamingStatus;
+import org.marble.commons.dao.model.UploadedStatus;
 
 import com.mongodb.DBCursor;
 import com.mongodb.MongoException;
@@ -48,6 +49,19 @@ public interface DatastoreService {
 
     <T> DBCursor findCursorForAll(Class<T> entityClass);
 
-	public void insertStreamingStatus(StreamingStatus streamingStatus);
+	<T> void findAllAndRemoveByDatasetId(Integer datasetId, Class<T> entityClass)
+			throws MongoException;
+
+	<T> List<T> findByDatasetId(Integer datasetId, Class<T> entityClass)
+			throws MongoException;
+
+	<T> DBCursor findCursorByDatasetId(Integer datasetId, Class<T> entityClass);
+
+	<T> T findOneByDatasetIdSortBy(Integer datasetId, String field,
+			Direction direction, Class<T> entityClass);
+
+	void insertStreamingStatus(StreamingStatus streamingStatus);
+
+	void insertUploadedStatus(UploadedStatus uploadedStatus);
 
 }

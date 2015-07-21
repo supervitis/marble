@@ -61,6 +61,11 @@ public class TopicServiceImpl implements TopicService {
         datastoreService.findAllAndRemoveByTopicId(id, ProcessedStatus.class);
         return;
     }
+    
+    @Override
+    public List<OriginalStatus> findAllStatusByTopicId(Integer topicId){
+    	return datastoreService.findByTopicId(topicId, OriginalStatus.class);
+    }
 
     @Override
     public TopicInfo info(Integer id) throws InvalidTopicException {
