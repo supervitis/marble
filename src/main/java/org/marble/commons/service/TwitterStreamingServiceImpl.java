@@ -2,6 +2,7 @@ package org.marble.commons.service;
 
 import org.marble.commons.dao.model.TwitterApiKey;
 
+import twitter4j.FilterQuery;
 import twitter4j.StatusListener;
 import twitter4j.TwitterFactory;
 import twitter4j.TwitterStream;
