@@ -8,6 +8,9 @@ import twitter4j.TwitterStream;
 
 public interface TwitterStreamingService {
 
+	//Comentario test
+	
+	
 	TwitterStream configure(TwitterApiKey apiKey);
 
 	void unconfigure();
