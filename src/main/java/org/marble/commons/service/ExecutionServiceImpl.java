@@ -7,9 +7,11 @@ import javax.transaction.Transactional;
 
 import org.marble.commons.dao.ExecutionDao;
 import org.marble.commons.dao.model.Execution;
+import org.marble.commons.dao.model.StreamingTopic;
 import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidExecutionException;
 import org.marble.commons.exception.InvalidModuleException;
+import org.marble.commons.exception.InvalidStreamingTopicException;
 import org.marble.commons.exception.InvalidTopicException;
 import org.marble.commons.executor.extractor.ExtractorExecutor;
 import org.marble.commons.executor.plotter.PlotterExecutor;
@@ -18,7 +20,6 @@ import org.marble.commons.model.ExecutionStatus;
 import org.marble.commons.model.ExecutionType;
 import org.marble.commons.model.ExecutionModuleParameters;
 import org.marble.commons.model.ExecutionModuleDefinition;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,9 @@ public class ExecutionServiceImpl implements ExecutionService {
 
     @Autowired
     TopicService topicService;
+    
+    @Autowired
+    StreamingTopicService streamingTopicService;
 
     @Autowired
     PlotService plotService;
@@ -97,6 +101,33 @@ public class ExecutionServiceImpl implements ExecutionService {
         topic.getExecutions().add(execution);
         execution.setTopic(topic);
         topic = topicService.save(topic);
+
+        execution = this.save(execution);
+
+        log.info("Starting execution <" + execution.getId() + ">... now!");
+        ExtractorExecutor executor = (ExtractorExecutor) context.getBean("twitterExtractionExecutor");
+        executor.setExecution(execution);
+        taskExecutor.execute(executor);
+
+        log.info("Executor launched.");
+
+        return execution.getId();
+    }
+    
+    @Override
+    @Transactional
+    public Integer executeStreaming(Integer streamingTopicId) throws InvalidStreamingTopicException, InvalidExecutionException {
+        log.info("Executing the extractor for topic <" + streamingTopicId + ">.");
+
+        Execution execution = new Execution();
+
+        StreamingTopic streamingTopic = streamingTopicService.findOne(streamingTopicId);
+
+        execution.setStatus(ExecutionStatus.Initialized);
+        execution.setType(ExecutionType.Extractor);
+        streamingTopic.getExecutions().add(execution);
+        execution.setStreamingTopic(streamingTopic);
+        streamingTopic = streamingTopicService.save(streamingTopic);
 
         execution = this.save(execution);
 

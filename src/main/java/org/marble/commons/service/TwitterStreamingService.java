@@ -7,7 +7,7 @@ import twitter4j.TwitterStream;
 
 public interface TwitterStreamingService {
 
-	void configure(TwitterApiKey apiKey);
+	TwitterStream configure(TwitterApiKey apiKey);
 
 	void unconfigure();
 

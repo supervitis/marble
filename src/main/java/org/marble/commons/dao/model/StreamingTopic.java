@@ -103,7 +103,7 @@ public class StreamingTopic implements Serializable {
     private Integer statusesPerFullExtraction = 1000;
 
 
-    @OneToMany(mappedBy = "topic", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "streamingTopic", fetch = FetchType.EAGER)
     @Cascade({ CascadeType.DELETE })
     @Column(name = "executions")
     @JsonManagedReference

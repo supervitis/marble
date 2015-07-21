@@ -2,6 +2,7 @@ package org.marble.commons.executor.streaming;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.marble.commons.dao.model.Execution;
@@ -18,12 +19,14 @@ import org.marble.commons.service.ExecutionService;
 import org.marble.commons.service.StreamingTopicService;
 import org.marble.commons.service.TwitterApiKeyService;
 import org.marble.commons.service.TwitterSearchService;
+import org.marble.commons.service.TwitterStreamingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import twitter4j.FilterQuery;
 import twitter4j.GeoLocation;
 import twitter4j.JSONObject;
 import twitter4j.Status;
@@ -64,8 +67,9 @@ public class TwitterStreamingExecutor implements ExtractorExecutor {
     Execution execution;
     
     @Autowired
-    TwitterSearchService twitterStreamingService;
+    TwitterStreamingService twitterStreamingService;
     
+    ArrayList<TwitterStreamingListener> listeners;
     TwitterStream twitterStream = null;
     
     StreamController streamController;
@@ -83,12 +87,7 @@ public class TwitterStreamingExecutor implements ExtractorExecutor {
 	        }
 
 	        try {
-
-	        	
-	            Boolean inRange = true;
-
 	            Integer id = execution.getId();
-
 	            msg = "Starting twitter streaming extraction <" + id + ">.";
 	            log.info(msg);
 	            execution.appendLog(msg);
@@ -97,10 +96,9 @@ public class TwitterStreamingExecutor implements ExtractorExecutor {
 	            execution.setStatus(ExecutionStatus.Running);
 	            execution = executionService.save(execution);
 
-	            // Get the associated topic
-	            //TODO: Incluir en execution un StreamingTopic
-	            StreamingTopic streamingTopic = streamingTopicService.findOne(execution.getTopic().getId());
+	            StreamingTopic streamingTopic = streamingTopicService.findOne(execution.getStreamingTopic().getId());
 
+	            
 	            // Get twitter keys
 	            List<TwitterApiKey> apiKeys = twitterApiKeyService.getEnabledTwitterApiKeys();
 	            for (TwitterApiKey key : apiKeys) {
@@ -131,7 +129,16 @@ public class TwitterStreamingExecutor implements ExtractorExecutor {
 	            log.info(msg);
 	            execution.appendLog(msg);
 	            executionService.save(execution);
-
+	            
+	            FilterQuery query = new FilterQuery();
+	            TwitterStreamingListener listener = new TwitterStreamingListener();
+	            twitterStream.shutdown();
+	            twitterStream.addListener(listener);
+	            listeners.add(listener);
+	            String[] languages = {streamingTopic.getLanguage()};
+	    		query = query.track(getKeywords()).language(languages);
+	            twitterStream.filter(query);
+	            /*
 	            long lastId = 0;
 	            if (streamingTopic.getUpperLimit() != null) {
 	                lastId = streamingTopic.getUpperLimit();
@@ -250,6 +257,7 @@ public class TwitterStreamingExecutor implements ExtractorExecutor {
 	            execution.appendLog(msg);
 	            execution.setStatus(ExecutionStatus.Stopped);
 	            execution = executionService.save(execution);
+	         */
 	        } catch (Exception e) {
 	            msg = "An error ocurred while manipulating execution <" + execution.getId() + ">. Execution aborted.";
 	            log.error(msg, e);
@@ -267,5 +275,14 @@ public class TwitterStreamingExecutor implements ExtractorExecutor {
 	@Override
 	public void setExecution(Execution execution) {
         this.execution = execution;		
+	}
+	
+	public String[] getKeywords(){
+		String [] keywords = {};
+		/*for(TwitterStreamingListener listener : listeners){
+			//Get keywords
+		}*/
+		return keywords;
+		
 	}
 }

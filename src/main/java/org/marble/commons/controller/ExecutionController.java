@@ -7,11 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.marble.commons.dao.model.Execution;
 import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidExecutionException;
+import org.marble.commons.exception.InvalidStreamingTopicException;
 import org.marble.commons.exception.InvalidTopicException;
 import org.marble.commons.service.ExecutionService;
 import org.marble.commons.service.TopicService;
 import org.marble.commons.util.MarbleUtil;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,6 +69,28 @@ public class ExecutionController {
             redirectAttributes.addFlashAttribute("notificationIcon", "fa-exclamation-triangle");
             redirectAttributes.addFlashAttribute("notificationLevel", "danger");
             return "redirect:" + basePath + "topic/" + topicId + "/execution";
+        }
+
+        // Setting message
+        redirectAttributes.addFlashAttribute("notificationMessage", "ExecutionController.extractorExecuted");
+        redirectAttributes.addFlashAttribute("notificationIcon", "fa-sign-in");
+        redirectAttributes.addFlashAttribute("notificationLevel", "success");
+        return "redirect:" + basePath + "/execution/" + executionId;
+    }
+    
+    @RequestMapping(value = "/streaming_topic/{streamingTopicId:[0-9]+}/extract", method = RequestMethod.GET)
+    public String executeStreaming(@PathVariable Integer streamingTopicId, RedirectAttributes redirectAttributes,
+            HttpServletRequest request){
+        String basePath = MarbleUtil.getBasePath(request);
+        Integer executionId = 0;
+        try {
+            executionId = executionService.executeStreaming(streamingTopicId);
+        } catch (InvalidExecutionException | InvalidStreamingTopicException | InvalidTopicException e) {
+            // Setting message
+            redirectAttributes.addFlashAttribute("notificationMessage", "ExecutionController.extractorExecutionFailed");
+            redirectAttributes.addFlashAttribute("notificationIcon", "fa-exclamation-triangle");
+            redirectAttributes.addFlashAttribute("notificationLevel", "danger");
+            return "redirect:" + basePath + "streaming_topic/" + streamingTopicId + "/execution";
         }
 
         // Setting message

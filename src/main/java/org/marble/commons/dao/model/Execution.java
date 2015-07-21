@@ -65,6 +65,12 @@ public class Execution implements Serializable {
     @JsonBackReference
     private Topic topic;
     
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "streamingTopic_id")
+    // @Cascade({ CascadeType.DELETE })
+    @JsonBackReference
+    private StreamingTopic streamingTopic;
+    
 
     @JsonSerialize(using = StringDateSerializer.class)
     @Column(name = "created_at")
@@ -138,7 +144,16 @@ public class Execution implements Serializable {
         this.topic = topic;
     }
 
-    public Date getCreatedAt() {
+    
+    public StreamingTopic getStreamingTopic() {
+		return streamingTopic;
+	}
+
+	public void setStreamingTopic(StreamingTopic streamingTopic) {
+		this.streamingTopic = streamingTopic;
+	}
+
+	public Date getCreatedAt() {
         return createdAt;
     }
 
