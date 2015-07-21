@@ -72,6 +72,9 @@ public class TwitterStreamingExecutor implements ExtractorExecutor {
     ArrayList<TwitterStreamingListener> listeners;
     TwitterStream twitterStream = null;
     
+    
+    
+    
     StreamController streamController;
     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     DateFormat dateOnlyFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -263,7 +266,7 @@ public class TwitterStreamingExecutor implements ExtractorExecutor {
 	            log.error(msg, e);
 	            execution.appendLog(msg);
 	            execution.setStatus(ExecutionStatus.Aborted);
-	            try {
+	            try {  
 	                execution = executionService.save(execution);
 	            } catch (InvalidExecutionException e1) {
 	                log.error("Status couldn't be refreshed on the execution object.");

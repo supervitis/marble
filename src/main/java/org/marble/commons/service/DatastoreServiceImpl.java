@@ -18,8 +18,8 @@ import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-
 import org.marble.commons.dao.model.OriginalStatus;
+import org.marble.commons.dao.model.StreamingStatus;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.BasicDBObject;
@@ -145,6 +145,14 @@ public class DatastoreServiceImpl implements DatastoreService {
     public void insertOriginalStatus(OriginalStatus originalStatus) {
         mongoOperations.save(originalStatus);
     }
+    
+	@Override
+	public void insertStreamingStatus(StreamingStatus streamingStatus) {
+        mongoOperations.save(streamingStatus);
+
+	}
+    
+    
 
     @Override
     public <T> void removeCollection(Class<T> entityClass) {
@@ -164,5 +172,7 @@ public class DatastoreServiceImpl implements DatastoreService {
         query.addCriteria(Criteria.where("topicId").is(topicId));
         return mongoOperations.count(query, entityClass);
     }
+
+
 
 }
