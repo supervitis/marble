@@ -134,133 +134,14 @@ public class TwitterStreamingExecutor implements ExtractorExecutor {
 	            executionService.save(execution);
 	            
 	            FilterQuery query = new FilterQuery();
-	            TwitterStreamingListener listener = new TwitterStreamingListener();
+	            TwitterStreamingListener listener = new TwitterStreamingListener(streamingTopic,execution);
 	            twitterStream.shutdown();
 	            twitterStream.addListener(listener);
 	            listeners.add(listener);
 	            String[] languages = {streamingTopic.getLanguage()};
 	    		query = query.track(getKeywords()).language(languages);
 	            twitterStream.filter(query);
-	            /*
-	            long lastId = 0;
-	            if (streamingTopic.getUpperLimit() != null) {
-	                lastId = streamingTopic.getUpperLimit();
-	            }
-
-	            long maxStatuses = 200;
-	            if (streamingTopic.getStatusesPerFullExtraction() != null) {
-	                maxStatuses = streamingTopic.getStatusesPerFullExtraction();
-	            }
 	            
-	            String sinceDate = null;
-	            if(streamingTopic.getSinceDate() != null)
-	            	sinceDate = dateOnlyFormat.format(streamingTopic.getSinceDate());
-	            
-	            String untilDate = null;
-	            if(streamingTopic.getUntilDate() != null)
-	            	untilDate = dateOnlyFormat.format(streamingTopic.getUntilDate());
-	            
-	            Double longitude = streamingTopic.getGeoLongitude();
-	            Double latitude = streamingTopic.getGeoLatitude();
-	            Double radius = streamingTopic.getGeoRadius();
-	            Unit unit = streamingTopic.getGeoUnit();
-	            
-	            GeoLocation geoLoc = null;
-	            if (longitude != null && latitude != null){
-	            	geoLoc = new GeoLocation(latitude.doubleValue(), longitude.doubleValue());
-	            }
-	            
-
-	            int count = 0;
-	            do {
-	                List<Status> statusList;
-
-	                try {
-	                    statusList = twitterStreamingService.search(keyword, lastId, sinceDate, untilDate, geoLoc, radius, unit );
-	                } catch (TwitterException e) {
-	                    // TODO Auto-generated catch block
-
-	                    apiKeysIndex++;
-	                    if (apiKeysIndex >= apiKeysCount) {
-	                        msg = "API Rate exceeded for all keys. Waiting a minute.";
-	                        log.warn(msg, e);
-	                        execution.appendLog(msg);
-	                        executionService.save(execution);
-
-	                        apiKeysIndex = 0;
-	                        try {
-	                            Thread.sleep(60000);
-	                        } catch (InterruptedException e1) {
-	                            // TODO Auto-generated catch block
-	                            log.error("Error while sleeping.", e);
-	                        }
-
-	                    } else {
-
-	                    }
-	                    msg = "API Rate exceeded. Changing to API Key <" + apiKeys.get(apiKeysIndex).getDescription()
-	                            + ">.";
-	                    log.warn(msg, e);
-	                    execution.appendLog(msg);
-	                    executionService.save(execution);
-
-	                    // Changing to another API Key
-	                    twitterStreamingService.configure((apiKeys.get(apiKeysIndex)));
-	                    continue;
-	                }
-	                if (statusList != null && statusList.size() > 0) {
-
-	                    for (Status status : statusList) {
-	                        lastId = status.getId();
-	                        log.info("UpperLimit: " + lastId + ", count: " + count + ", maxStatuses: " + maxStatuses);
-	                        streamingTopic.setUpperLimit(lastId);
-	                        // save
-	                        OriginalStatus originalStatus = new OriginalStatus(status, streamingTopic.getId());
-	                        if(streamingTopic.getLowerLimit() != null && streamingTopic.getLowerLimit() >= originalStatus.getId()) {
-	                            inRange = false;
-	                            msg = "Reached the lower limit for this topic.";
-	                            log.info(msg);
-	                            execution.appendLog(msg);
-	                            executionService.save(execution);
-	                            break;
-	                        }
-
-	                        datastoreService.insertOriginalStatus(originalStatus);
-	                        
-	                        //Con esto llega? 
-	                        count++;
-	                        if (count >= maxStatuses) {
-	                            break;
-	                        }
-
-	                    }
-
-	                }
-	                else {
-	                    // No statuses extracted, it might be out of availability.
-	                    msg = "No statuses available for extraction at this point.";
-	                    log.info(msg);
-	                    execution.appendLog(msg);
-	                    executionService.save(execution);
-	                    break;
-	                }
-	                
-	                //Supongo que no pero este puede fallar 
-	                streamingTopicService.save(streamingTopic);
-
-	                msg = "Statuses extracted so far: <" + count + ">";
-	                log.info(msg);
-	                execution.appendLog(msg);
-	                executionService.save(execution);
-
-	            } while (count < maxStatuses && inRange);
-
-	            msg = "Extraction of this streaming topic has finished.";
-	            log.info(msg);
-	            execution.appendLog(msg);
-	            execution.setStatus(ExecutionStatus.Stopped);
-	            execution = executionService.save(execution);
-	         */
 	        } catch (Exception e) {
 	            msg = "An error ocurred while manipulating execution <" + execution.getId() + ">. Execution aborted.";
 	            log.error(msg, e);
@@ -281,11 +162,13 @@ public class TwitterStreamingExecutor implements ExtractorExecutor {
 	}
 	
 	public String[] getKeywords(){
-		String [] keywords = {};
-		/*for(TwitterStreamingListener listener : listeners){
-			//Get keywords
-		}*/
-		return keywords;
+		ArrayList<String> keywords = new ArrayList<String>();
+		for(TwitterStreamingListener listener : listeners){
+			keywords.add(listener.getKeyword());
+			
+		}
+		String[] result = {};
+		return keywords.toArray(result);
 		
 	}
 }

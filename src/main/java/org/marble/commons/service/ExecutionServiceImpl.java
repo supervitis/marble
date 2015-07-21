@@ -124,7 +124,7 @@ public class ExecutionServiceImpl implements ExecutionService {
         StreamingTopic streamingTopic = streamingTopicService.findOne(streamingTopicId);
 
         execution.setStatus(ExecutionStatus.Initialized);
-        execution.setType(ExecutionType.Extractor);
+        execution.setType(ExecutionType.Streamer);
         streamingTopic.getExecutions().add(execution);
         execution.setStreamingTopic(streamingTopic);
         streamingTopic = streamingTopicService.save(streamingTopic);
@@ -132,7 +132,7 @@ public class ExecutionServiceImpl implements ExecutionService {
         execution = this.save(execution);
 
         log.info("Starting execution <" + execution.getId() + ">... now!");
-        ExtractorExecutor executor = (ExtractorExecutor) context.getBean("twitterExtractionExecutor");
+        ExtractorExecutor executor = (ExtractorExecutor) context.getBean("twitterStreamingExecutor");
         executor.setExecution(execution);
         taskExecutor.execute(executor);
 
