@@ -56,6 +56,7 @@ public class TwitterStreamingListener implements StatusListener {
 	public TwitterStreamingListener(StreamingTopic streamingTopic, Execution execution) {
 		statuses = new ArrayList<Status>();
 		this.streamingTopic = streamingTopic;
+		this.keyword = streamingTopic.getKeywords();
 		this.execution = execution;
 		count = 0;
 	}
@@ -77,6 +78,14 @@ public class TwitterStreamingListener implements StatusListener {
 	public void setKeyword(String keyword) {
 		this.keyword = keyword;
 	}
+	
+
+
+	public String getKeyword() {
+		return keyword;
+	}
+
+
 
 	public void onStatus(Status status) {
         Boolean inRange = true;
@@ -127,7 +136,7 @@ public class TwitterStreamingListener implements StatusListener {
 					e.printStackTrace();
 				}
             }
-            //REPLICAR ESTO Y AÑADIR EL CODIGO DE ABAJO
+            //REPLICAR ESTO Y Aï¿½ADIR EL CODIGO DE ABAJO
             datastoreService.insertStreamingStatus(streamingStatus);
             try {
 
