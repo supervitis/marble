@@ -5,6 +5,7 @@ import java.util.List;
 import org.marble.commons.dao.model.Execution;
 import org.marble.commons.exception.InvalidExecutionException;
 import org.marble.commons.exception.InvalidModuleException;
+import org.marble.commons.exception.InvalidStreamingTopicException;
 import org.marble.commons.exception.InvalidTopicException;
 import org.marble.commons.model.ExecutionModuleParameters;
 
@@ -31,4 +32,7 @@ public interface ExecutionService {
 
     Integer executeProcessor(ExecutionModuleParameters plotParameters) throws InvalidTopicException,
             InvalidExecutionException, InvalidModuleException;
+
+	Integer executeStreaming(Integer streamingTopicId)
+			throws InvalidTopicException, InvalidExecutionException, InvalidStreamingTopicException;
 }

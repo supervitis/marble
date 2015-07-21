@@ -1,6 +1,7 @@
 package org.marble.commons.service;
 
 import org.marble.commons.dao.model.TwitterApiKey;
+import org.springframework.stereotype.Service;
 
 import twitter4j.FilterQuery;
 import twitter4j.StatusListener;
@@ -10,6 +11,7 @@ import twitter4j.TwitterStreamFactory;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
+@Service
 public class TwitterStreamingServiceImpl implements TwitterStreamingService {
    
     private TwitterApiKey apiKey;
@@ -26,7 +28,7 @@ public class TwitterStreamingServiceImpl implements TwitterStreamingService {
     }
    
     @Override
-    public void configure(TwitterApiKey apiKey) {
+    public TwitterStream configure(TwitterApiKey apiKey) {
 
         this.apiKey = apiKey;
 
@@ -39,6 +41,7 @@ public class TwitterStreamingServiceImpl implements TwitterStreamingService {
 
         this.configuration = configurationBuilder.build();
         this.twitterStream = new TwitterStreamFactory(configuration).getInstance();
+        return this.twitterStream;
     }
     
     @Override
