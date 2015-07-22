@@ -54,6 +54,10 @@
 											<i class="fa fa-sign-in"></i><span class="hidden-xs hidden-sm"> <spring:message
 													code="streaming_topics_list.form.extract" />
 											</span>
+										</a><a href="<c:url value="streaming_topic/${streaming_topic.id}/execution/stop"/>" class="btn btn-default btn-light-red">
+											<i class="fa fa-stop"></i><span class="hidden-xs hidden-sm"> <spring:message
+													code="streaming_topics_list.form.stop" />
+											</span>
 										</a></td>
 								</tr>
 							</c:forEach>
