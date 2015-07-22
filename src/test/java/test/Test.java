@@ -6,10 +6,21 @@ import twitter4j.StatusDeletionNotice;
 import twitter4j.StatusListener;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
+import twitter4j.conf.Configuration;
+import twitter4j.conf.ConfigurationBuilder;
 public class Test {
 
 	public static void main(String[] args) {
-			TwitterStream twitterStream = new TwitterStreamFactory().getInstance();
+		 ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+		 configurationBuilder.setJSONStoreEnabled(true);
+		 configurationBuilder.setOAuthConsumerKey("96Xv75qXVCALSzNtOv2h8o2gV");
+	        configurationBuilder.setOAuthConsumerSecret("BmABb2FGfYBuh1okfKtTtY50gOnMiDhyg0rFZl9yFHNjcRu68U");
+	        configurationBuilder.setOAuthAccessToken("412585536-i8udOorXPJhn3Eh3UL8njf8228KhztoAyISD1Qyh");
+	        configurationBuilder.setOAuthAccessTokenSecret("x9FoKE5rNxOLGSvJL9OlzAlOle2P5dsUtGDtYglNQ91Yy");
+
+         Configuration configuration = configurationBuilder.build();
+         TwitterStreamFactory streamFactory = new TwitterStreamFactory(configuration);
+			TwitterStream twitterStream = streamFactory.getInstance();
 	        StatusListener listener = new StatusListener() {
 	            @Override
 	            public void onStatus(Status status) {

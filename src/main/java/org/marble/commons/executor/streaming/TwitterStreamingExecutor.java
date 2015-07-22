@@ -6,9 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.marble.commons.dao.model.Execution;
-import org.marble.commons.dao.model.OriginalStatus;
 import org.marble.commons.dao.model.StreamingTopic;
-import org.marble.commons.dao.model.Topic;
 import org.marble.commons.dao.model.TwitterApiKey;
 import org.marble.commons.exception.InvalidExecutionException;
 import org.marble.commons.executor.extractor.ExtractorExecutor;
@@ -18,7 +16,6 @@ import org.marble.commons.service.DatastoreService;
 import org.marble.commons.service.ExecutionService;
 import org.marble.commons.service.StreamingTopicService;
 import org.marble.commons.service.TwitterApiKeyService;
-import org.marble.commons.service.TwitterSearchService;
 import org.marble.commons.service.TwitterStreamingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,20 +24,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import twitter4j.FilterQuery;
-import twitter4j.GeoLocation;
-import twitter4j.JSONObject;
-import twitter4j.Status;
 import twitter4j.StreamController;
-import twitter4j.TwitterException;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
-import twitter4j.Query.Unit;
-
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.MongoClient;
-import com.mongodb.util.JSON;
+import twitter4j.conf.Configuration;
+import twitter4j.conf.ConfigurationBuilder;
 
 @Component
 @Scope("singleton")
@@ -123,8 +111,13 @@ public class TwitterStreamingExecutor implements ExtractorExecutor {
 
 	            //Solo se crea el streaming si no existe ya
 	            if(twitterStream == null){
+	     
 	        		twitterStreamingService.configure(apiKeys.get(apiKeysIndex));
 	    		}
+	            
+	            if(listeners == null){
+	            	listeners = new ArrayList<TwitterStreamingListener>();
+	            }
 	            
 	            //TODO: IMPLEMENTAR LOS LISTENERS Y DEMAS
 	            

@@ -445,7 +445,12 @@
 		<dependency>
 			<groupId>org.twitter4j</groupId>
 			<artifactId>twitter4j-core</artifactId>
-			<version>LATEST</version>
+			<version>${twitter.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.twitter4j</groupId>
+			<artifactId>twitter4j-stream</artifactId>
+			<version>${twitter.version}</version>
 		</dependency>
 
 		<!-- MongoDB -->
@@ -513,11 +518,7 @@
 			<version>3.5.0</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.twitter4j</groupId>
-			<artifactId>twitter4j-stream</artifactId>
-			<version>LATEST</version>
-		</dependency>
+
 	</dependencies>
 
 </project>

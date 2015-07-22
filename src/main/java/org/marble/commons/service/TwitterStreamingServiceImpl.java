@@ -3,9 +3,7 @@ package org.marble.commons.service;
 import org.marble.commons.dao.model.TwitterApiKey;
 import org.springframework.stereotype.Service;
 
-import twitter4j.FilterQuery;
 import twitter4j.StatusListener;
-import twitter4j.TwitterFactory;
 import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
 import twitter4j.conf.Configuration;
