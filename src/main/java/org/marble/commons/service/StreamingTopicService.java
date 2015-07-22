@@ -2,6 +2,7 @@ package org.marble.commons.service;
 
 import java.util.List;
 
+import org.marble.commons.dao.model.StreamingStatus;
 import org.marble.commons.dao.model.StreamingTopic;
 import org.marble.commons.exception.InvalidStreamingTopicException;
 import org.marble.commons.model.StreamingTopicInfo;
@@ -19,5 +20,7 @@ public interface StreamingTopicService {
     Long count();
 
     StreamingTopicInfo info(Integer id) throws InvalidStreamingTopicException;
+
+	public List<StreamingStatus> findAllStatusByStreamingTopicId(Integer id);
 
 }

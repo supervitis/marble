@@ -112,7 +112,7 @@ public class TwitterStreamingExecutor implements ExtractorExecutor {
 	            //Solo se crea el streaming si no existe ya
 	            if(twitterStream == null){
 	     
-	        		twitterStreamingService.configure(apiKeys.get(apiKeysIndex));
+	        		twitterStream = twitterStreamingService.configure(apiKeys.get(apiKeysIndex));
 	    		}
 	            
 	            if(listeners == null){
@@ -132,6 +132,7 @@ public class TwitterStreamingExecutor implements ExtractorExecutor {
 	            twitterStream.addListener(listener);
 	            listeners.add(listener);
 	            String[] languages = {streamingTopic.getLanguage()};
+	            log.info("Active Streaming topics: " + getKeywords().length);
 	    		query = query.track(getKeywords()).language(languages);
 	            twitterStream.filter(query);
 	            

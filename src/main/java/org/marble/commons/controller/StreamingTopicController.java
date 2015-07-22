@@ -1,6 +1,7 @@
 package org.marble.commons.controller;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
@@ -11,12 +12,17 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.marble.commons.dao.model.Dataset;
+import org.marble.commons.dao.model.OriginalStatus;
+import org.marble.commons.dao.model.StreamingStatus;
 import org.marble.commons.dao.model.StreamingTopic;
+import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidDatasetException;
 import org.marble.commons.exception.InvalidStreamingTopicException;
+import org.marble.commons.exception.InvalidTopicException;
 import org.marble.commons.model.ExecutionModuleParameters;
 import org.marble.commons.model.StreamingTopicInfo;
 import org.marble.commons.service.DatasetService;
@@ -42,6 +48,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
 
 import twitter4j.GeoLocation;
+import twitter4j.JSONObject;
 import twitter4j.Query.Unit;
 
 @Controller
@@ -77,6 +84,32 @@ public class StreamingTopicController {
         return modelAndView;
     }
     
+    @RequestMapping(value = "/{streamingTopicId:[0-9]+}/download", method = RequestMethod.GET)
+    public ModelAndView downloadTopic(@PathVariable Integer streamingTopicId, HttpServletRequest request, HttpServletResponse response) throws InvalidTopicException, InvalidStreamingTopicException {
+
+        String basePath = MarbleUtil.getBasePath(request);
+        ModelAndView modelAndView = new ModelAndView();
+        try {
+        	StreamingTopic streamingTopic;
+            streamingTopic = streaming_topicService.findOne(streamingTopicId);
+			response.setHeader("Content-Disposition",
+                    "attachment;filename=" + streamingTopic.getName() + ".json");
+			
+			
+			PrintWriter out = response.getWriter();
+			List<StreamingStatus> statuses = streaming_topicService.findAllStatusByStreamingTopicId(streamingTopic.getId());
+			for(StreamingStatus originalStatus : statuses){
+				JSONObject jsonObject = new JSONObject(originalStatus);
+				out.println(jsonObject.toString());
+			}
+			out.close();
+		} catch (IOException ex) {
+			throw new RuntimeException("IOError writing file to output stream");
+		}
+        modelAndView.setViewName("redirect:" + basePath + "/datasets");
+        return modelAndView;
+    }
+    
     @RequestMapping(value = "/{streaming_topicId:[0-9]+}/edit", method = RequestMethod.GET)
     public ModelAndView edit(@PathVariable Integer streaming_topicId) throws InvalidStreamingTopicException {
         ModelAndView modelAndView = new ModelAndView();
@@ -109,22 +142,9 @@ public class StreamingTopicController {
             modelAndView.addObject("streaming_topic", streaming_topic);
             return modelAndView;
         }
-        String oldName = streaming_topicService.findOne(streaming_topic.getId()).getName();
-        streaming_topic = streaming_topicService.save(streaming_topic);
-        Dataset dataset = datasetService.getDatasetByName(oldName);
-        if(dataset != null){
-        	dataset.setName(streaming_topic.getName());
-    		dataset.setDescription(streaming_topic.getDescription());
-        	datasetService.updateDataset(dataset, null);
-        }
-        else{
-        	dataset = new Dataset();
-        	dataset.setName(streaming_topic.getName());
-        	dataset.setDescription(streaming_topic.getDescription());
-        	datasetService.createDataset(dataset,null);
-        }
         
-
+        streaming_topic = streaming_topicService.save(streaming_topic);
+        
         redirectAttributes.addFlashAttribute("notificationMessage", "StreamingTopicController.streaming_topicModified");
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
         redirectAttributes.addFlashAttribute("notificationLevel", "success");
@@ -164,10 +184,6 @@ public class StreamingTopicController {
         }
 
         streaming_topic = streaming_topicService.save(streaming_topic);
-        Dataset dataset = new Dataset();
-        dataset.setDescription(streaming_topic.getDescription());
-        dataset.setName(streaming_topic.getName());
-        datasetService.createDataset(dataset, null);
         
         // Setting message
         redirectAttributes.addFlashAttribute("notificationMessage", "StreamingTopicController.streaming_topicCreated");

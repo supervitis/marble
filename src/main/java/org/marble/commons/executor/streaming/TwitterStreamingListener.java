@@ -42,8 +42,6 @@ public class TwitterStreamingListener implements StatusListener {
 	
 	
 	private String keyword;
-
-	private ArrayList<Status> statuses;
 	private StreamingTopic streamingTopic;
     private static final Logger log = LoggerFactory.getLogger(TwitterExtractionExecutor.class);
     private long count;
@@ -54,7 +52,6 @@ public class TwitterStreamingListener implements StatusListener {
     DateFormat dateOnlyFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	public TwitterStreamingListener(StreamingTopic streamingTopic, Execution execution) {
-		statuses = new ArrayList<Status>();
 		this.streamingTopic = streamingTopic;
 		this.keyword = streamingTopic.getKeywords();
 		this.execution = execution;
@@ -90,18 +87,22 @@ public class TwitterStreamingListener implements StatusListener {
 	public void onStatus(Status status) {
         Boolean inRange = true;
         String msg = null;
-		if (status.getText().toLowerCase()
-				.contains(streamingTopic.getKeywords())) {
+		if (status.getText().toLowerCase().contains(streamingTopic.getKeywords())) {
+			//TODO: FILTRAR LOS TWEETS SEGUN LOS PARÁMETROS DEL TOPIC
+			
+			/*/No hace falta el lastId porque no vamos a ir hacia atras
 			long lastId = 0;
             if (streamingTopic.getUpperLimit() != null) {
                 lastId = streamingTopic.getUpperLimit();
-            }
-
+            }*/
+            
+            //Esto supongo que si se puede usar. Hay que hacer que al llegar al máximo se pause el topic
             long maxStatuses = 200;
             if (streamingTopic.getStatusesPerFullExtraction() != null) {
                 maxStatuses = streamingTopic.getStatusesPerFullExtraction();
             }
             
+            //Filtrar por fecha y por localización
             String sinceDate = null;
             if(streamingTopic.getSinceDate() != null)
             	sinceDate = dateOnlyFormat.format(streamingTopic.getSinceDate());
@@ -119,12 +120,13 @@ public class TwitterStreamingListener implements StatusListener {
             if (longitude != null && latitude != null){
             	geoLoc = new GeoLocation(latitude.doubleValue(), longitude.doubleValue());
             }
-			lastId = status.getId();
-            log.info("UpperLimit: " + lastId + ", count: " + count + ", maxStatuses: " + maxStatuses);
-            streamingTopic.setUpperLimit(lastId);
+			//lastId = status.getId();
+			
+            //log.info("UpperLimit: " + lastId + ", count: " + count + ", maxStatuses: " + maxStatuses);
+            //streamingTopic.setUpperLimit(lastId);
             // save
             StreamingStatus streamingStatus = new StreamingStatus(status, streamingTopic.getId());
-            if(streamingTopic.getLowerLimit() != null && streamingTopic.getLowerLimit() >= streamingStatus.getId()) {
+            /*if(streamingTopic.getLowerLimit() != null && streamingTopic.getLowerLimit() >= streamingStatus.getId()) {
                 inRange = false;
                 msg = "Reached the lower limit for this topic.";
                 log.info(msg);
@@ -135,29 +137,9 @@ public class TwitterStreamingListener implements StatusListener {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-            }
-            //REPLICAR ESTO Y A�ADIR EL CODIGO DE ABAJO
+            }*/
+            log.info("Saving tweet: " + streamingStatus.getText());
             datastoreService.insertStreamingStatus(streamingStatus);
-            try {
-
-    			MongoClient mongoClient = new MongoClient("polux.det.uvigo.es",
-    					27117);
-
-    			// Now connect to your databases
-    			DB db = mongoClient.getDB("datasets");
-    			String oldName = streamingTopic.getName();
-    			
-    			DBCollection collection = db.getCollection(oldName);
-
-    			JSONObject jsonObject = new JSONObject(streamingStatus);
-				DBObject dbObject = (DBObject) JSON.parse(jsonObject.toString());
-		
-					collection.insert(dbObject);
-				
-			
-    		} catch (Exception ex) {
-    			log.error(ex.getMessage());
-    		}
             count++;
 		}
 

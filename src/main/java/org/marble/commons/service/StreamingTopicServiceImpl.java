@@ -5,6 +5,7 @@ import java.util.List;
 import org.marble.commons.dao.StreamingTopicDao;
 import org.marble.commons.dao.model.OriginalStatus;
 import org.marble.commons.dao.model.ProcessedStatus;
+import org.marble.commons.dao.model.StreamingStatus;
 import org.marble.commons.dao.model.StreamingTopic;
 import org.marble.commons.exception.InvalidStreamingTopicException;
 import org.marble.commons.model.StreamingTopicInfo;
@@ -99,5 +100,10 @@ public class StreamingTopicServiceImpl implements StreamingTopicService {
     public Long count() {
         return streamingTopicDao.count();
     }
+
+	@Override
+	public List<StreamingStatus> findAllStatusByStreamingTopicId(Integer id) {
+    	return datastoreService.findByStreamingTopicId(id, StreamingStatus.class);
+	}
 
 }

@@ -28,6 +28,8 @@ public interface DatastoreService {
     <T> List<T> findByTopicId(Integer topicId, Class<T> entityClass) throws MongoException;
 
     <T> List<T> findByQuery(Query query, Class<T> entityClass) throws MongoException;
+	
+    <T> List<T> findByStreamingTopicId(Integer streamingTopicId,Class<T> entityClass)throws MongoException;
 
     <T> T findOneByText(String text, Class<T> entityClass) throws MongoException;
 
@@ -63,5 +65,7 @@ public interface DatastoreService {
 	void insertStreamingStatus(StreamingStatus streamingStatus);
 
 	void insertUploadedStatus(UploadedStatus uploadedStatus);
+
+
 
 }

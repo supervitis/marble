@@ -193,29 +193,6 @@ public class TwitterExtractionExecutor implements ExtractorExecutor {
                         }
 
                         datastoreService.insertOriginalStatus(originalStatus);
-                        
-                        //TODO: GUARDAR EN LA COLECCION DE DATASETS
-                        /*
-                        try {
-
-                			MongoClient mongoClient = new MongoClient("polux.det.uvigo.es",
-                					27117);
-
-                			// Now connect to your databases
-                			DB db = mongoClient.getDB("datasets");
-                			String oldName = topic.getName();
-                			
-                			DBCollection collection = db.getCollection(oldName);
-
-                			JSONObject jsonObject = new JSONObject(originalStatus);
-	        				DBObject dbObject = (DBObject) JSON.parse(jsonObject.toString());
-	        		
-	        					collection.insert(dbObject);
-	        				
-	        			
-                		} catch (Exception ex) {
-                			log.error(ex.getMessage());
-                		}*/
                         count++;
                         if (count >= maxStatuses) {
                             break;

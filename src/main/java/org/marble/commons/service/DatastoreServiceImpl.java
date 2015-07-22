@@ -106,6 +106,12 @@ public class DatastoreServiceImpl implements DatastoreService {
         return this.findByQuery(query, entityClass);
     }
 
+	@Override
+	public <T> List<T> findByStreamingTopicId(Integer streamingTopicId,	Class<T> entityClass) {
+		Query query = new Query();
+        query.addCriteria(Criteria.where("streamingTopicId").is(streamingTopicId));
+        return this.findByQuery(query, entityClass);
+	}
     @Override
     public <T> DBCursor findCursorByTopicId(Integer topicId, Class<T> entityClass) {
         Document document = entityClass.getAnnotation(Document.class);
@@ -211,6 +217,8 @@ public class DatastoreServiceImpl implements DatastoreService {
         query.addCriteria(Criteria.where("topicId").is(topicId));
         return mongoOperations.count(query, entityClass);
     }
+
+
 
 
 

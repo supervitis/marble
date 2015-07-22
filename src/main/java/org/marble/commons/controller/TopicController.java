@@ -141,6 +141,8 @@ public class TopicController {
             modelAndView.addObject("topic", topic);
             return modelAndView;
         }
+        
+        topic = topicService.save(topic);
        
         redirectAttributes.addFlashAttribute("notificationMessage", "TopicController.topicModified");
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
@@ -180,7 +182,7 @@ public class TopicController {
             return modelAndView;
         }
 
-        
+        topic = topicService.save(topic);
         // Setting message
         redirectAttributes.addFlashAttribute("notificationMessage", "TopicController.topicCreated");
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
