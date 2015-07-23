@@ -127,15 +127,16 @@ public class TwitterStreamingExecutor implements ExtractorExecutor {
 	            executionService.save(execution);
 	            
 	            FilterQuery query = new FilterQuery();
-	            TwitterStreamingListener listener = new TwitterStreamingListener(streamingTopic,execution);
+	            TwitterStreamingListener listener = new TwitterStreamingListener(streamingTopic,execution,datastoreService);
 	            twitterStream.shutdown();
 	            twitterStream.addListener(listener);
 	            listeners.add(listener);
 	            String[] languages = {streamingTopic.getLanguage()};
-	            log.info("Active Streaming topics: " + getKeywords().length);
-	    		query = query.track(getKeywords()).language(languages);
+	            String[] keywords = getKeywords();
+	            log.info("Active Streaming topics: " + keywords.length);
+	    		query = query.track(keywords).language(languages);
 	            twitterStream.filter(query);
-	            
+	            log.info("Thread" + keywords + "finished");
 	        } catch (Exception e) {
 	            msg = "An error ocurred while manipulating execution <" + execution.getId() + ">. Execution aborted.";
 	            log.error(msg, e);
