@@ -135,6 +135,8 @@ public class TwitterStreamingExecutor implements ExtractorExecutor {
 	            String[] keywords = getKeywords();
 	            log.info("Active Streaming topics: " + keywords.length);
 	    		query = query.track(keywords).language(languages);
+	    		streamingTopic.setActive(true);
+	    		streamingTopicService.save(streamingTopic);
 	            twitterStream.filter(query);
 	            log.info("Thread" + keywords + "finished");
 	        } catch (Exception e) {

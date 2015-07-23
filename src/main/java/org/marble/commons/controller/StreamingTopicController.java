@@ -76,11 +76,13 @@ public class StreamingTopicController {
     @RequestMapping(value = "/{streaming_topicId:[0-9]+}", method = RequestMethod.GET)
     public ModelAndView info(@PathVariable Integer streaming_topicId) throws InvalidStreamingTopicException {
         ModelAndView modelAndView = new ModelAndView();
-
+        StreamingTopic streamingTopic;
+        streamingTopic = streaming_topicService.findOne(streaming_topicId);
         StreamingTopicInfo streaming_topicInfo;
         streaming_topicInfo = streaming_topicService.info(streaming_topicId);
         modelAndView.setViewName("streaming_topic_info");
         modelAndView.addObject("streaming_topicInfo", streaming_topicInfo);
+        modelAndView.addObject("streaming_topic", streamingTopic);
         return modelAndView;
     }
     

@@ -55,10 +55,9 @@ public class StreamingTopic implements Serializable {
     @Column(name = "keywords")
     private String keywords;
 
-    @NotNull
-    @NotEmpty
+
     @Column(name = "active")
-    private Boolean active = false;
+    private boolean active = false;
    
 
 	@Digits(fraction = 0, integer = 24)
@@ -150,11 +149,11 @@ public class StreamingTopic implements Serializable {
         this.keywords = keywords;
     }
     
-    public Boolean getActive() {
+    public boolean getActive() {
  		return active;
  	}
 
- 	public void setActive(Boolean active) {
+ 	public void setActive(boolean active) {
  		this.active = active;
  	}
     

@@ -27,41 +27,41 @@
 			</div>
 			<!-- .panel-heading -->
 			<div class="panel-body">
-				<c:if test="${streaming_topicInfo.totalStatusesExtracted == 0 && streaming_topicInfo.totalStatusesProcessed == 0}">
-					<spring:message code='streaming_topic_info.no_information_available' />
+				<c:if
+					test="${streaming_topicInfo.totalStatusesExtracted == 0 && streaming_topicInfo.totalStatusesProcessed == 0}">
+					<spring:message
+						code='streaming_topic_info.no_information_available' />
 				</c:if>
-				<c:if test="${streaming_topicInfo.totalStatusesExtracted != 0 || streaming_topicInfo.totalStatusesProcessed != 0}">
+				<c:if
+					test="${streaming_topicInfo.totalStatusesExtracted != 0 || streaming_topicInfo.totalStatusesProcessed != 0}">
 
 					<div class="list-group">
-						<a class="list-group-item">
-							<i class="fa fa-sign-in fa-fw"></i>
-							<spring:message code="streaming_topic_info.total_statuses_extracted" />
-							<span class="pull-right text-muted small"><em> ${streaming_topicInfo.totalStatusesExtracted}</em> </span>
-						</a>
-						<a class="list-group-item">
-							<i class="fa fa-calendar fa-fw"></i>
+						<a class="list-group-item"> <i class="fa fa-sign-in fa-fw"></i>
+							<spring:message
+								code="streaming_topic_info.total_statuses_extracted" /> <span
+							class="pull-right text-muted small"><em>
+									${streaming_topicInfo.totalStatusesExtracted}</em> </span>
+						</a> <a class="list-group-item"> <i class="fa fa-calendar fa-fw"></i>
 							<spring:message code="streaming_topic_info.oldest_status_date" />
-							<span class="pull-right text-muted small"><em> ${streaming_topicInfo.oldestStatusDate}</em> </span>
-						</a>
-						<a class="list-group-item">
-							<i class="fa fa-barcode fa-fw"></i>
+							<span class="pull-right text-muted small"><em>
+									${streaming_topicInfo.oldestStatusDate}</em> </span>
+						</a> <a class="list-group-item"> <i class="fa fa-barcode fa-fw"></i>
 							<spring:message code="streaming_topic_info.oldest_status_id" />
-							<span class="pull-right text-muted small"><em> ${streaming_topicInfo.oldestStatusId}</em> </span>
-						</a>
-						<a class="list-group-item">
-							<i class="fa fa-calendar fa-fw"></i>
+							<span class="pull-right text-muted small"><em>
+									${streaming_topicInfo.oldestStatusId}</em> </span>
+						</a> <a class="list-group-item"> <i class="fa fa-calendar fa-fw"></i>
 							<spring:message code="streaming_topic_info.newest_status_date" />
-							<span class="pull-right text-muted small"><em> ${streaming_topicInfo.newestStatusDate}</em> </span>
-						</a>
-						<a class="list-group-item">
-							<i class="fa fa-barcode fa-fw"></i>
+							<span class="pull-right text-muted small"><em>
+									${streaming_topicInfo.newestStatusDate}</em> </span>
+						</a> <a class="list-group-item"> <i class="fa fa-barcode fa-fw"></i>
 							<spring:message code="streaming_topic_info.newest_status_id" />
-							<span class="pull-right text-muted small"><em> ${streaming_topicInfo.newestStatusId}</em> </span>
-						</a>
-						<a class="list-group-item">
-							<i class="fa fa-scissors fa-fw"></i>
-							<spring:message code="streaming_topic_info.total_statuses_processed" />
-							<span class="pull-right text-muted small"><em> ${streaming_topicInfo.totalStatusesProcessed}</em> </span>
+							<span class="pull-right text-muted small"><em>
+									${streaming_topicInfo.newestStatusId}</em> </span>
+						</a> <a class="list-group-item"> <i class="fa fa-scissors fa-fw"></i>
+							<spring:message
+								code="streaming_topic_info.total_statuses_processed" /> <span
+							class="pull-right text-muted small"><em>
+									${streaming_topicInfo.totalStatusesProcessed}</em> </span>
 						</a>
 
 					</div>
@@ -85,18 +85,36 @@
 					<table class="table">
 						<tbody>
 							<tr>
-								<td><a href="<c:url value="streaming_topic/${streaming_topicInfo.topicId}/edit"/>" class="btn btn-default btn-block">
-										<i class="fa fa-pencil"></i>
+								<td><a
+									href="<c:url value="streaming_topic/${streaming_topicInfo.topicId}/edit"/>"
+									class="btn btn-default btn-block"> <i class="fa fa-pencil"></i>
 										<spring:message code="streaming_topic_info.actions.edit" />
-									</a></td>
+								</a></td>
 							</tr>
-							<tr>
-								<td><a href="<c:url value="streaming_topic/${streaming_topicInfo.topicId}/execution/extract"/>"
-										class="btn btn-default btn-light-green btn-block">
-										<i class="fa fa-sign-in"></i>
-										<spring:message code="streaming_topics_list.form.extract" />
-									</a></td>
-							</tr>
+							<c:choose>
+								<c:when test="${not streaming_topic.active}">
+									<tr>
+										<td><a
+											href="<c:url value="streaming_topic/${streaming_topic.id}/execution/extract"/>"
+											class="btn btn-default btn-light-green"> <i
+												class="fa fa-sign-in"></i><span class="hidden-xs hidden-sm">
+													<spring:message code="streaming_topics_list.form.extract" />
+											</span>
+										</a></td>
+									</tr>
+								</c:when>
+								<c:otherwise>
+									<tr>
+										<td><a
+											href="<c:url value="streaming_topic/${streaming_topic.id}/execution/stop"/>"
+											class="btn btn-default"> <i
+												class="fa fa-stop"></i><span class="hidden-xs hidden-sm">
+													<spring:message code="streaming_topics_list.form.stop" />
+											</span>
+										</a></td>
+									</tr>
+								</c:otherwise>
+							</c:choose>
 						</tbody>
 					</table>
 				</div>
