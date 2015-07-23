@@ -37,7 +37,7 @@ public class TwitterStreamingListener implements StatusListener {
 	@Autowired
 	ExecutionService executionService;
 	
-    @Autowired
+
     DatastoreService datastoreService;
 	
 	
@@ -51,10 +51,11 @@ public class TwitterStreamingListener implements StatusListener {
     DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     DateFormat dateOnlyFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-	public TwitterStreamingListener(StreamingTopic streamingTopic, Execution execution) {
+	public TwitterStreamingListener(StreamingTopic streamingTopic, Execution execution,DatastoreService datastoreService) {
 		this.streamingTopic = streamingTopic;
 		this.keyword = streamingTopic.getKeywords();
 		this.execution = execution;
+		this.datastoreService = datastoreService;
 		count = 0;
 	}
 
@@ -139,7 +140,13 @@ public class TwitterStreamingListener implements StatusListener {
 				}
             }*/
             log.info("Saving tweet: " + streamingStatus.getText());
+            try{
+            	if(datastoreService == null)
+            		log.error("Data store is null");
             datastoreService.insertStreamingStatus(streamingStatus);
+            }catch(Exception e){
+            	log.error(e.getMessage());
+            }
             count++;
 		}
 
