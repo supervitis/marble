@@ -55,7 +55,13 @@ public class StreamingTopic implements Serializable {
     @Column(name = "keywords")
     private String keywords;
 
-    @Digits(fraction = 0, integer = 24)
+    @NotNull
+    @NotEmpty
+    @Column(name = "active")
+    private Boolean active = false;
+   
+
+	@Digits(fraction = 0, integer = 24)
     @Column(name = "upper_limit")
     private Long upperLimit;
 
@@ -143,6 +149,15 @@ public class StreamingTopic implements Serializable {
     public void setKeywords(String keywords) {
         this.keywords = keywords;
     }
+    
+    public Boolean getActive() {
+ 		return active;
+ 	}
+
+ 	public void setActive(Boolean active) {
+ 		this.active = active;
+ 	}
+    
 
     public Long getUpperLimit() {
         return upperLimit;
