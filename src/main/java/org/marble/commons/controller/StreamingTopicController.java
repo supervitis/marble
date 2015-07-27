@@ -221,6 +221,13 @@ public class StreamingTopicController {
         modelAndView.setViewName("forward:/execution/streaming_topic/" + streaming_topicId + "/extract");
         return modelAndView;
     }
+    
+    @RequestMapping(value = "/{streaming_topicId:[0-9]+}/execution/stop", method = RequestMethod.GET)
+    public ModelAndView stopExtractor(@PathVariable Integer streaming_topicId) throws InvalidStreamingTopicException {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("forward:/execution/streaming_topic/" + streaming_topicId + "/stop");
+        return modelAndView;
+    }
 
     @RequestMapping(value = "/{streaming_topicId:[0-9]+}/execution/process", method = RequestMethod.GET)
     public ModelAndView executeProcessor(@PathVariable Integer streaming_topicId) throws InvalidStreamingTopicException {

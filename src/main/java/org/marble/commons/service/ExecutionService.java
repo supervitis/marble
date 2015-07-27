@@ -35,4 +35,7 @@ public interface ExecutionService {
 
 	Integer executeStreaming(Integer streamingTopicId)
 			throws InvalidTopicException, InvalidExecutionException, InvalidStreamingTopicException;
+
+	Integer stopStreaming(Integer streamingTopicId)
+			throws InvalidStreamingTopicException, InvalidExecutionException;
 }

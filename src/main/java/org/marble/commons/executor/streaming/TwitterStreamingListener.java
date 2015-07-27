@@ -40,7 +40,7 @@ public class TwitterStreamingListener implements StatusListener {
 
     DatastoreService datastoreService;
 	
-	
+	private Integer streamingTopicId;
 	private String keyword;
 	private StreamingTopic streamingTopic;
     private static final Logger log = LoggerFactory.getLogger(TwitterExtractionExecutor.class);
@@ -56,11 +56,61 @@ public class TwitterStreamingListener implements StatusListener {
 		this.keyword = streamingTopic.getKeywords();
 		this.execution = execution;
 		this.datastoreService = datastoreService;
+		this.streamingTopicId = streamingTopic.getId();
 		count = 0;
 	}
 
 	
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((keyword == null) ? 0 : keyword.hashCode());
+		result = prime
+				* result
+				+ ((streamingTopicId == null) ? 0 : streamingTopicId.hashCode());
+		return result;
+	}
+
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TwitterStreamingListener other = (TwitterStreamingListener) obj;
+		if (keyword == null) {
+			if (other.keyword != null)
+				return false;
+		} else if (!keyword.equals(other.keyword))
+			return false;
+		if (streamingTopicId == null) {
+			if (other.streamingTopicId != null)
+				return false;
+		} else if (!streamingTopicId.equals(other.streamingTopicId))
+			return false;
+		return true;
+	}
+
+
+
+	public Integer getStreamingTopicId() {
+		return streamingTopicId;
+	}
+
+
+
+	public void setStreamingTopicId(Integer streamingTopicId) {
+		this.streamingTopicId = streamingTopicId;
+	}
+
+
+
 	public long getCount() {
 		return count;
 	}

@@ -96,10 +96,9 @@
 									<tr>
 										<td><a
 											href="<c:url value="streaming_topic/${streaming_topic.id}/execution/extract"/>"
-											class="btn btn-default btn-light-green"> <i
-												class="fa fa-sign-in"></i><span class="hidden-xs hidden-sm">
+											class="btn btn-default btn-block"> <i
+												class="fa fa-sign-in"></i>
 													<spring:message code="streaming_topics_list.form.extract" />
-											</span>
 										</a></td>
 									</tr>
 								</c:when>
@@ -107,10 +106,9 @@
 									<tr>
 										<td><a
 											href="<c:url value="streaming_topic/${streaming_topic.id}/execution/stop"/>"
-											class="btn btn-default"> <i
-												class="fa fa-stop"></i><span class="hidden-xs hidden-sm">
+											class="btn btn-default btn-block"> <i
+												class="fa fa-stop"></i>
 													<spring:message code="streaming_topics_list.form.stop" />
-											</span>
 										</a></td>
 									</tr>
 								</c:otherwise>

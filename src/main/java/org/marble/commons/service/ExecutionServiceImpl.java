@@ -1,6 +1,8 @@
 package org.marble.commons.service;
 
 import java.beans.Introspector;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -16,6 +18,8 @@ import org.marble.commons.exception.InvalidTopicException;
 import org.marble.commons.executor.extractor.ExtractorExecutor;
 import org.marble.commons.executor.plotter.PlotterExecutor;
 import org.marble.commons.executor.processor.ProcessorExecutor;
+import org.marble.commons.executor.streaming.StreamingExecutor;
+import org.marble.commons.executor.streaming.TwitterStreamingExecutor;
 import org.marble.commons.model.ExecutionStatus;
 import org.marble.commons.model.ExecutionType;
 import org.marble.commons.model.ExecutionModuleParameters;
@@ -119,10 +123,10 @@ public class ExecutionServiceImpl implements ExecutionService {
     public Integer executeStreaming(Integer streamingTopicId) throws InvalidStreamingTopicException, InvalidExecutionException {
         log.info("Executing the extractor for topic <" + streamingTopicId + ">.");
 
-        Execution execution = new Execution();
+        
 
         StreamingTopic streamingTopic = streamingTopicService.findOne(streamingTopicId);
-
+        Execution execution = new Execution();
         execution.setStatus(ExecutionStatus.Initialized);
         execution.setType(ExecutionType.Streamer);
         streamingTopic.getExecutions().add(execution);
@@ -132,13 +136,54 @@ public class ExecutionServiceImpl implements ExecutionService {
         execution = this.save(execution);
 
         log.info("Starting execution <" + execution.getId() + ">... now!");
-        ExtractorExecutor executor = (ExtractorExecutor) context.getBean("twitterStreamingExecutor");
-        executor.setExecution(execution);
-        taskExecutor.execute(executor);
+        TwitterStreamingExecutor executor = (TwitterStreamingExecutor) context.getBean("twitterStreamingExecutor");
+        executor.executeStreaming(execution);
 
         log.info("Executor launched.");
 
         return execution.getId();
+    }
+    
+    @Override
+    @Transactional
+    public Integer stopStreaming(Integer streamingTopicId) throws InvalidStreamingTopicException, InvalidExecutionException {
+        log.info("Stopping the extractor for topic <" + streamingTopicId + ">.");
+
+        
+
+        StreamingTopic streamingTopic = streamingTopicService.findOne(streamingTopicId);
+        Iterator<Execution> it = streamingTopic.getExecutions().iterator();
+        Execution execution = null;
+        while(it.hasNext()){
+        	Execution auxExecution = it.next();
+        	log.info("Checking an execution with state " + auxExecution.getStatus());
+        	if(auxExecution.getStatus() == ExecutionStatus.Running){
+        		execution = auxExecution;
+        		break;
+        	}
+        }
+       
+        if(execution != null){
+        streamingTopic.getExecutions().remove(execution);
+        execution.setStatus(ExecutionStatus.Stopped);
+        streamingTopic.getExecutions().add(execution);
+        streamingTopic.setActive(false);
+        streamingTopic = streamingTopicService.save(streamingTopic);
+
+        execution = this.save(execution);
+
+        log.info("Stoping execution <" + execution.getId() + ">... now!");
+        TwitterStreamingExecutor executor = (TwitterStreamingExecutor) context.getBean("twitterStreamingExecutor");
+        executor.stopStreaming(execution);
+
+        log.info("Executor launched.");
+        return execution.getId();
+        }
+        else{
+        	streamingTopic.setActive(false);
+        	streamingTopic = streamingTopicService.save(streamingTopic);
+        	return -1;
+        }
     }
 
     @Override
