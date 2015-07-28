@@ -154,6 +154,7 @@ public class ExecutionServiceImpl implements ExecutionService {
         StreamingTopic streamingTopic = streamingTopicService.findOne(streamingTopicId);
         Iterator<Execution> it = streamingTopic.getExecutions().iterator();
         Execution execution = null;
+        log.info("Searching executions");
         while(it.hasNext()){
         	Execution auxExecution = it.next();
         	log.info("Checking an execution with state " + auxExecution.getStatus());
@@ -164,6 +165,7 @@ public class ExecutionServiceImpl implements ExecutionService {
         }
        
         if(execution != null){
+        	log.info("Execution found");
         streamingTopic.getExecutions().remove(execution);
         execution.setStatus(ExecutionStatus.Stopped);
         streamingTopic.getExecutions().add(execution);

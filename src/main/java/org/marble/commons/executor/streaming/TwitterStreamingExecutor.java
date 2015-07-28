@@ -117,15 +117,13 @@ public class TwitterStreamingExecutor implements StreamingExecutor{
 	            	listeners = new ArrayList<TwitterStreamingListener>();
 	            }
 	            
-	            //TODO: IMPLEMENTAR LOS LISTENERS Y DEMAS
-	            
 	            msg = "Extraction will begin with Api Key <" + apiKeys.get(apiKeysIndex).getDescription() + ">";
 	            log.info(msg);
 	            execution.appendLog(msg);
 	            executionService.save(execution);
 	            
 	            FilterQuery query = new FilterQuery();
-	            TwitterStreamingListener listener = new TwitterStreamingListener(streamingTopic,execution,datastoreService);
+	            TwitterStreamingListener listener = new TwitterStreamingListener(streamingTopic,execution,datastoreService,executionService);
 	            twitterStream.shutdown();
 	            twitterStream.addListener(listener);
 	            listeners.add(listener);
@@ -170,11 +168,10 @@ public class TwitterStreamingExecutor implements StreamingExecutor{
 	            // Changing execution state
 	            execution.setStatus(ExecutionStatus.Stopped);
 	            execution = executionService.save(execution);
-
 	            StreamingTopic streamingTopic = streamingTopicService.findOne(execution.getStreamingTopic().getId());
 	           	            
 	            FilterQuery query = new FilterQuery();
-	            TwitterStreamingListener listener = new TwitterStreamingListener(streamingTopic,execution,datastoreService);
+	            TwitterStreamingListener listener = new TwitterStreamingListener(streamingTopic,execution,datastoreService,executionService);
 	            twitterStream.shutdown();
 	            twitterStream.removeListener(listener);
 	            listeners.remove(listener);
@@ -208,7 +205,7 @@ public class TwitterStreamingExecutor implements StreamingExecutor{
 	public String[] getKeywords(){
 		ArrayList<String> keywords = new ArrayList<String>();
 		for(TwitterStreamingListener listener : listeners){
-			keywords.add(listener.getKeyword());
+			keywords.add(listener.getKeywords());
 			
 		}
 		String[] result = {};
