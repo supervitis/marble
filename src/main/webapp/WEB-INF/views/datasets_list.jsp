@@ -207,7 +207,7 @@
 									<td><a href="<c:url value="streaming_topic/${streaming_topic.id}/edit"/>"
 										class="btn btn-default"><i class="fa fa-pencil"></i> <spring:message
 												code="datasets_list.form.edit" /></a><a
-										href="<c:url value="streaming_topic/${topic.id}/download"/>"
+										href="<c:url value="streaming_topic/${streaming_topic.id}/download"/>"
 										class="btn btn-default"><i class="fa fa-download"></i> <spring:message
 												code="datasets_list.form.download" /></a></td>
 								</tr>

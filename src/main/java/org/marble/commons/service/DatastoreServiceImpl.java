@@ -107,7 +107,7 @@ public class DatastoreServiceImpl implements DatastoreService {
     }
 
 	@Override
-	public <T> List<T> findByStreamingTopicId(Integer streamingTopicId,	Class<T> entityClass) {
+	public <T> List<T> findByStreamingTopicId(Integer streamingTopicId,	Class<T> entityClass) throws MongoException{
 		Query query = new Query();
         query.addCriteria(Criteria.where("streamingTopicId").is(streamingTopicId));
         return this.findByQuery(query, entityClass);
