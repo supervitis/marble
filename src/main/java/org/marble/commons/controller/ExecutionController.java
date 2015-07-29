@@ -44,6 +44,7 @@ public class ExecutionController {
         Execution execution;
         execution = executionService.findOne(executionId);
         modelAndView.addObject("topic", execution.getTopic());
+        modelAndView.addObject("streaming_topic", execution.getStreamingTopic());
         modelAndView.setViewName("execution_view");
         modelAndView.addObject("execution", execution);
         return modelAndView;
