@@ -15,6 +15,8 @@ import org.marble.commons.dao.model.Dataset;
 import org.marble.commons.dao.model.UploadedStatus;
 import org.marble.commons.exception.InvalidDatasetException;
 import org.marble.commons.util.MarbleUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +36,7 @@ public class DatasetServiceImpl implements DatasetService {
 	@Autowired
     DatastoreService datastoreService;
 
-
+	private static final Logger log = LoggerFactory.getLogger(DatasetServiceImpl.class);
 	@Override
 	public Dataset updateDataset(Dataset dataset, MultipartFile mfile)
 			throws InvalidDatasetException, IllegalStateException, IOException {
@@ -82,9 +84,9 @@ public class DatasetServiceImpl implements DatasetService {
 	}
 
 	@Override
-	public void deleteDataset(Integer id) {
-		datastoreService.findAllAndRemoveByDatasetId(id, UploadedStatus.class);
-		datasetDao.delete(id);
+	public void deleteDataset(Integer datasetId) {
+		datastoreService.findAllAndRemoveByDatasetId(datasetId, UploadedStatus.class);
+		datasetDao.delete(datasetId);
 		return;
 	}
 
@@ -110,6 +112,7 @@ public class DatasetServiceImpl implements DatasetService {
 			try {
 				datastoreService.save(new UploadedStatus(dataset.getId(), status));
 			} catch (Exception e) {
+				log.error("Excepcion al guardar: " + e.getMessage());
 			}
 		}
 

@@ -15,6 +15,7 @@ import org.marble.commons.dao.model.Dataset;
 import org.marble.commons.dao.model.UploadedStatus;
 import org.marble.commons.exception.InvalidDatasetException;
 import org.marble.commons.service.DatasetService;
+import org.marble.commons.service.StreamingTopicService;
 import org.marble.commons.service.TopicService;
 import org.marble.commons.util.MarbleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,12 +46,16 @@ public class DatasetController {
 	
 	@Autowired
 	TopicService topicService;
+	
+	@Autowired
+	StreamingTopicService streamingTopicService;
 
 	@RequestMapping
 	public ModelAndView home() {
 		ModelAndView modelAndView = new ModelAndView("datasets_list");
 		modelAndView.addObject("datasets", datasetService.getDatasets());
 		modelAndView.addObject("topics",topicService.findAll());
+		modelAndView.addObject("streaming_topics",streamingTopicService.findAll());
 		return modelAndView;
 	}
 

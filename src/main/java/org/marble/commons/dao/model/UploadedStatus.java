@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.persistence.Id;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -15,7 +16,8 @@ public class UploadedStatus {
 	 @Indexed
 	 private Integer datasetId;
 
-	
+	 @Id
+	 private ObjectId id;
 	 private Object status;
 	 
 	 public UploadedStatus() {
@@ -23,6 +25,7 @@ public class UploadedStatus {
     }
 
     public UploadedStatus(Integer datasetId, Object status) {
+    	this.id = new ObjectId();
     	this.datasetId = datasetId;
     	this.status = status;
     }
