@@ -11,9 +11,11 @@
 			<div class="panel-body">
 
 				<div class="form-group">
-					<textarea id="execution-log" class="form-control resize-vertical" rows="20" disabled="disabled"></textarea>
-					<p class="help-block">The log is displayed backwards, and only the recent entries are shown. Also, the log is
-						refreshed periodically, so you don't have to refresh the whole page.</p>
+					<textarea id="execution-log" class="form-control resize-vertical"
+						rows="20" disabled="disabled"></textarea>
+					<p class="help-block">The log is displayed backwards, and only
+						the recent entries are shown. Also, the log is refreshed
+						periodically, so you don't have to refresh the whole page.</p>
 				</div>
 
 			</div>
@@ -83,15 +85,27 @@
 				<div class="table-responsive">
 					<table class="table" id="actions-table">
 						<tbody>
+
 							<tr>
-								<td><a href='<c:url value="topic/${execution.topic.id}" />' class="btn btn-default btn-block">
-										<i class="fa fa-tags"></i> View Topic
-									</a></td>
+								<td><c:if test="${not empty execution.topic.id}">
+										<a href='<c:url value="topic/${execution.topic.id}" />'
+											class="btn btn-default btn-block"> <i class="fa fa-tags"></i>
+											View Topic
+										</a>
+									</c:if> <c:if test="${not empty execution.streamingTopic.id}">
+
+										<a href='<c:url value="streaming_topic/${execution.streamingTopic.id}" />'
+											class="btn btn-default btn-block"> <i class="fa fa-tags"></i>
+											View Streaming Topic
+										</a>
+									</c:if></td>
 							</tr>
 							<tr>
-								<td><div data-toggle="tooltip" title="This action is not available right now.">
-										<a id="send-command-stop" class="btn btn-default btn-block disabled">
-											<spring:message code="execution_view.actions.stop" />
+								<td><div data-toggle="tooltip"
+										title="This action is not available right now.">
+										<a id="send-command-stop"
+											class="btn btn-default btn-block disabled"> <spring:message
+												code="execution_view.actions.stop" />
 										</a>
 									</div></td>
 							</tr>
