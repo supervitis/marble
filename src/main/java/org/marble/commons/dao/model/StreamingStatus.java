@@ -91,8 +91,8 @@ public class StreamingStatus {
         this.user = status.getUser();
     }
 
-    public StreamingStatus(twitter4j.Status status, Integer topicId) {
-        this.streamingTopicId = topicId;
+    public StreamingStatus(twitter4j.Status status, Integer streamingTopicId) {
+        this.streamingTopicId = streamingTopicId;
         this.createdAt = status.getCreatedAt();
         this.id = status.getId();
         this.text = status.getText();
@@ -134,8 +134,8 @@ public class StreamingStatus {
         return streamingTopicId;
     }
 
-    public void setStreamingTopicId(Integer topicId) {
-        this.streamingTopicId = topicId;
+    public void setStreamingTopicId(Integer streamingTopicId) {
+        this.streamingTopicId = streamingTopicId;
     }
 
     public Date getCreatedAt() {

@@ -7,6 +7,8 @@ import org.marble.commons.dao.model.StreamingTopic;
 import org.marble.commons.exception.InvalidStreamingTopicException;
 import org.marble.commons.model.StreamingTopicInfo;
 
+import com.mongodb.DBCursor;
+
 public interface StreamingTopicService {
 
 	public StreamingTopic save(StreamingTopic streamingTopic) throws InvalidStreamingTopicException;
@@ -22,5 +24,7 @@ public interface StreamingTopicService {
     StreamingTopicInfo info(Integer id) throws InvalidStreamingTopicException;
 
 	public List<StreamingStatus> findAllStatusByStreamingTopicId(Integer id);
+
+	DBCursor findCursorByStreamingTopicId(Integer streamingTopicId);
 
 }

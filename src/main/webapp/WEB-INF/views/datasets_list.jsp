@@ -88,7 +88,7 @@
 					</p>
 					<div class="form-group">
 						<div class="col-lg-offset-10 col-lg-2">
-							<a href="<c:url value="datasets/create"/>"
+							<a href="<c:url value="topic/create"/>"
 								class="btn btn-primary pull-right"><i class="fa fa-file-o"></i>
 								<spring:message code="datasets_list.form.create" /></a>
 

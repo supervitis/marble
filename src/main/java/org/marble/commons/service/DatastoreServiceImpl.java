@@ -71,8 +71,23 @@ public class DatastoreServiceImpl implements DatastoreService {
     }
     
     @Override
+    public <T> void findAllAndRemoveByStreamingTopicId(Integer streamingTopicId, Class<T> entityClass) throws MongoException {
+        Query query = new BasicQuery("{'streamingTopicId': " + streamingTopicId + "}");
+        this.findAllAndRemove(query, entityClass);
+    }
+    
+    @Override
     public <T> List<T> findByQuery(Query query, Class<T> entityClass) throws MongoException {
         List<T> result = mongoOperations.find(query, entityClass);
+        if (result == null) {
+            throw new MongoException("Object <" + entityClass.getName() + "> with query <" + query + "> not found.");
+        }
+        return result;
+    }
+    
+    @Override
+    public <T> List<T> findByQuery(Query query, Class<T> entityClass, String collectionName) throws MongoException {
+        List<T> result = mongoOperations.find(query, entityClass, collectionName);
         if (result == null) {
             throw new MongoException("Object <" + entityClass.getName() + "> with query <" + query + "> not found.");
         }
@@ -110,7 +125,7 @@ public class DatastoreServiceImpl implements DatastoreService {
 	public <T> List<T> findByStreamingTopicId(Integer streamingTopicId,	Class<T> entityClass) throws MongoException{
 		Query query = new Query();
         query.addCriteria(Criteria.where("streamingTopicId").is(streamingTopicId));
-        return this.findByQuery(query, entityClass);
+        return this.findByQuery(query, entityClass,"streaming_statuses");
 	}
     @Override
     public <T> DBCursor findCursorByTopicId(Integer topicId, Class<T> entityClass) {
@@ -119,6 +134,18 @@ public class DatastoreServiceImpl implements DatastoreService {
 
         BasicDBObject searchQuery = new BasicDBObject();
         searchQuery.put("topicId", topicId);
+
+        DBCursor cursor = collection.find(searchQuery);
+        return cursor;
+    }
+    
+    @Override
+    public <T> DBCursor findCursorByStreamingTopicId(Integer streamingTopicId, Class<T> entityClass) {
+        Document document = entityClass.getAnnotation(Document.class);
+        DBCollection collection = mongoOperations.getCollection(document.collection());
+
+        BasicDBObject searchQuery = new BasicDBObject();
+        searchQuery.put("streamingTopicId", streamingTopicId);
 
         DBCursor cursor = collection.find(searchQuery);
         return cursor;
@@ -177,6 +204,14 @@ public class DatastoreServiceImpl implements DatastoreService {
     }
     
     @Override
+    public <T> T findOneByStreamingTopicIdSortBy(Integer streamingTopicId, String field, Direction direction, Class<T> entityClass) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("streamingTopicId").is(streamingTopicId));
+        query.with(new Sort(direction, field));
+        return this.findOneByQuery(query, entityClass);
+    }
+    
+    @Override
     public MongoConverter getConverter() {
         return mongoOperations.getConverter();
     }
@@ -191,8 +226,6 @@ public class DatastoreServiceImpl implements DatastoreService {
         mongoOperations.save(streamingStatus);
 
 	}
-    
-    
     
     @Override
     public void insertUploadedStatus(UploadedStatus uploadedStatus) {
@@ -218,7 +251,12 @@ public class DatastoreServiceImpl implements DatastoreService {
         return mongoOperations.count(query, entityClass);
     }
 
-
+    @Override
+    public <T> long countByStreamingTopicId(Integer streamingTopicId, Class<T> entityClass) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("streamingTopicId").is(streamingTopicId));
+        return mongoOperations.count(query, entityClass);
+    }
 
 
 

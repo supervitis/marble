@@ -29,6 +29,8 @@ import org.marble.commons.service.DatasetService;
 import org.marble.commons.service.DatasetServiceImpl;
 import org.marble.commons.service.StreamingTopicService;
 import org.marble.commons.util.MarbleUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -45,6 +47,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.MongoClient;
 
 import twitter4j.GeoLocation;
@@ -55,8 +58,7 @@ import twitter4j.Query.Unit;
 @RequestMapping("/streaming_topic")
 public class StreamingTopicController {
 
-    // private static final Logger log =
-    // LoggerFactory.getLogger(PlotController.class);
+    private static final Logger log = LoggerFactory.getLogger(StreamingTopic.class);
 	@Autowired
 	DatasetService datasetService;
 
@@ -87,7 +89,7 @@ public class StreamingTopicController {
     }
     
     @RequestMapping(value = "/{streamingTopicId:[0-9]+}/download", method = RequestMethod.GET)
-    public ModelAndView downloadTopic(@PathVariable Integer streamingTopicId, HttpServletRequest request, HttpServletResponse response) throws InvalidTopicException, InvalidStreamingTopicException {
+    public ModelAndView downloadStreamingTopic(@PathVariable Integer streamingTopicId, HttpServletRequest request, HttpServletResponse response) throws InvalidStreamingTopicException {
 
         String basePath = MarbleUtil.getBasePath(request);
         ModelAndView modelAndView = new ModelAndView();
@@ -96,13 +98,11 @@ public class StreamingTopicController {
             streamingTopic = streaming_topicService.findOne(streamingTopicId);
 			response.setHeader("Content-Disposition",
                     "attachment;filename=" + streamingTopic.getName() + ".json");
-			
-			
 			PrintWriter out = response.getWriter();
-			List<StreamingStatus> statuses = streaming_topicService.findAllStatusByStreamingTopicId(streamingTopic.getId());
-			for(StreamingStatus originalStatus : statuses){
-				JSONObject jsonObject = new JSONObject(originalStatus);
-				out.println(jsonObject.toString());
+			log.error(streamingTopic.getName() + "con id " + streamingTopic.getId() + " - " + streamingTopicId);
+			DBCursor cursor = streaming_topicService.findCursorByStreamingTopicId(streamingTopicId);
+			while(cursor.hasNext()){
+				out.println(cursor.next().toString());
 			}
 			out.close();
 		} catch (IOException ex) {

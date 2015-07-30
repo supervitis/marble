@@ -3,13 +3,12 @@ package org.marble.commons.service;
 import java.util.List;
 
 import org.marble.commons.dao.StreamingTopicDao;
-import org.marble.commons.dao.model.OriginalStatus;
-import org.marble.commons.dao.model.ProcessedStatus;
 import org.marble.commons.dao.model.StreamingStatus;
 import org.marble.commons.dao.model.StreamingTopic;
 import org.marble.commons.exception.InvalidStreamingTopicException;
 import org.marble.commons.model.StreamingTopicInfo;
 
+import com.mongodb.DBCursor;
 import com.mongodb.MongoException;
 
 import org.slf4j.Logger;
@@ -58,8 +57,7 @@ public class StreamingTopicServiceImpl implements StreamingTopicService {
     public void delete(Integer id) {
         streamingTopicDao.delete(id);
         // Remove all the related tweets from the database
-        datastoreService.findAllAndRemoveByTopicId(id, OriginalStatus.class);
-        datastoreService.findAllAndRemoveByTopicId(id, ProcessedStatus.class);
+        datastoreService.findAllAndRemoveByStreamingTopicId(id, StreamingStatus.class);
         return;
     }
 
@@ -74,17 +72,16 @@ public class StreamingTopicServiceImpl implements StreamingTopicService {
         StreamingTopicInfo streamingTopicInfo = new StreamingTopicInfo();
         streamingTopicInfo.setTopicId(id);
         try {
-            streamingTopicInfo.setTotalStatusesExtracted(datastoreService.countByTopicId(id, OriginalStatus.class));
-            streamingTopicInfo.setTotalStatusesProcessed(datastoreService.countByTopicId(id, ProcessedStatus.class));
+            streamingTopicInfo.setTotalStatusesExtracted(datastoreService.countByStreamingTopicId(id, StreamingStatus.class));
 
             if (streamingTopicInfo.getTotalStatusesExtracted() > 0) {
-                OriginalStatus status = datastoreService.findOneByTopicIdSortBy(id, "createdAt", Sort.Direction.ASC,
-                        OriginalStatus.class);
+                StreamingStatus status = datastoreService.findOneByStreamingTopicIdSortBy(id, "createdAt", Sort.Direction.ASC,
+                        StreamingStatus.class);
                 streamingTopicInfo.setOldestStatusDate(status.getCreatedAt());
                 streamingTopicInfo.setOldestStatusId(status.getId());
 
                 status = datastoreService
-                        .findOneByTopicIdSortBy(id, "createdAt", Sort.Direction.DESC, OriginalStatus.class);
+                        .findOneByStreamingTopicIdSortBy(id, "createdAt", Sort.Direction.DESC, StreamingStatus.class);
                 streamingTopicInfo.setNewestStatusDate(status.getCreatedAt());
                 streamingTopicInfo.setNewestStatusId(status.getId());
             }
@@ -104,6 +101,11 @@ public class StreamingTopicServiceImpl implements StreamingTopicService {
 	@Override
 	public List<StreamingStatus> findAllStatusByStreamingTopicId(Integer id) {
     	return datastoreService.findByStreamingTopicId(id, StreamingStatus.class);
+	}
+	
+	@Override
+	public DBCursor findCursorByStreamingTopicId(Integer streamingTopicId){
+		return datastoreService.findCursorByStreamingTopicId(streamingTopicId, StreamingStatus.class);
 	}
 
 }
