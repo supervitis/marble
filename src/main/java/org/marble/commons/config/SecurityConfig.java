@@ -71,6 +71,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers("/execution/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPER')")
                         .antMatchers("/plot/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPER')")
                         .antMatchers("/rest/execution/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPER')")
+                        .antMatchers("/streaming_topic/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPER')")
+                        .antMatchers("/datasets/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPER')")
                         // Urls reserved to Admin
 						.antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
 						.antMatchers("/rest/**").access("hasRole('ROLE_ADMIN')")

@@ -11,6 +11,10 @@ public interface ResetService {
     public void resetTopics();
 
     public void getTheSpecial();
+
+	public void resetStreamingTopics();
+
+	void resetDatasets();
     
 
 }

@@ -57,6 +57,11 @@ public class DatastoreServiceImpl implements DatastoreService {
     public <T> void findAllAndRemove(Query query, Class<T> entityClass) {
         mongoOperations.findAllAndRemove(query, entityClass);
     }
+    
+    @Override
+    public <T> void remove(Query query, Class<T> entityClass) {
+        mongoOperations.remove(query, entityClass);
+    }
 
     @Override
     public <T> void findAllAndRemoveByTopicId(Integer topicId, Class<T> entityClass) throws MongoException {
@@ -74,6 +79,12 @@ public class DatastoreServiceImpl implements DatastoreService {
     public <T> void findAllAndRemoveByStreamingTopicId(Integer streamingTopicId, Class<T> entityClass) throws MongoException {
         Query query = new BasicQuery("{'streamingTopicId': " + streamingTopicId + "}");
         this.findAllAndRemove(query, entityClass);
+    }
+    
+    @Override
+    public <T> void removeByStreamingTopicId(Integer streamingTopicId, Class<T> entityClass) throws MongoException {
+        Query query = new BasicQuery("{'streamingTopicId': " + streamingTopicId + "}");
+        this.remove(query, entityClass);
     }
     
     @Override

@@ -4,17 +4,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.marble.commons.dao.ConfigurationItemDao;
+import org.marble.commons.dao.DatasetDao;
 import org.marble.commons.dao.ExecutionDao;
+import org.marble.commons.dao.StreamingTopicDao;
 import org.marble.commons.dao.TopicDao;
 import org.marble.commons.dao.TwitterApiKeyDao;
 import org.marble.commons.dao.model.ConfigurationItem;
+import org.marble.commons.dao.model.Dataset;
 import org.marble.commons.dao.model.OriginalStatus;
 import org.marble.commons.dao.model.Plot;
+import org.marble.commons.dao.model.StreamingTopic;
 import org.marble.commons.dao.model.Topic;
 import org.marble.commons.dao.model.TwitterApiKey;
 import org.marble.commons.exception.InvalidPlotException;
-
 import org.apache.commons.lang.math.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +39,10 @@ public class ResetServiceImpl implements ResetService {
     TwitterApiKeyDao twitterApiKeyDao;
     @Autowired
     TopicDao topicDao;
+    @Autowired
+    StreamingTopicDao streamingTopicDao;
+    @Autowired
+    DatasetDao datasetDao;
     @Autowired
     ExecutionDao executionDao;
 
@@ -58,12 +66,21 @@ public class ResetServiceImpl implements ResetService {
 
     @Value("${rebase.topics:}")
     private String[] topics;
+    
+    @Value("${rebase.streaming_topics:}")
+    private String[] streamingTopics;
+    
+    @Value("${rebase.dataset:}")
+    private String[] datasets;
+
 
     @Override
     public void resetAll() {
         this.resetConfiguration();
         this.resetTwitterApiKeys();
         this.resetTopics();
+        this.resetStreamingTopics();
+        this.resetDatasets();
     }
 
     @Override
@@ -114,6 +131,38 @@ public class ResetServiceImpl implements ResetService {
             topic = topicDao.save(topic);
         }
         log.info("TopicDAO reset.");
+        return;
+    }
+    
+    @Override
+    public void resetStreamingTopics() {
+        log.info("Reseting StreamingTopicDAO...");
+        streamingTopicDao.deleteAll();
+
+        for (int i = 0; i < streamingTopics.length; i = i + 1) {
+            StreamingTopic topic = new StreamingTopic();
+            topic.setName(streamingTopics[i]);
+            topic.setKeywords(streamingTopics[i]);
+
+            topic = streamingTopicDao.save(topic);
+        }
+        log.info("StreamingTopicDAO reset.");
+        return;
+    }
+    
+    @Override
+    public void resetDatasets() {
+        log.info("Reseting DatasetDAO...");
+        datasetDao.deleteAll();
+
+        for (int i = 0; i < datasets.length; i = i + 1) {
+            Dataset dataset = new Dataset();
+            dataset.setName(streamingTopics[i]);
+            dataset.setDescription(streamingTopics[i]);
+
+            dataset = datasetDao.save(dataset);
+        }
+        log.info("DatasetDAO reset.");
         return;
     }
 

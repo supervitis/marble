@@ -101,7 +101,7 @@ public class DatasetServiceImpl implements DatasetService {
 		if (dataset == null) {
 			throw new InvalidDatasetException();
 		}
-		
+		if(!mfile.isEmpty()){
 		File file = MarbleUtil.multipartToFile(mfile);
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(
 				file));
@@ -117,6 +117,7 @@ public class DatasetServiceImpl implements DatasetService {
 		}
 
 		bufferedReader.close();
+		}
 		return dataset;
 	}
 	

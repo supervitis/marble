@@ -57,7 +57,7 @@ public class StreamingTopicServiceImpl implements StreamingTopicService {
     public void delete(Integer id) {
         streamingTopicDao.delete(id);
         // Remove all the related tweets from the database
-        datastoreService.findAllAndRemoveByStreamingTopicId(id, StreamingStatus.class);
+        datastoreService.removeByStreamingTopicId(id, StreamingStatus.class);
         return;
     }
 

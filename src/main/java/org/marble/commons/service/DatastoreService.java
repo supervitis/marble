@@ -82,6 +82,11 @@ public interface DatastoreService {
 	
 	MongoConverter getConverter();
 
+	<T> void removeByStreamingTopicId(Integer streamingTopicId, Class<T> entityClass)
+			throws MongoException;
+
+	<T>void remove(Query query, Class<T> entityClass);
+
 
 
 
