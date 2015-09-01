@@ -245,7 +245,7 @@ public class TwitterStreamingListener implements StatusListener {
 	}
 
 	public void onException(Exception ex) {
-
+		executionService.useNextAPIKey(); 
 	}
 
 	public StreamingTopic getStreamingTopic() {
@@ -254,5 +254,9 @@ public class TwitterStreamingListener implements StatusListener {
 
 	public void setStreamingTopic(StreamingTopic streamingTopic) {
 		this.streamingTopic = streamingTopic;
+	}
+
+	public String getLanguage() {
+		return streamingTopic.getLanguage();
 	}
 }

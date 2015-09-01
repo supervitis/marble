@@ -187,6 +187,13 @@ public class ExecutionServiceImpl implements ExecutionService {
         	return -1;
         }
     }
+    
+    @Override
+    public void useNextAPIKey(){
+    	log.info("Changing API key");
+        TwitterStreamingExecutor executor = (TwitterStreamingExecutor) context.getBean("twitterStreamingExecutor");
+        executor.useNextAPIKey();
+    }
 
     @Override
     @Transactional

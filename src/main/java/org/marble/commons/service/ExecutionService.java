@@ -38,4 +38,6 @@ public interface ExecutionService {
 
 	Integer stopStreaming(Integer streamingTopicId)
 			throws InvalidStreamingTopicException, InvalidExecutionException;
+
+	void useNextAPIKey();
 }

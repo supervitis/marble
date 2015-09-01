@@ -32,184 +32,238 @@ import twitter4j.conf.ConfigurationBuilder;
 
 @Component
 @Scope("singleton")
-public class TwitterStreamingExecutor implements StreamingExecutor{
+public class TwitterStreamingExecutor implements StreamingExecutor {
 
-    private static final Logger log = LoggerFactory.getLogger(TwitterStreamingExecutor.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(TwitterStreamingExecutor.class);
 
-    
-    @Autowired
-    ExecutionService executionService;
+	@Autowired
+	ExecutionService executionService;
 
-    @Autowired
-    StreamingTopicService streamingTopicService;
-    
-    @Autowired
-    DatasetService datasetService;
+	@Autowired
+	StreamingTopicService streamingTopicService;
 
-    @Autowired
-    TwitterApiKeyService twitterApiKeyService;
+	@Autowired
+	DatasetService datasetService;
 
-    @Autowired
-    DatastoreService datastoreService;
-    
-    Execution execution;
-    
-    @Autowired
-    TwitterStreamingService twitterStreamingService;
-    
-    ArrayList<TwitterStreamingListener> listeners;
-    TwitterStream twitterStream = null;
-    
-    
-    
-    
-    StreamController streamController;
-    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-    DateFormat dateOnlyFormat = new SimpleDateFormat("yyyy-MM-dd");
+	@Autowired
+	TwitterApiKeyService twitterApiKeyService;
+
+	@Autowired
+	DatastoreService datastoreService;
+
+	Execution execution;
+
+	@Autowired
+	TwitterStreamingService twitterStreamingService;
+
+	ArrayList<TwitterStreamingListener> listeners;
+	TwitterStream twitterStream = null;
+
+	Integer apiKeysIndex = 0;
+
+	StreamController streamController;
+	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+	DateFormat dateOnlyFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 	public void executeStreaming(Execution execution) {
+
+		String msg = "";
+		try {
+			log.info("Initializing execution...");
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+		}
+
+		try {
+			Integer id = execution.getId();
+			msg = "Starting twitter streaming extraction <" + id + ">.";
+			log.info(msg);
+			execution.appendLog(msg);
+
+			// Changing execution state
+			execution.setStatus(ExecutionStatus.Running);
+			execution = executionService.save(execution);
+
+			StreamingTopic streamingTopic = streamingTopicService
+					.findOne(execution.getStreamingTopic().getId());
+
+			// Get twitter keys
+			List<TwitterApiKey> apiKeys = twitterApiKeyService
+					.getEnabledTwitterApiKeys();
+			for (TwitterApiKey key : apiKeys) {
+				log.info("Key available: " + key);
+			}
+
+			Integer apiKeysCount = apiKeys.size();
+			if (apiKeysCount == 0) {
+				msg = "There are no Api Keys available. Aborting execution.";
+				log.info(msg);
+				execution.appendLog(msg);
+				execution.setStatus(ExecutionStatus.Aborted);
+				executionService.save(execution);
+				return;
+			}
+
+			// Solo se crea el streaming si no existe ya
+			if (twitterStream == null) {
+
+				twitterStream = twitterStreamingService.configure(apiKeys
+						.get(apiKeysIndex));
+			}
+
+			if (listeners == null) {
+				listeners = new ArrayList<TwitterStreamingListener>();
+			}
+
+			msg = "Extraction will begin with Api Key <"
+					+ apiKeys.get(apiKeysIndex).getDescription() + ">";
+			log.info(msg);
+			execution.appendLog(msg);
+			executionService.save(execution);
+
+			FilterQuery query = new FilterQuery();
+			TwitterStreamingListener listener = new TwitterStreamingListener(
+					streamingTopic, execution, datastoreService,
+					executionService);
+			twitterStream.shutdown();
+			twitterStream.addListener(listener);
+			listeners.add(listener);
+			String[] languages = getLanguages();
+			String[] keywords = getKeywords();
+			log.info("Active Streaming topics: " + keywords.length);
+			query = query.track(keywords).language(languages);
+			streamingTopic.setActive(true);
+			streamingTopicService.save(streamingTopic);
+			twitterStream.filter(query);
+			log.info("Thread" + keywords + "finished");
+		} catch (Exception e) {
+			msg = "An error ocurred while manipulating execution <"
+					+ execution.getId() + ">. Execution aborted.";
+			log.error(msg, e);
+			execution.appendLog(msg);
+			execution.setStatus(ExecutionStatus.Aborted);
+			try {
+				execution = executionService.save(execution);
+			} catch (InvalidExecutionException e1) {
+				log.error("Status couldn't be refreshed on the execution object.");
+			}
+			return;
+		}
+	}
+
+	public void stopStreaming(Execution execution) {
+
+		String msg = "";
+		try {
+			log.info("Initializing execution...");
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+		}
+
+		try {
+			Integer id = execution.getId();
+			msg = "Stopping twitter streaming extraction <" + id + ">.";
+			log.info(msg);
+			execution.appendLog(msg);
+
+			// Changing execution state
+			execution.setStatus(ExecutionStatus.Stopped);
+			execution = executionService.save(execution);
+			StreamingTopic streamingTopic = streamingTopicService
+					.findOne(execution.getStreamingTopic().getId());
+
+			FilterQuery query = new FilterQuery();
+			TwitterStreamingListener listener = new TwitterStreamingListener(
+					streamingTopic, execution, datastoreService,
+					executionService);
+			twitterStream.shutdown();
+			twitterStream.removeListener(listener);
+			listeners.remove(listener);
+			if (!listeners.isEmpty()) {
+				String[] languages = { streamingTopic.getLanguage() };
+				String[] keywords = getKeywords();
+				log.info("Active Streaming topics: " + keywords.length);
+				query = query.track(keywords).language(languages);
+				streamingTopic.setActive(false);
+				streamingTopicService.save(streamingTopic);
+				twitterStream.filter(query);
+			}
+			log.info("Thread finished");
+		} catch (Exception e) {
+			msg = "An error ocurred while manipulating execution <"
+					+ execution.getId() + ">. Execution aborted.";
+			log.error(msg, e);
+			execution.appendLog(msg);
+			execution.setStatus(ExecutionStatus.Aborted);
+			try {
+				execution = executionService.save(execution);
+			} catch (InvalidExecutionException e1) {
+				log.error("Status couldn't be refreshed on the execution object.");
+			}
+			return;
+		}
+	}
+
+	public void useNextAPIKey() {
+		twitterStream.shutdown();
+		String msg = "";
+		List<TwitterApiKey> apiKeys = twitterApiKeyService
+				.getEnabledTwitterApiKeys();
+		for (TwitterApiKey key : apiKeys) {
+			log.info("Key available: " + key);
+		}
 		
-		 String msg = "";
-	        try {
-	            log.info("Initializing execution...");
-	            Thread.sleep(1000);
-	        } catch (InterruptedException e) {
-	        }
+		Integer apiKeysCount = apiKeys.size();
+		if (apiKeysCount == 0) {
+			msg = "There are no Api Keys available. Aborting execution.";
+			// TODO: Para todo el streaming.
+		}
 
-	        try {
-	            Integer id = execution.getId();
-	            msg = "Starting twitter streaming extraction <" + id + ">.";
-	            log.info(msg);
-	            execution.appendLog(msg);
+		// Usar la siguiente API Key (ciclico)
+		apiKeysIndex = (apiKeysIndex + 1) % apiKeysCount;
+		twitterStream = twitterStreamingService.configure(apiKeys.get(apiKeysIndex));
 
-	            // Changing execution state
-	            execution.setStatus(ExecutionStatus.Running);
-	            execution = executionService.save(execution);
+		if (listeners == null) {
+			listeners = new ArrayList<TwitterStreamingListener>();
+		}else{
+			for (TwitterStreamingListener listener : listeners){
+				twitterStream.addListener(listener);
+			}
+		}
+		FilterQuery query = new FilterQuery();
 
-	            StreamingTopic streamingTopic = streamingTopicService.findOne(execution.getStreamingTopic().getId());
-
-	            
-	            // Get twitter keys
-	            List<TwitterApiKey> apiKeys = twitterApiKeyService.getEnabledTwitterApiKeys();
-	            for (TwitterApiKey key : apiKeys) {
-	                log.info("Key available: " + key);
-	            }
-
-	            Integer apiKeysCount = apiKeys.size();
-	            if (apiKeysCount == 0) {
-	                msg = "There are no Api Keys available. Aborting execution.";
-	                log.info(msg);
-	                execution.appendLog(msg);
-	                execution.setStatus(ExecutionStatus.Aborted);
-	                executionService.save(execution);
-	                return;
-	            }
-
-	            Integer apiKeysIndex = 0;
-
-	            //Solo se crea el streaming si no existe ya
-	            if(twitterStream == null){
-	     
-	        		twitterStream = twitterStreamingService.configure(apiKeys.get(apiKeysIndex));
-	    		}
-	            
-	            if(listeners == null){
-	            	listeners = new ArrayList<TwitterStreamingListener>();
-	            }
-	            
-	            msg = "Extraction will begin with Api Key <" + apiKeys.get(apiKeysIndex).getDescription() + ">";
-	            log.info(msg);
-	            execution.appendLog(msg);
-	            executionService.save(execution);
-	            
-	            FilterQuery query = new FilterQuery();
-	            TwitterStreamingListener listener = new TwitterStreamingListener(streamingTopic,execution,datastoreService,executionService);
-	            twitterStream.shutdown();
-	            twitterStream.addListener(listener);
-	            listeners.add(listener);
-	            String[] languages = {streamingTopic.getLanguage()};
-	            String[] keywords = getKeywords();
-	            log.info("Active Streaming topics: " + keywords.length);
-	    		query = query.track(keywords).language(languages);
-	    		streamingTopic.setActive(true);
-	    		streamingTopicService.save(streamingTopic);
-	            twitterStream.filter(query);
-	            log.info("Thread" + keywords + "finished");
-	        } catch (Exception e) {
-	            msg = "An error ocurred while manipulating execution <" + execution.getId() + ">. Execution aborted.";
-	            log.error(msg, e);
-	            execution.appendLog(msg);
-	            execution.setStatus(ExecutionStatus.Aborted);
-	            try {  
-	                execution = executionService.save(execution);
-	            } catch (InvalidExecutionException e1) {
-	                log.error("Status couldn't be refreshed on the execution object.");
-	            }
-	            return;
-	        }
+		String[] languages = getLanguages();
+		String[] keywords = getKeywords();
+		log.info("Active Streaming topics: " + keywords.length);
+		query = query.track(keywords).language(languages);
+		twitterStream.filter(query);
+		msg = "Updated Api Key <"
+				+ apiKeys.get(apiKeysIndex).getDescription() + ">";
+		log.info(msg);
 	}
 
-
-	public void stopStreaming(Execution execution){
-
-		 String msg = "";
-	        try {
-	            log.info("Initializing execution...");
-	            Thread.sleep(1000);
-	        } catch (InterruptedException e) {
-	        }
-
-	        try {
-	            Integer id = execution.getId();
-	            msg = "Stopping twitter streaming extraction <" + id + ">.";
-	            log.info(msg);
-	            execution.appendLog(msg);
-
-	            // Changing execution state
-	            execution.setStatus(ExecutionStatus.Stopped);
-	            execution = executionService.save(execution);
-	            StreamingTopic streamingTopic = streamingTopicService.findOne(execution.getStreamingTopic().getId());
-	           	            
-	            FilterQuery query = new FilterQuery();
-	            TwitterStreamingListener listener = new TwitterStreamingListener(streamingTopic,execution,datastoreService,executionService);
-	            twitterStream.shutdown();
-	            twitterStream.removeListener(listener);
-	            listeners.remove(listener);
-	            if(!listeners.isEmpty()){
-		            String[] languages = {streamingTopic.getLanguage()};
-		            String[] keywords = getKeywords();
-		            log.info("Active Streaming topics: " + keywords.length);
-		    		query = query.track(keywords).language(languages);
-		    		streamingTopic.setActive(false);
-		    		streamingTopicService.save(streamingTopic);
-		            twitterStream.filter(query);
-	            }
-	            log.info("Thread finished");
-	        } catch (Exception e) {
-	            msg = "An error ocurred while manipulating execution <" + execution.getId() + ">. Execution aborted.";
-	            log.error(msg, e);
-	            execution.appendLog(msg);
-	            execution.setStatus(ExecutionStatus.Aborted);
-	            try {  
-	                execution = executionService.save(execution);
-	            } catch (InvalidExecutionException e1) {
-	                log.error("Status couldn't be refreshed on the execution object.");
-	            }
-	            return;
-	        }
-	}
 	public void setExecution(Execution execution) {
-        this.execution = execution;		
+		this.execution = execution;
 	}
-	
-	public String[] getKeywords(){
+
+	public String[] getKeywords() {
 		ArrayList<String> keywords = new ArrayList<String>();
-		for(TwitterStreamingListener listener : listeners){
+		for (TwitterStreamingListener listener : listeners) {
 			keywords.add(listener.getKeywords());
-			
 		}
 		String[] result = {};
 		return keywords.toArray(result);
-		
+
+	}
+	
+	public String[] getLanguages() {
+		ArrayList<String> languages = new ArrayList<String>();
+		for (TwitterStreamingListener listener : listeners) {
+			languages.add(listener.getLanguage());
+		}
+		String[] result = {};
+		return languages.toArray(result);
+
 	}
 }
