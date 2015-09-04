@@ -167,12 +167,12 @@
 								<p class="help-block"><spring:message code="streaming_topic.form.language.help" /></p>
 							</div>
 						</spring:bind>
-						<spring:bind path="statusesPerCall">
+						<spring:bind path="email">
 							<div class="form-group ${status.error ? 'has-error': ''}">
-								<label for="statusesPerCall"><spring:message code="streaming_topic.form.statusesPerCall.label" /></label>
-								<form:input id="statusesPerCall" path="statusesPerCall" type="text" class="form-control" />
-								<form:errors path="statusesPerCall" cssClass="text-danger" />
-								<p class="help-block"><spring:message code="streaming_topic.form.statusesPerCall.help" /></p>
+								<label for="email"><spring:message code="streaming_topic.form.email.label" /></label>
+								<form:input id="email" path="email" type="text" class="form-control" />
+								<form:errors path="email" cssClass="text-danger" />
+								<p class="help-block"><spring:message code="streaming_topic.form.email.help" /></p>
 							</div>
 						</spring:bind>
 						<spring:bind path="statusesPerFullExtraction">

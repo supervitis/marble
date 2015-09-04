@@ -40,4 +40,6 @@ public interface ExecutionService {
 			throws InvalidStreamingTopicException, InvalidExecutionException;
 
 	void useNextAPIKey();
+
+	void sendMail(String string, String message, String string2);
 }

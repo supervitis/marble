@@ -1,6 +1,15 @@
 package org.marble.commons.executor.streaming;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import org.marble.commons.dao.model.Execution;
 import org.marble.commons.dao.model.StreamingStatus;
@@ -26,10 +35,11 @@ public class TwitterStreamingListener implements StatusListener {
 	ExecutionService executionService;
 
 	DatastoreService datastoreService;
-
+	private boolean failure = false;
 	private boolean stopping = false;
 	private Integer streamingTopicId;
 	private String keywords;
+	private ArrayList<double[]> locations;
 	private StreamingTopic streamingTopic;
 	private static final Logger log = LoggerFactory
 			.getLogger(TwitterExtractionExecutor.class);
@@ -46,6 +56,56 @@ public class TwitterStreamingListener implements StatusListener {
 		this.streamingTopicId = streamingTopic.getId();
 		this.executionService = executionService;
 		count = 0;
+		if("".equals(keywords)){
+		Double longitude = streamingTopic.getGeoLongitude();
+		Double latitude = streamingTopic.getGeoLatitude();
+		Double radius = streamingTopic.getGeoRadius();
+		Unit unit = streamingTopic.getGeoUnit();
+		log.info("preparing location");
+			if(longitude != null && latitude != null && radius != null && unit != null){
+				log.info("it has a location");
+				locations = getSquareAroundPoint(latitude,longitude,radius,unit);
+				log.info("Loc *" + locations.get(0)[0] + "*"+ locations.get(0)[1] + "*"+ locations.get(1)[0] + "*"+ locations.get(1)[1] + "*");
+			}
+		}
+	}
+
+	private ArrayList<double[]> getSquareAroundPoint (Double lat, Double lon, Double radius, Unit unit){
+		double R = 6371;
+		double distance = radius.doubleValue();
+		 if(unit == Unit.mi){
+			 distance = distance * 0.621371192;
+		 }
+
+			  double north = (lat*Math.PI/180 + distance/R)*180/Math.PI;
+			  if(north>90) 
+				 north=90;
+
+			  double neast = (lon +(Math.atan2(Math.sin(distance/R)*Math.cos(lat*Math.PI/180), Math.cos(distance/R) - Math.sin(lat*Math.PI/180)*Math.sin(lat*Math.PI/180 + distance/R)))*180/Math.PI);
+			  double nwest = (lon +(Math.atan2(-Math.sin(distance/R)*Math.cos(lat*Math.PI/180), Math.cos(distance/R) - Math.sin(lat*Math.PI/180)*Math.sin(lat*Math.PI/180 + distance/R)))*180/Math.PI);
+
+			  double south = (lat*Math.PI/180 - distance/R)*180/Math.PI;
+			 if(south<-90) 
+				 south=-90;
+			  double seast = (lon +(Math.atan2(Math.sin(distance/R)*Math.cos(lat*Math.PI/180), Math.cos(distance/R) - Math.sin(lat*Math.PI/180)*Math.sin(lat*Math.PI/180 - distance/R)))*180/Math.PI);
+			  double swest = (lon +(Math.atan2(-Math.sin(distance/R)*Math.cos(lat*Math.PI/180), Math.cos(distance/R) - Math.sin(lat*Math.PI/180)*Math.sin(lat*Math.PI/180 - distance/R)))*180/Math.PI);
+
+			  double east = Math.max(seast, neast);
+			  double west = Math.min(swest, nwest);
+			  while(east > 180) 
+					 east-=360;
+			  while(east<=-180)
+				 east+=360;
+			  while(west > 180) 
+					 east-=360;
+			  while(west<=-180)
+				 east+=360;
+			ArrayList<double[]> coords = new ArrayList<double[]>();
+			double [] southwest = {west,south};
+			double [] northeast = {east,north};
+			coords.add(southwest);
+			coords.add(northeast);
+		return coords;
 	}
 
 	@Override
@@ -107,11 +167,19 @@ public class TwitterStreamingListener implements StatusListener {
 	}
 
 	public void onStatus(Status status) {
-
-		String[] kwords = keywords.split(" ");
-		String tweetText = status.getText().toLowerCase();
-		for (String kword : kwords) {
-			if (!tweetText.contains(kword)) {
+		
+		if(!"".equals(keywords)){
+			String[] kwords = keywords.split(" ");
+			String tweetText = status.getText().toLowerCase();
+			for (String kword : kwords) {
+				if (!tweetText.contains(kword)) {
+					return;
+				}
+			}
+		}
+		
+		if(!"".equals(streamingTopic.getLanguage())){
+			if(!streamingTopic.getLanguage().equals(status.getLang())){
 				return;
 			}
 		}
@@ -197,6 +265,7 @@ public class TwitterStreamingListener implements StatusListener {
 				if (datastoreService == null)
 					log.error("Data store is null");
 				datastoreService.insertStreamingStatus(streamingStatus);
+				failure = false;
 			} catch (Exception e) {
 				log.error(e.getMessage());
 			}
@@ -245,6 +314,11 @@ public class TwitterStreamingListener implements StatusListener {
 	}
 
 	public void onException(Exception ex) {
+		if(!failure){
+			failure = true;
+			executionService.sendMail("Marble Streaming Topic" + streamingTopicId, ex.getMessage(),"dani_montalvo34@hotmail.com");
+		}
+		failure = true;
 		executionService.useNextAPIKey(); 
 	}
 
@@ -259,4 +333,9 @@ public class TwitterStreamingListener implements StatusListener {
 	public String getLanguage() {
 		return streamingTopic.getLanguage();
 	}
+
+	public ArrayList<double[]> getLocation() {
+		return locations;
+	}
+	
 }

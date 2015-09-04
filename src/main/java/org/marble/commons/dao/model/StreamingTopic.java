@@ -52,7 +52,6 @@ public class StreamingTopic implements Serializable {
     private String description;
 
     @NotNull
-    @NotEmpty
     @Column(name = "keywords")
     private String keywords;
 
@@ -98,10 +97,9 @@ public class StreamingTopic implements Serializable {
     @Column(name = "language")
     private String language = "en";
 
-    @Min(1)
-    @Max(100)
-    @Column(name = "statuses_per_call")
-    private Integer statusesPerCall;
+    @Pattern(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message = "Must be valid email address")
+    @Column(name = "email")
+    private String email;
 
     @NotNull
     @Digits(fraction = 0, integer = 5)
@@ -231,15 +229,16 @@ public class StreamingTopic implements Serializable {
 		this.geoUnit = geoUnit;
 	}
 
-	public Integer getStatusesPerCall() {
-        return statusesPerCall;
-    }
+	
+    public String getEmail() {
+		return email;
+	}
 
-    public void setStatusesPerCall(Integer statusesPerCall) {
-        this.statusesPerCall = statusesPerCall;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public Integer getStatusesPerFullExtraction() {
+	public Integer getStatusesPerFullExtraction() {
         return statusesPerFullExtraction;
     }
 

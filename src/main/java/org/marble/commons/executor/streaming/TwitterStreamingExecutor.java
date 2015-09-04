@@ -4,6 +4,14 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import org.marble.commons.dao.model.Execution;
 import org.marble.commons.dao.model.StreamingTopic;
@@ -87,7 +95,7 @@ public class TwitterStreamingExecutor implements StreamingExecutor {
 
 			StreamingTopic streamingTopic = streamingTopicService
 					.findOne(execution.getStreamingTopic().getId());
-
+			sendMail("Marble Streaming Topic " + streamingTopic.getId(),msg,streamingTopic.getEmail());
 			// Get twitter keys
 			List<TwitterApiKey> apiKeys = twitterApiKeyService
 					.getEnabledTwitterApiKeys();
@@ -131,12 +139,18 @@ public class TwitterStreamingExecutor implements StreamingExecutor {
 			listeners.add(listener);
 			String[] languages = getLanguages();
 			String[] keywords = getKeywords();
+			double[][] locations = getLocations();
+	
 			log.info("Active Streaming topics: " + keywords.length);
-			query = query.track(keywords).language(languages);
+			query = query.language(languages);
+			if(keywords.length > 0)
+				query = query.track(keywords);
+			if(locations.length > 0)
+				query = query.locations(locations);
 			streamingTopic.setActive(true);
 			streamingTopicService.save(streamingTopic);
 			twitterStream.filter(query);
-			log.info("Thread" + keywords + "finished");
+			log.info("Thread" + keywords[0] + "finished");
 		} catch (Exception e) {
 			msg = "An error ocurred while manipulating execution <"
 					+ execution.getId() + ">. Execution aborted.";
@@ -164,6 +178,7 @@ public class TwitterStreamingExecutor implements StreamingExecutor {
 		try {
 			Integer id = execution.getId();
 			msg = "Stopping twitter streaming extraction <" + id + ">.";
+			
 			log.info(msg);
 			execution.appendLog(msg);
 
@@ -172,7 +187,7 @@ public class TwitterStreamingExecutor implements StreamingExecutor {
 			execution = executionService.save(execution);
 			StreamingTopic streamingTopic = streamingTopicService
 					.findOne(execution.getStreamingTopic().getId());
-
+			sendMail("Marble Streaming Topic " + streamingTopic.getId(),msg,streamingTopic.getEmail());
 			FilterQuery query = new FilterQuery();
 			TwitterStreamingListener listener = new TwitterStreamingListener(
 					streamingTopic, execution, datastoreService,
@@ -235,8 +250,13 @@ public class TwitterStreamingExecutor implements StreamingExecutor {
 
 		String[] languages = getLanguages();
 		String[] keywords = getKeywords();
+		double[][] locations = getLocations();
 		log.info("Active Streaming topics: " + keywords.length);
-		query = query.track(keywords).language(languages);
+		query = query.language(languages);
+		if(keywords.length > 0)
+			query = query.track(keywords);
+		if(locations.length > 0)
+			query = query.locations(locations);
 		twitterStream.filter(query);
 		msg = "Updated Api Key <"
 				+ apiKeys.get(apiKeysIndex).getDescription() + ">";
@@ -250,7 +270,9 @@ public class TwitterStreamingExecutor implements StreamingExecutor {
 	public String[] getKeywords() {
 		ArrayList<String> keywords = new ArrayList<String>();
 		for (TwitterStreamingListener listener : listeners) {
-			keywords.add(listener.getKeywords());
+			if(listener.getKeywords() != "")
+				keywords.add(listener.getKeywords());
+
 		}
 		String[] result = {};
 		return keywords.toArray(result);
@@ -260,10 +282,62 @@ public class TwitterStreamingExecutor implements StreamingExecutor {
 	public String[] getLanguages() {
 		ArrayList<String> languages = new ArrayList<String>();
 		for (TwitterStreamingListener listener : listeners) {
-			languages.add(listener.getLanguage());
+			if(!"".equals(listener.getLanguage())){
+				languages.add(listener.getLanguage());
+			}
 		}
 		String[] result = {};
 		return languages.toArray(result);
+	}
+	
+	public double[][] getLocations() {
+		ArrayList<double[]> locations = new ArrayList<double[]>();
+		for (TwitterStreamingListener listener : listeners) {
+			ArrayList<double[]> listenerLocation =  listener.getLocation();
+			if(listenerLocation != null){
+				locations.addAll(listenerLocation);
+			}
+		}
+		double[][] result = {{}};
+		return locations.toArray(result);
+	}
+	
+	public void sendMail(String subject, String msg, String to) {
 
+		// Sender's email ID needs to be mentioned
+		String from = "daniel@det.uvigo.es";
+
+		// Assuming you are sending email from localhost
+		String host = "jucar.det.uvigo.es";
+
+		// Get system properties
+		Properties properties = System.getProperties();
+
+		// Setup mail server
+		properties.setProperty("mail.smtp.host", host);
+		properties.setProperty("mail.user", "daniel");
+		properties.setProperty("mail.password", "36N0010LK");
+		// Get the default Session object.
+		Session session = Session.getDefaultInstance(properties);
+
+		try {
+			// Create a default MimeMessage object.
+			MimeMessage message = new MimeMessage(session);
+
+			// Set From: header field of the header.
+			message.setFrom(new InternetAddress(from));
+
+			// Set To: header field of the header.
+			message.addRecipient(Message.RecipientType.TO, new InternetAddress(
+					to));
+			message.setSubject(subject);
+			message.setText(msg);
+
+			// Send message
+			Transport.send(message);
+
+		} catch (MessagingException mex) {
+			mex.printStackTrace();
+		}
 	}
 }

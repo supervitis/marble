@@ -308,4 +308,11 @@ public class ExecutionServiceImpl implements ExecutionService {
     public Long count() {
         return executionDao.count();
     }
+
+	@Override
+	public void sendMail(String subject, String message, String to) {
+		log.info("Changing API key");
+        TwitterStreamingExecutor executor = (TwitterStreamingExecutor) context.getBean("twitterStreamingExecutor");
+        executor.sendMail(subject,message,to);
+	}
 }
