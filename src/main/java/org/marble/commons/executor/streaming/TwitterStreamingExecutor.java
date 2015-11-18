@@ -69,6 +69,7 @@ public class TwitterStreamingExecutor implements StreamingExecutor {
 	TwitterStream twitterStream = null;
 
 	Integer apiKeysIndex = 0;
+	boolean updatingAPIKey = false;
 
 	StreamController streamController;
 	DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
@@ -95,7 +96,6 @@ public class TwitterStreamingExecutor implements StreamingExecutor {
 
 			StreamingTopic streamingTopic = streamingTopicService
 					.findOne(execution.getStreamingTopic().getId());
-			sendMail("Marble Streaming Topic " + streamingTopic.getId(),msg,streamingTopic.getEmail());
 			// Get twitter keys
 			List<TwitterApiKey> apiKeys = twitterApiKeyService
 					.getEnabledTwitterApiKeys();
@@ -141,16 +141,27 @@ public class TwitterStreamingExecutor implements StreamingExecutor {
 			String[] keywords = getKeywords();
 			double[][] locations = getLocations();
 	
-			log.info("Active Streaming topics: " + keywords.length);
-			query = query.language(languages);
-			if(keywords.length > 0)
+			boolean needQuery = false;
+			if(languages.length > 0){
+				query = query.language(languages);
+				needQuery = true;
+			}
+			if(keywords.length > 0){
 				query = query.track(keywords);
-			if(locations.length > 0)
+				needQuery = true;
+			}
+			if(locations.length > 0){
 				query = query.locations(locations);
+				needQuery = true;
+			}
 			streamingTopic.setActive(true);
-			streamingTopicService.save(streamingTopic);
-			twitterStream.filter(query);
-			log.info("Thread" + keywords[0] + "finished");
+				streamingTopicService.save(streamingTopic);
+			if(needQuery){
+				twitterStream.filter(query);
+			}else{
+				twitterStream.sample();
+			}
+
 		} catch (Exception e) {
 			msg = "An error ocurred while manipulating execution <"
 					+ execution.getId() + ">. Execution aborted.";
@@ -187,7 +198,6 @@ public class TwitterStreamingExecutor implements StreamingExecutor {
 			execution = executionService.save(execution);
 			StreamingTopic streamingTopic = streamingTopicService
 					.findOne(execution.getStreamingTopic().getId());
-			sendMail("Marble Streaming Topic " + streamingTopic.getId(),msg,streamingTopic.getEmail());
 			FilterQuery query = new FilterQuery();
 			TwitterStreamingListener listener = new TwitterStreamingListener(
 					streamingTopic, execution, datastoreService,
@@ -196,13 +206,30 @@ public class TwitterStreamingExecutor implements StreamingExecutor {
 			twitterStream.removeListener(listener);
 			listeners.remove(listener);
 			if (!listeners.isEmpty()) {
-				String[] languages = { streamingTopic.getLanguage() };
+				String[] languages = getLanguages();
 				String[] keywords = getKeywords();
-				log.info("Active Streaming topics: " + keywords.length);
-				query = query.track(keywords).language(languages);
+				double[][] locations = getLocations();
+		
+				boolean needQuery = false;
+				if(languages.length > 0){
+					query = query.language(languages);
+					needQuery = true;
+				}
+				if(keywords.length > 0){
+					query = query.track(keywords);
+					needQuery = true;
+				}
+				if(locations.length > 0){
+					query = query.locations(locations);
+					needQuery = true;
+				}
 				streamingTopic.setActive(false);
-				streamingTopicService.save(streamingTopic);
-				twitterStream.filter(query);
+					streamingTopicService.save(streamingTopic);
+				if(needQuery){
+					twitterStream.filter(query);
+				}else{
+					twitterStream.sample();
+				}
 			}
 			log.info("Thread finished");
 		} catch (Exception e) {
@@ -221,6 +248,9 @@ public class TwitterStreamingExecutor implements StreamingExecutor {
 	}
 
 	public void useNextAPIKey() {
+		if(updatingAPIKey)
+			return;
+		updatingAPIKey = true;
 		twitterStream.shutdown();
 		String msg = "";
 		List<TwitterApiKey> apiKeys = twitterApiKeyService
@@ -252,15 +282,35 @@ public class TwitterStreamingExecutor implements StreamingExecutor {
 		String[] keywords = getKeywords();
 		double[][] locations = getLocations();
 		log.info("Active Streaming topics: " + keywords.length);
-		query = query.language(languages);
-		if(keywords.length > 0)
+		boolean needQuery = false;
+		if(languages.length > 0){
+			query = query.language(languages);
+			needQuery = true;
+		}
+		if(keywords.length > 0){
 			query = query.track(keywords);
-		if(locations.length > 0)
+			needQuery = true;
+		}
+		if(locations.length > 0){
 			query = query.locations(locations);
-		twitterStream.filter(query);
+			needQuery = true;
+		}
+
+		if(needQuery){
+			twitterStream.filter(query);
+		}else{
+			twitterStream.sample();
+		}
 		msg = "Updated Api Key <"
 				+ apiKeys.get(apiKeysIndex).getDescription() + ">";
 		log.info(msg);
+		try {
+			Thread.sleep(30000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		updatingAPIKey = false;
 	}
 
 	public void setExecution(Execution execution) {

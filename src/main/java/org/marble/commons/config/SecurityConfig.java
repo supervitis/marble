@@ -58,6 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .antMatchers("/").permitAll()
                         .antMatchers("/rest/execution/*").permitAll()
                         .antMatchers("/topic").permitAll()
+                        .antMatchers("/streaming_topic").permitAll()
                         .regexMatchers("/topic/[0-9]+").permitAll()
                         .regexMatchers("/topic/[0-9]+/execution").permitAll()
                         .regexMatchers("/topic/[0-9]+/plot").permitAll()
@@ -66,12 +67,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .regexMatchers("/execution/[0-9]+").permitAll()
                         .regexMatchers("/plot/[0-9]+").permitAll()
                         .regexMatchers("/plot/topic/[0-9]+").permitAll()
+                        .antMatchers("/streaming_topic/instagram").permitAll()
                         // Urls reserved to Admin and Operators
                         .antMatchers("/topic/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPER')")
                         .antMatchers("/execution/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPER')")
                         .antMatchers("/plot/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPER')")
                         .antMatchers("/rest/execution/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPER')")
-                        .antMatchers("/streaming_topic/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPER')")
+                        //.antMatchers("/streaming_topic/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPER')")
                         .antMatchers("/datasets/**").access("hasRole('ROLE_ADMIN') or hasRole('ROLE_OPER')")
                         // Urls reserved to Admin
 						.antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")

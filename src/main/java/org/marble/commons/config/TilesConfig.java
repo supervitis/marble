@@ -42,13 +42,19 @@ public class TilesConfig extends WebMvcConfigurerAdapter {
         addBaseDefinition("topics_list", "Topics", "<i class='fa fa-tags fa-fw'></i>", Boolean.FALSE);
         addBaseDefinition("topic_info", "Topic Info", "<i class='fa fa-info-circle fa-fw'></i>", Boolean.FALSE);
         
-        // Topics Views
+        //Streaming Topics Views
         addBaseDefinition("streaming_topic_edit", "Edit Topic", "<i class='fa fa-pencil fa-fw'></i>", Boolean.TRUE);
         addBaseDefinition("streaming_topic_create", "streaming_topic_edit", "Create New Streaming Topic", "<i class='fa fa-file-o fa-fw'></i>",
                 Boolean.TRUE);
         addBaseDefinition("streaming_topics_list", "Streaming Topics", "<i class='fa fa-twitter fa-fw'></i>", Boolean.FALSE);
         addBaseDefinition("streaming_topic_info", "Streaming Topic Info", "<i class='fa fa-info-circle fa-fw'></i>", Boolean.FALSE);
         
+     // Instagram Topic Views
+        addBaseDefinition("instagram_topic_edit", "Edit Topic", "<i class='fa fa-pencil fa-fw'></i>", Boolean.TRUE);
+        addBaseDefinition("instagram_topic_create", "instagram_topic_edit", "Create New Instagram Topic", "<i class='fa fa-file-o fa-fw'></i>",
+                Boolean.TRUE);
+        addBaseDefinition("instagram_topics_list", "Instagram Topics", "<i class='fa fa-twitter fa-fw'></i>", Boolean.FALSE);
+        addBaseDefinition("instagram_topic_info", "Instagram Topic Info", "<i class='fa fa-info-circle fa-fw'></i>", Boolean.FALSE);
         
         
 

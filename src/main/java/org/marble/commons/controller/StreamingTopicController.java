@@ -1,5 +1,6 @@
 package org.marble.commons.controller;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.UnknownHostException;
@@ -78,15 +79,14 @@ public class StreamingTopicController {
     @RequestMapping(value = "/{streaming_topicId:[0-9]+}", method = RequestMethod.GET)
     public ModelAndView info(@PathVariable Integer streaming_topicId) throws InvalidStreamingTopicException {
         ModelAndView modelAndView = new ModelAndView();
-        StreamingTopic streamingTopic;
-        streamingTopic = streaming_topicService.findOne(streaming_topicId);
+
         StreamingTopicInfo streaming_topicInfo;
         streaming_topicInfo = streaming_topicService.info(streaming_topicId);
         modelAndView.setViewName("streaming_topic_info");
         modelAndView.addObject("streaming_topicInfo", streaming_topicInfo);
-        modelAndView.addObject("streaming_topic", streamingTopic);
         return modelAndView;
     }
+    
     
     @RequestMapping(value = "/{streamingTopicId:[0-9]+}/download", method = RequestMethod.GET)
     public ModelAndView downloadStreamingTopic(@PathVariable Integer streamingTopicId, HttpServletRequest request, HttpServletResponse response) throws InvalidStreamingTopicException {
@@ -144,16 +144,54 @@ public class StreamingTopicController {
             modelAndView.addObject("streaming_topic", streaming_topic);
             return modelAndView;
         }
-        
+        StreamingTopic oldStreamingTopic = streaming_topicService.findOne(streaming_topicId);
+        boolean wasActive = oldStreamingTopic.getActive();
+        streaming_topic.setActive(wasActive);
         streaming_topic = streaming_topicService.save(streaming_topic);
         
         redirectAttributes.addFlashAttribute("notificationMessage", "StreamingTopicController.streaming_topicModified");
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
         redirectAttributes.addFlashAttribute("notificationLevel", "success");
-        modelAndView.setViewName("redirect:" + basePath + "/streaming_topic/"+ streaming_topic.getId());
+        if(wasActive)
+        	modelAndView.setViewName("redirect:"+ basePath + "/execution/streaming_topic/" + streaming_topicId + "/stop");
+        else
+        	modelAndView.setViewName("redirect:" + basePath + "/streaming_topic/"+ streaming_topic.getId());
         return modelAndView;
     }
 
+    @RequestMapping(value = "/instagram", method = RequestMethod.GET)
+    public void instagramStreamingTopic(HttpServletRequest request, HttpServletResponse response) {
+    	response.setContentType("text/html");
+        String challenge = request.getParameter("hub.challenge");
+        log.info(challenge);
+        PrintWriter out;
+		try {
+			out = response.getWriter();
+	        out.print(challenge);
+	        out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+    }
+    
+    @RequestMapping(value = "/instagram", method = RequestMethod.POST)
+    public void saveInstagramStreamingTopic(HttpServletRequest request, HttpServletResponse response) {
+    	
+    	log.info("new instagram state");
+        BufferedReader reader;
+		try {
+			reader = request.getReader();
+			String line;
+			while ((line = reader.readLine()) != null)
+			      log.info(line);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		response.setStatus(HttpServletResponse.SC_OK);
+        
+    }
     @RequestMapping(value = "/create", method = RequestMethod.GET)
     public ModelAndView create() throws InvalidStreamingTopicException {
         ModelAndView modelAndView = new ModelAndView();
@@ -275,7 +313,7 @@ public class StreamingTopicController {
 
     @RequestMapping(value = "/{streaming_topicId:[0-9]+}/plot/create", method = RequestMethod.POST)
     public ModelAndView createPlotResponse(@PathVariable Integer streaming_topicId,
-            ExecutionModuleParameters moduleParameters) throws InvalidStreamingTopicException {
+    		 ExecutionModuleParameters moduleParameters) throws InvalidStreamingTopicException {
         ModelAndView modelAndView = new ModelAndView();
 
         modelAndView.setViewName("forward:/plot/streaming_topic/" + streaming_topicId + "/create");

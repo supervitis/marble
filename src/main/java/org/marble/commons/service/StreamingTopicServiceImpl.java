@@ -57,7 +57,7 @@ public class StreamingTopicServiceImpl implements StreamingTopicService {
     public void delete(Integer id) {
         streamingTopicDao.delete(id);
         // Remove all the related tweets from the database
-        datastoreService.removeByStreamingTopicId(id, StreamingStatus.class);
+        datastoreService.findAllAndRemoveByStreamingTopicId(id, StreamingStatus.class);
         return;
     }
 
@@ -71,6 +71,7 @@ public class StreamingTopicServiceImpl implements StreamingTopicService {
 
         StreamingTopicInfo streamingTopicInfo = new StreamingTopicInfo();
         streamingTopicInfo.setTopicId(id);
+        streamingTopicInfo.setActive(streamingTopic.getActive());
         try {
             streamingTopicInfo.setTotalStatusesExtracted(datastoreService.countByStreamingTopicId(id, StreamingStatus.class));
 
@@ -98,11 +99,6 @@ public class StreamingTopicServiceImpl implements StreamingTopicService {
         return streamingTopicDao.count();
     }
 
-	@Override
-	public List<StreamingStatus> findAllStatusByStreamingTopicId(Integer id) {
-    	return datastoreService.findByStreamingTopicId(id, StreamingStatus.class);
-	}
-	
 	@Override
 	public DBCursor findCursorByStreamingTopicId(Integer streamingTopicId){
 		return datastoreService.findCursorByStreamingTopicId(streamingTopicId, StreamingStatus.class);

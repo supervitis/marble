@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.mongodb.core.convert.MongoConverter;
 import org.springframework.data.mongodb.core.query.Query;
+import org.marble.commons.dao.model.InstagramStatus;
 import org.marble.commons.dao.model.OriginalStatus;
 import org.marble.commons.dao.model.StreamingStatus;
 import org.marble.commons.dao.model.UploadedStatus;
@@ -53,6 +54,8 @@ public interface DatastoreService {
 	
 	<T> void findAllAndRemoveByDatasetId(Integer datasetId, Class<T> entityClass) throws MongoException;
 	
+	<T>void findAllAndRemoveByInstagramTopicId(Integer instagramTopicId,Class<T> entityClass) throws MongoException;
+	
 
     <T> long countAll(Class<T> entityClass);
     
@@ -60,13 +63,16 @@ public interface DatastoreService {
     
 	<T> long countByStreamingTopicId(Integer id,Class<T> entityClass);
 	
-    
+	<T> long countByInstagramTopicId(Integer id,Class<T> entityClass);
+	
 
     <T> DBCursor findCursorByTopicId(Integer topicId, Class<T> entityClass);
     
 	<T> DBCursor findCursorByDatasetId(Integer datasetId, Class<T> entityClass);
 	
 	<T> DBCursor findCursorByStreamingTopicId(Integer streamingTopicId,	Class<T> entityClass);
+	
+	<T> DBCursor findCursorByInstagramTopicId(Integer instagramTopicId,	Class<T> entityClass);
 	
     <T> DBCursor findCursorForAll(Class<T> entityClass);
     
@@ -79,13 +85,17 @@ public interface DatastoreService {
     
 	<T> T findOneByStreamingTopicIdSortBy(Integer id, String string, Direction asc, Class<T> entityClass);
 	
+	<T> T findOneByInstagramTopicIdSortBy(Integer id, String string, Direction asc, Class<T> entityClass);
+
 	
 	MongoConverter getConverter();
 
-	<T> void removeByStreamingTopicId(Integer streamingTopicId, Class<T> entityClass)
-			throws MongoException;
-
 	<T>void remove(Query query, Class<T> entityClass);
+
+
+
+
+
 
 
 

@@ -71,6 +71,11 @@ public class Execution implements Serializable {
     @JsonBackReference
     private StreamingTopic streamingTopic;
     
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "instagramTopic_id")
+    // @Cascade({ CascadeType.DELETE })
+    @JsonBackReference
+    private InstagramTopic instagramTopic;
 
     @JsonSerialize(using = StringDateSerializer.class)
     @Column(name = "created_at")
@@ -151,6 +156,15 @@ public class Execution implements Serializable {
 
 	public void setStreamingTopic(StreamingTopic streamingTopic) {
 		this.streamingTopic = streamingTopic;
+	}
+	
+	 
+    public InstagramTopic getInstagramTopic() {
+		return instagramTopic;
+	}
+
+	public void setInstagramTopic(InstagramTopic instagramTopic) {
+		this.instagramTopic = instagramTopic;
 	}
 
 	public Date getCreatedAt() {

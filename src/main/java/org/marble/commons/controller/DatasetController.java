@@ -12,12 +12,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.marble.commons.dao.model.Dataset;
+import org.marble.commons.dao.model.StreamingTopic;
 import org.marble.commons.dao.model.UploadedStatus;
 import org.marble.commons.exception.InvalidDatasetException;
 import org.marble.commons.service.DatasetService;
 import org.marble.commons.service.StreamingTopicService;
 import org.marble.commons.service.TopicService;
 import org.marble.commons.util.MarbleUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -40,6 +44,7 @@ import com.mongodb.MongoClient;
 @Controller
 @RequestMapping("/datasets")
 public class DatasetController {
+    private static final Logger log = LoggerFactory.getLogger(DatasetController.class);
 
 	@Autowired
 	DatasetService datasetService;
@@ -65,15 +70,14 @@ public class DatasetController {
 		String basePath = MarbleUtil.getBasePath(request);
         ModelAndView modelAndView = new ModelAndView();
 		try {
-		
-		List<UploadedStatus> uploadedStatuses = datasetService.downloadDataset(datasetId);
+			
 			response.setHeader("Content-Disposition",
                     "attachment;filename=" + datasetService.getDataset(datasetId).getName() + ".json");		
 			PrintWriter out = response.getWriter();
-
-			for(UploadedStatus uploadedStatus : uploadedStatuses){
-				JSONObject jsonObject = new JSONObject(uploadedStatus);
-				out.println(jsonObject.toString());
+			DBCursor cursor = datasetService.findCursorByDatasetId(datasetId);
+			log.error("Conseguido cursor para el id " + datasetId + " con " + cursor.count() + "elementos");
+			while(cursor.hasNext()){
+				out.println(cursor.next().toString());
 			}
 			out.close();
 
@@ -100,7 +104,7 @@ public class DatasetController {
 	@RequestMapping(value = "/edit/{datasetId}", method = RequestMethod.POST)
 	public String save(@PathVariable Integer datasetId,
 			@Valid Dataset dataset, BindingResult result,
-			@RequestParam("file") MultipartFile file,
+			MultipartRequest mpreq,
 			RedirectAttributes redirectAttributes, HttpServletRequest request)
 			throws InvalidDatasetException {
 
@@ -120,7 +124,7 @@ public class DatasetController {
 		}
 
 		try {
-			datasetService.updateDataset(dataset, file);
+			datasetService.updateDataset(dataset, mpreq);
 		} catch (IllegalStateException | IOException e) {
 			modelAndView.addObject("notificationMessage",
 					"DatasetController.editDatasetError");
@@ -151,7 +155,7 @@ public class DatasetController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public ModelAndView create(@Valid Dataset dataset, BindingResult result,
 			RedirectAttributes redirectAttributes, HttpServletRequest request,
-			@RequestParam("file") MultipartFile file)
+			MultipartRequest mpreq)
 			throws InvalidDatasetException {
 
 		String basePath = MarbleUtil.getBasePath(request);
@@ -168,7 +172,8 @@ public class DatasetController {
 			return modelAndView;
 		}
 		try {
-			dataset = datasetService.createDataset(dataset, file);
+			
+			dataset = datasetService.createDataset(dataset, mpreq);
 		} catch (IllegalStateException | IOException e) {
 			modelAndView.addObject("notificationMessage",
 					"DatasetController.editDatasetError");

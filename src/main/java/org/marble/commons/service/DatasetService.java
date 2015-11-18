@@ -7,11 +7,14 @@ import org.marble.commons.dao.model.Dataset;
 import org.marble.commons.dao.model.UploadedStatus;
 import org.marble.commons.exception.InvalidDatasetException;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
+
+import com.mongodb.DBCursor;
 
 public interface DatasetService {
 
 	
-	public Dataset updateDataset(Dataset dataset, MultipartFile file) throws InvalidDatasetException, IllegalStateException, IOException;
+	public Dataset updateDataset(Dataset dataset, MultipartRequest mpreq) throws InvalidDatasetException, IllegalStateException, IOException;
 
 	public Dataset getDataset(Integer id) throws InvalidDatasetException;
 
@@ -20,12 +23,15 @@ public interface DatasetService {
 
 	public void deleteDataset(Integer id);
 
-	public Dataset createDataset(Dataset dataset, MultipartFile file) throws InvalidDatasetException, IllegalStateException, IOException;
+	public Dataset createDataset(Dataset dataset, MultipartRequest mpreq) throws InvalidDatasetException, IllegalStateException, IOException;
 
 	public Dataset getDatasetByName(String name) throws InvalidDatasetException;
 
 	public List<UploadedStatus> downloadDataset(
 			Integer datasetId);
+
+	DBCursor findCursorByDatasetId(Integer datasetId);
+
 
 
 

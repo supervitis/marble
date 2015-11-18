@@ -4,5 +4,6 @@ public enum ExecutionType {
     Extractor,
     Processor,
     Plotter,
-    Streamer
+    Streamer,
+    InstagramExtractor
 }

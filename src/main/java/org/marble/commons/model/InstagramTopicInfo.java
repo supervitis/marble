@@ -2,9 +2,9 @@ package org.marble.commons.model;
 
 import java.util.Date;
 
-public class StreamingTopicInfo {
+public class InstagramTopicInfo {
     
-    private Integer topicId;
+    private Integer instagramTopicId;
     private Boolean active;
     private Long totalStatusesExtracted;
     private Date oldestStatusDate;
@@ -13,12 +13,12 @@ public class StreamingTopicInfo {
     private Long newestStatusId;
     private Long totalStatusesProcessed;
 
-    public Integer getTopicId() {
-        return topicId;
+    public Integer getInstagramTopicId() {
+        return instagramTopicId;
     }
 
-    public void setTopicId(Integer topicId) {
-        this.topicId = topicId;
+    public void setInstagramTopicId(Integer instagramTopicId) {
+        this.instagramTopicId = instagramTopicId;
     }
     
     public Boolean getActive() {

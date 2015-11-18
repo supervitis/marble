@@ -82,10 +82,12 @@ public class DatastoreServiceImpl implements DatastoreService {
     }
     
     @Override
-    public <T> void removeByStreamingTopicId(Integer streamingTopicId, Class<T> entityClass) throws MongoException {
-        Query query = new BasicQuery("{'streamingTopicId': " + streamingTopicId + "}");
-        this.remove(query, entityClass);
+    public <T> void findAllAndRemoveByInstagramTopicId(Integer instagramTopicId, Class<T> entityClass) throws MongoException {
+        Query query = new BasicQuery("{'instagramTopicId': " + instagramTopicId + "}");
+        this.findAllAndRemove(query, entityClass);
     }
+    
+
     
     @Override
     public <T> List<T> findByQuery(Query query, Class<T> entityClass) throws MongoException {
@@ -162,6 +164,18 @@ public class DatastoreServiceImpl implements DatastoreService {
         return cursor;
     }
     
+	@Override
+	public <T> DBCursor findCursorByInstagramTopicId(Integer instagramTopicId,	Class<T> entityClass) {
+		 Document document = entityClass.getAnnotation(Document.class);
+	     DBCollection collection = mongoOperations.getCollection(document.collection());
+
+	     BasicDBObject searchQuery = new BasicDBObject();
+	     searchQuery.put("instagramTopicId", instagramTopicId);
+
+	     DBCursor cursor = collection.find(searchQuery);
+	     return cursor;
+	}
+    
     @Override
     public <T> DBCursor findCursorByDatasetId(Integer datasetId, Class<T> entityClass) {
         Document document = entityClass.getAnnotation(Document.class);
@@ -222,6 +236,14 @@ public class DatastoreServiceImpl implements DatastoreService {
         return this.findOneByQuery(query, entityClass);
     }
     
+	@Override
+	public <T> T findOneByInstagramTopicIdSortBy(Integer instagramTopicId, String field,	Direction direction, Class<T> entityClass) {
+		Query query = new Query();
+        query.addCriteria(Criteria.where("instagramTopicId").is(instagramTopicId));
+        query.with(new Sort(direction, field));
+        return this.findOneByQuery(query, entityClass);
+	}
+    
     @Override
     public MongoConverter getConverter() {
         return mongoOperations.getConverter();
@@ -268,6 +290,17 @@ public class DatastoreServiceImpl implements DatastoreService {
         query.addCriteria(Criteria.where("streamingTopicId").is(streamingTopicId));
         return mongoOperations.count(query, entityClass);
     }
+
+	@Override
+	public <T> long countByInstagramTopicId(Integer instagramTopicId, Class<T> entityClass) {
+		Query query = new Query();
+        query.addCriteria(Criteria.where("instagramTopicId").is(instagramTopicId));
+        return mongoOperations.count(query, entityClass);
+	}
+
+
+
+
 
 
 

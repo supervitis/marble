@@ -23,8 +23,6 @@ public interface StreamingTopicService {
 
     StreamingTopicInfo info(Integer id) throws InvalidStreamingTopicException;
 
-	public List<StreamingStatus> findAllStatusByStreamingTopicId(Integer id);
-
 	DBCursor findCursorByStreamingTopicId(Integer streamingTopicId);
 
 }

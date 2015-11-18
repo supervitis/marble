@@ -86,7 +86,7 @@
 						
 						<div class="form-group">
 						<p>Select the file containing the data in json format and click upload. New entries will be added to the previous dataset</p>
-						<input name="file" type="file" class="form-control" />
+						<input name="file" type="file" class="form-control" multiple="multiple"/>
 						</div>
 
 					</fieldset>

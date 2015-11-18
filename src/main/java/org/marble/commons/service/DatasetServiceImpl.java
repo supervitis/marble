@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.marble.commons.dao.DatasetDao;
 import org.marble.commons.dao.model.Dataset;
+import org.marble.commons.dao.model.StreamingStatus;
 import org.marble.commons.dao.model.UploadedStatus;
 import org.marble.commons.exception.InvalidDatasetException;
 import org.marble.commons.util.MarbleUtil;
@@ -20,9 +21,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartRequest;
 
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.util.JSON;
@@ -38,13 +41,15 @@ public class DatasetServiceImpl implements DatasetService {
 
 	private static final Logger log = LoggerFactory.getLogger(DatasetServiceImpl.class);
 	@Override
-	public Dataset updateDataset(Dataset dataset, MultipartFile mfile)
+	public Dataset updateDataset(Dataset dataset, MultipartRequest mpreq)
 			throws InvalidDatasetException, IllegalStateException, IOException {
 		dataset = datasetDao.save(dataset);
 		if (dataset == null) {
 			throw new InvalidDatasetException();
 		}
-		
+		List<MultipartFile> files = mpreq.getFiles("file");;
+		for (MultipartFile mfile:files){
+		if(!mfile.isEmpty()){
 		File file = MarbleUtil.multipartToFile(mfile);
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(
 				file));
@@ -55,10 +60,13 @@ public class DatasetServiceImpl implements DatasetService {
 			try {
 				datastoreService.save(new UploadedStatus(dataset.getId(), status));
 			} catch (Exception e) {
+				log.error("Excepcion al guardar: " + e.getMessage());
 			}
 		}
-
+		
 		bufferedReader.close();
+		}
+		}
 		return dataset;
 	}
 
@@ -95,12 +103,14 @@ public class DatasetServiceImpl implements DatasetService {
 		return datastoreService.findAll(UploadedStatus.class);
 	}
 	@Override
-	public Dataset createDataset(Dataset dataset, MultipartFile mfile)
+	public Dataset createDataset(Dataset dataset, MultipartRequest mpreq)
 			throws InvalidDatasetException, IllegalStateException, IOException {
 		dataset = datasetDao.save(dataset);
 		if (dataset == null) {
 			throw new InvalidDatasetException();
 		}
+		 List<MultipartFile> files = mpreq.getFiles("file");;
+		for (MultipartFile mfile:files){
 		if(!mfile.isEmpty()){
 		File file = MarbleUtil.multipartToFile(mfile);
 		BufferedReader bufferedReader = new BufferedReader(new FileReader(
@@ -115,10 +125,16 @@ public class DatasetServiceImpl implements DatasetService {
 				log.error("Excepcion al guardar: " + e.getMessage());
 			}
 		}
-
+		
 		bufferedReader.close();
 		}
+		}
 		return dataset;
+	}
+
+	@Override
+	public DBCursor findCursorByDatasetId(Integer datasetId) {
+		return datastoreService.findCursorByDatasetId(datasetId, UploadedStatus.class);
 	}
 	
 
