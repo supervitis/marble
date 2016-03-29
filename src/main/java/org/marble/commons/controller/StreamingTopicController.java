@@ -142,6 +142,10 @@ public class StreamingTopicController {
             modelAndView.addObject("notificationLevel", "danger");
             modelAndView.setViewName("streaming_topic_edit");
             modelAndView.addObject("streaming_topic", streaming_topic);
+            Map<String,String> geoUnits= new LinkedHashMap<String,String>();
+        	geoUnits.put("km", "Kilometers");
+        	geoUnits.put("mi", "Miles");
+        	modelAndView.addObject("geoUnits", geoUnits);
             return modelAndView;
         }
         StreamingTopic oldStreamingTopic = streaming_topicService.findOne(streaming_topicId);
@@ -220,6 +224,10 @@ public class StreamingTopicController {
             modelAndView.addObject("notificationLevel", "danger");
             modelAndView.setViewName("streaming_topic_create");
             modelAndView.addObject("streaming_topic", streaming_topic);
+            Map<String,String> geoUnits= new LinkedHashMap<String,String>();
+        	geoUnits.put("km", "Kilometers");
+        	geoUnits.put("mi", "Miles");
+        	modelAndView.addObject("geoUnits", geoUnits);
             return modelAndView;
         }
 

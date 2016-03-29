@@ -9,9 +9,11 @@ import javax.transaction.Transactional;
 
 import org.marble.commons.dao.ExecutionDao;
 import org.marble.commons.dao.model.Execution;
+import org.marble.commons.dao.model.InstagramTopic;
 import org.marble.commons.dao.model.StreamingTopic;
 import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidExecutionException;
+import org.marble.commons.exception.InvalidInstagramTopicException;
 import org.marble.commons.exception.InvalidModuleException;
 import org.marble.commons.exception.InvalidStreamingTopicException;
 import org.marble.commons.exception.InvalidTopicException;
@@ -44,6 +46,9 @@ public class ExecutionServiceImpl implements ExecutionService {
     
     @Autowired
     StreamingTopicService streamingTopicService;
+    
+    @Autowired
+    InstagramTopicService instagramTopicService;
 
     @Autowired
     PlotService plotService;
@@ -117,6 +122,34 @@ public class ExecutionServiceImpl implements ExecutionService {
 
         return execution.getId();
     }
+    
+    @Override
+    @Transactional
+    public Integer executeInstagramExtractor(Integer topicId) throws InvalidInstagramTopicException, InvalidExecutionException {
+        log.info("Executing the extractor for Instagram topic <" + topicId + ">.");
+
+        Execution execution = new Execution();
+
+        InstagramTopic instagramtopic = instagramTopicService.findOne(topicId);
+
+        execution.setStatus(ExecutionStatus.Initialized);
+        execution.setType(ExecutionType.InstagramExtractor);
+        instagramtopic.getExecutions().add(execution);
+        execution.setInstagramTopic(instagramtopic);
+        instagramtopic = instagramTopicService.save(instagramtopic);
+
+        execution = this.save(execution);
+
+        log.info("Starting execution <" + execution.getId() + ">... now!");
+        ExtractorExecutor executor = (ExtractorExecutor) context.getBean("instagramExtractionExecutor");
+        executor.setExecution(execution);
+        taskExecutor.execute(executor);
+
+        log.info("Executor launched.");
+
+        return execution.getId();
+    }
+    
     
     @Override
     @Transactional
@@ -314,5 +347,11 @@ public class ExecutionServiceImpl implements ExecutionService {
 		log.info("Changing API key");
         TwitterStreamingExecutor executor = (TwitterStreamingExecutor) context.getBean("twitterStreamingExecutor");
         executor.sendMail(subject,message,to);
+	}
+
+	@Override
+	public List<Execution> getExecutionsPerInstagramTopic(Integer instagramTopicId) {
+		  List<Execution> executions = executionDao.findByInstagramTopic_id(instagramTopicId);
+	        return executions;
 	}
 }

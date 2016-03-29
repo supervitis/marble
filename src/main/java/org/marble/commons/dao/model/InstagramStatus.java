@@ -1,6 +1,6 @@
 package org.marble.commons.dao.model;
 
-import java.util.Date;
+import java.util.Arrays;
 
 import javax.persistence.Id;
 
@@ -9,8 +9,8 @@ import org.marble.commons.dao.model.instagram.Comment;
 import org.marble.commons.dao.model.instagram.Image;
 import org.marble.commons.dao.model.instagram.InstagramUser;
 import org.marble.commons.dao.model.instagram.Location;
+import org.marble.commons.dao.model.instagram.UserPhotoTag;
 import org.marble.commons.dao.model.instagram.Video;
-
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -20,10 +20,10 @@ public class InstagramStatus {
 
     @Indexed
     private Integer instagramTopicId;
-    private Date createdTime;
+    private Long createdTime;
 
     @Id
-    private long id;
+    private String id;
     private String[] tags;
     private String type;
     private Location location;
@@ -36,7 +36,7 @@ public class InstagramStatus {
     private Image imageStandardResolution;
     private Video videoLowResolution;
     private Video videoStandardResolution;
-    private InstagramUser[] usersInPhoto;
+    private UserPhotoTag[] usersInPhoto;
     private Caption caption;
     private InstagramUser user;
   
@@ -44,6 +44,37 @@ public class InstagramStatus {
     public InstagramStatus() {
 
     }
+
+    
+
+	public InstagramStatus(Integer instagramTopicId, Long createdTime, String id,
+			String[] tags, String type, Location location, Comment[] comments,
+			String filter, String link, InstagramUser[] likes,
+			Image imageLowResolution, Image imageThumbnail,
+			Image imageStandardResolution, Video videoLowResolution,
+			Video videoStandardResolution, UserPhotoTag[] usersInPhoto,
+			Caption caption, InstagramUser user) {
+		super();
+		this.instagramTopicId = instagramTopicId;
+		this.createdTime = createdTime;
+		this.id = id;
+		this.tags = tags;
+		this.type = type;
+		this.location = location;
+		this.comments = comments;
+		this.filter = filter;
+		this.link = link;
+		this.likes = likes;
+		this.imageLowResolution = imageLowResolution;
+		this.imageThumbnail = imageThumbnail;
+		this.imageStandardResolution = imageStandardResolution;
+		this.videoLowResolution = videoLowResolution;
+		this.videoStandardResolution = videoStandardResolution;
+		this.usersInPhoto = usersInPhoto;
+		this.caption = caption;
+		this.user = user;
+	}
+
 
 
 	public Integer getInstagramTopicId() {
@@ -56,22 +87,22 @@ public class InstagramStatus {
 	}
 
 
-	public Date getCreatedTime() {
+	public Long getCreatedTime() {
 		return createdTime;
 	}
 
 
-	public void setCreatedTime(Date createdTime) {
+	public void setCreatedTime(Long createdTime) {
 		this.createdTime = createdTime;
 	}
 
 
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 
 
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -196,12 +227,12 @@ public class InstagramStatus {
 	}
 
 
-	public InstagramUser[] getUsersInPhoto() {
+	public UserPhotoTag[] getUsersInPhoto() {
 		return usersInPhoto;
 	}
 
 
-	public void setUsersInPhoto(InstagramUser[] usersInPhoto) {
+	public void setUsersInPhoto(UserPhotoTag[] usersInPhoto) {
 		this.usersInPhoto = usersInPhoto;
 	}
 
@@ -223,6 +254,24 @@ public class InstagramStatus {
 
 	public void setUser(InstagramUser user) {
 		this.user = user;
+	}
+
+
+
+	@Override
+	public String toString() {
+		return "InstagramStatus [instagramTopicId=" + instagramTopicId
+				+ ", createdTime=" + createdTime + ", id=" + id + ", tags="
+				+ Arrays.toString(tags) + ", type=" + type + ", location="
+				+ location + ", comments=" + Arrays.toString(comments)
+				+ ", filter=" + filter + ", link=" + link + ", likes="
+				+ Arrays.toString(likes) + ", imageLowResolution="
+				+ imageLowResolution + ", imageThumbnail=" + imageThumbnail
+				+ ", imageStandardResolution=" + imageStandardResolution
+				+ ", videoLowResolution=" + videoLowResolution
+				+ ", videoStandardResolution=" + videoStandardResolution
+				+ ", usersInPhoto=" + Arrays.toString(usersInPhoto)
+				+ ", caption=" + caption + ", user=" + user + "]";
 	}
  
     

@@ -5,11 +5,14 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.marble.commons.dao.model.Execution;
+import org.marble.commons.dao.model.InstagramTopic;
 import org.marble.commons.dao.model.Topic;
 import org.marble.commons.exception.InvalidExecutionException;
+import org.marble.commons.exception.InvalidInstagramTopicException;
 import org.marble.commons.exception.InvalidStreamingTopicException;
 import org.marble.commons.exception.InvalidTopicException;
 import org.marble.commons.service.ExecutionService;
+import org.marble.commons.service.InstagramTopicService;
 import org.marble.commons.service.StreamingTopicService;
 import org.marble.commons.service.TopicService;
 import org.marble.commons.util.MarbleUtil;
@@ -33,6 +36,9 @@ public class ExecutionController {
 
     @Autowired
     TopicService topicService;
+    
+    @Autowired
+    InstagramTopicService instagramTopicService;
 
     @RequestMapping(value = "/{executionId:[0-9]+}", method = RequestMethod.GET)
     public ModelAndView view(@PathVariable Integer executionId) throws InvalidExecutionException {
@@ -45,6 +51,7 @@ public class ExecutionController {
         execution = executionService.findOne(executionId);
         modelAndView.addObject("topic", execution.getTopic());
         modelAndView.addObject("streaming_topic", execution.getStreamingTopic());
+        modelAndView.addObject("instagram_topic", execution.getInstagramTopic());
         modelAndView.setViewName("execution_view");
         modelAndView.addObject("execution", execution);
         return modelAndView;
@@ -61,6 +68,7 @@ public class ExecutionController {
         modelAndView.setViewName("executions_list");
         modelAndView.addObject("executions", executions);
         modelAndView.addObject("topic", topic);
+        modelAndView.addObject("instagram_topic",null);
         return modelAndView;
     }
 
@@ -77,6 +85,43 @@ public class ExecutionController {
             redirectAttributes.addFlashAttribute("notificationIcon", "fa-exclamation-triangle");
             redirectAttributes.addFlashAttribute("notificationLevel", "danger");
             return "redirect:" + basePath + "topic/" + topicId + "/execution";
+        }
+
+        // Setting message
+        redirectAttributes.addFlashAttribute("notificationMessage", "ExecutionController.extractorExecuted");
+        redirectAttributes.addFlashAttribute("notificationIcon", "fa-sign-in");
+        redirectAttributes.addFlashAttribute("notificationLevel", "success");
+        return "redirect:" + basePath + "/execution/" + executionId;
+    }
+    
+    @RequestMapping(value = "/instagram_topic/{instagramTopicId:[0-9]+}", method = RequestMethod.GET)
+    public ModelAndView showPerInstagramTopic(@PathVariable Integer instagramTopicId) throws InvalidExecutionException,
+            InvalidInstagramTopicException {
+        ModelAndView modelAndView = new ModelAndView();
+
+        InstagramTopic instagramTopic = instagramTopicService.findOne(instagramTopicId);
+        List<Execution> executions;
+        executions = executionService.getExecutionsPerInstagramTopic(instagramTopicId);
+        modelAndView.setViewName("executions_list");
+        modelAndView.addObject("executions", executions);
+        modelAndView.addObject("instagram_topic", instagramTopic);
+        modelAndView.addObject("topic",null);
+        return modelAndView;
+    }
+    
+    @RequestMapping(value = "/instagram_topic/{instagramTopicId:[0-9]+}/extract", method = RequestMethod.GET)
+    public String executeInstagram(@PathVariable Integer instagramTopicId, RedirectAttributes redirectAttributes,
+            HttpServletRequest request){
+        String basePath = MarbleUtil.getBasePath(request);
+        Integer executionId = 0;
+        try {
+            executionId = executionService.executeInstagramExtractor(instagramTopicId);
+        } catch (InvalidExecutionException | InvalidInstagramTopicException  e) {
+            // Setting message
+            redirectAttributes.addFlashAttribute("notificationMessage", "ExecutionController.extractorExecutionFailed");
+            redirectAttributes.addFlashAttribute("notificationIcon", "fa-exclamation-triangle");
+            redirectAttributes.addFlashAttribute("notificationLevel", "danger");
+            return "redirect:" + basePath + "instagram_topic/" + instagramTopicId + "/execution";
         }
 
         // Setting message

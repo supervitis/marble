@@ -45,26 +45,18 @@ public class InstagramTopic implements Serializable {
     @org.hibernate.validator.constraints.Length(max = 20)
     @Pattern(regexp = "[a-zA-Z_0-9-]+")
     private String name;
+    
     @Column(name = "description")
     private String description;
 
     @NotNull
     @Column(name = "keywords")
     private String keywords;
-
-
-    @Column(name = "active")
-    private boolean active = false;
    
-
-	@Digits(fraction = 0, integer = 24)
+	@Digits(fraction = 0, integer = 32)
     @Column(name = "upper_limit")
-    private Long upperLimit;
-
-    @Digits(fraction = 0, integer = 24)
-    @Column(name = "lower_limit")
-    private Long lowerLimit;
-    
+    private Long upperLimit = 0L;
+	
     //Dates and geolocation
     @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm")
     @Column(name = "sinceDate")
@@ -76,32 +68,27 @@ public class InstagramTopic implements Serializable {
     
     @Min(-90)
     @Max(90)
+    @NotNull
     @Column(name = "geoLatitude")
     private Double geoLatitude;
     
     @Min(-180)
     @Max(180)
+    @NotNull
     @Column(name = "geoLongitude")
     private Double geoLongitude;
     
+    @NotNull
     @Column(name = "geoRadius")
     private Double geoRadius;
     
     @Column(name = "geoUnit")
     private Unit geoUnit;
 
-    @Pattern(regexp = "[a-zA-Z]{2}|")
-    @Column(name = "language")
-    private String language = "en";
-
-    @Pattern(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message = "Must be valid email address")
-    @Column(name = "email")
-    private String email;
-
     @NotNull
     @Digits(fraction = 0, integer = 5)
     @Column(name = "statuses_per_full_extraction")
-    private Integer statusesPerFullExtraction = 1000;
+    private Integer statusesPerFullExtraction = 10000;
 
 
     @OneToMany(mappedBy = "instagramTopic", fetch = FetchType.EAGER)
@@ -144,39 +131,14 @@ public class InstagramTopic implements Serializable {
     public void setKeywords(String keywords) {
         this.keywords = keywords;
     }
-    
-    public boolean getActive() {
- 		return active;
- 	}
 
- 	public void setActive(boolean active) {
- 		this.active = active;
- 	}
-    
-
-    public Long getUpperLimit() {
+	public Long getUpperLimit() {
         return upperLimit;
     }
 
     public void setUpperLimit(Long upperLimit) {
         this.upperLimit = upperLimit;
     }
-
-    public Long getLowerLimit() {
-        return lowerLimit;
-    }
-
-    public void setLowerLimit(Long lowerLimit) {
-        this.lowerLimit = lowerLimit;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }   
 
     public Date getSinceDate() {
 		return sinceDate;
@@ -224,15 +186,6 @@ public class InstagramTopic implements Serializable {
 
 	public void setGeoUnit(Unit geoUnit) {
 		this.geoUnit = geoUnit;
-	}
-
-	
-    public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	public Integer getStatusesPerFullExtraction() {

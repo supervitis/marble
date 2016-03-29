@@ -18,6 +18,7 @@ import org.springframework.data.mongodb.core.query.BasicQuery;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
+import org.marble.commons.dao.model.InstagramStatus;
 import org.marble.commons.dao.model.OriginalStatus;
 import org.marble.commons.dao.model.StreamingStatus;
 import org.marble.commons.dao.model.UploadedStatus;
@@ -257,8 +258,13 @@ public class DatastoreServiceImpl implements DatastoreService {
 	@Override
 	public void insertStreamingStatus(StreamingStatus streamingStatus) {
         mongoOperations.save(streamingStatus);
-
 	}
+	
+	@Override
+	public void insertInstagramStatus(InstagramStatus status) {
+		mongoOperations.save(status);
+	}
+
     
     @Override
     public void insertUploadedStatus(UploadedStatus uploadedStatus) {
@@ -297,6 +303,7 @@ public class DatastoreServiceImpl implements DatastoreService {
         query.addCriteria(Criteria.where("instagramTopicId").is(instagramTopicId));
         return mongoOperations.count(query, entityClass);
 	}
+
 
 
 

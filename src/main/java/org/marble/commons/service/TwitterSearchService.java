@@ -28,4 +28,6 @@ public interface TwitterSearchService {
     
     public List<Status> search(String keyword, long maxId, String since, String until, GeoLocation geolocation, Double radius, Unit unit) throws TwitterException;
 
+	
+
 }

@@ -1,17 +1,24 @@
 package org.marble.commons.executor.extractor;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.marble.commons.dao.model.Execution;
+import org.marble.commons.dao.model.InstagramStatus;
 import org.marble.commons.dao.model.OriginalStatus;
 import org.marble.commons.dao.model.InstagramTopic;
 import org.marble.commons.dao.model.TwitterApiKey;
+import org.marble.commons.exception.EmptyInstagramResponseException;
 import org.marble.commons.exception.InvalidExecutionException;
+import org.marble.commons.exception.InvalidInstagramTopicException;
 import org.marble.commons.model.ExecutionStatus;
 import org.marble.commons.service.DatastoreService;
 import org.marble.commons.service.ExecutionService;
+import org.marble.commons.service.InstagramSearchService;
 import org.marble.commons.service.InstagramTopicService;
 import org.marble.commons.service.TwitterApiKeyService;
 import org.marble.commons.service.TwitterSearchService;
@@ -23,6 +30,7 @@ import org.springframework.stereotype.Component;
 
 import twitter4j.GeoLocation;
 import twitter4j.Query.Unit;
+import twitter4j.JSONException;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 
@@ -50,7 +58,7 @@ public class InstagramExtractionExecutor implements ExtractorExecutor {
     Execution execution;
 
     @Autowired
-    TwitterSearchService twitterSearchService;
+    InstagramSearchService instagramSearchService;
 
     @Override
     public void setExecution(Execution execution) {
@@ -82,117 +90,115 @@ public class InstagramExtractionExecutor implements ExtractorExecutor {
 
             // Get the associated instagramTopic
             InstagramTopic instagramTopic = instagramTopicService.findOne(execution.getInstagramTopic().getId());
-
-            // Get twitter keys
-            List<TwitterApiKey> apiKeys = twitterApiKeyService.getEnabledTwitterApiKeys();
-            for (TwitterApiKey key : apiKeys) {
-                log.info("Key available: " + key);
+            
+            //Here we will have a list with all available tokens
+            List<String> instagramAccessTokens = new ArrayList<String>();
+    		String instagramAccessToken = "2205827063.a33b3a4.5ceb14860bc8429886c9551b8e42c048";
+    		instagramAccessTokens.add(instagramAccessToken);
+            for (String token : instagramAccessTokens) {
+                log.info("Key available: " + token);
             }
 
-            Integer apiKeysCount = apiKeys.size();
-            if (apiKeysCount == 0) {
-                msg = "There are no Api Keys available. Aborting execution.";
+            
+            Integer tokenCount = instagramAccessTokens.size();
+            if (tokenCount == 0) {
+                msg = "There are no tokens available. Aborting execution.";
                 log.info(msg);
                 execution.appendLog(msg);
                 execution.setStatus(ExecutionStatus.Aborted);
                 executionService.save(execution);
+                instagramTopic = instagramTopicService.findOne(execution.getInstagramTopic().getId());
+                instagramTopicService.save(instagramTopic);
                 return;
             }
 
-            Integer apiKeysIndex = 0;
+            Integer tokenIndex = 0;
             String keyword = instagramTopic.getKeywords();
 
-            twitterSearchService.configure(apiKeys.get(apiKeysIndex));
+            instagramSearchService.configure(instagramAccessTokens.get(tokenIndex));
 
-            msg = "Extraction will begin with Api Key <" + apiKeys.get(apiKeysIndex).getDescription() + ">";
+            msg = "Extraction will begin with Api Key <" + instagramAccessTokens.get(tokenIndex) + ">";
             log.info(msg);
             execution.appendLog(msg);
             executionService.save(execution);
 
-            long lastId = 0;
-            if (instagramTopic.getUpperLimit() != null) {
-                lastId = instagramTopic.getUpperLimit();
-            }
-
-            long maxStatuses = 200;
+            long maxStatuses = 0;
             if (instagramTopic.getStatusesPerFullExtraction() != null) {
                 maxStatuses = instagramTopic.getStatusesPerFullExtraction();
             }
             
-            String sinceDate = null;
-            if(instagramTopic.getSinceDate() != null)
-            	sinceDate = dateOnlyFormat.format(instagramTopic.getSinceDate());
-            
-            String untilDate = null;
+            Long untilDate = null;
             if(instagramTopic.getUntilDate() != null)
-            	untilDate = dateOnlyFormat.format(instagramTopic.getUntilDate());
+            	untilDate = instagramTopic.getUntilDate().getTime()/1000;
             
             Double longitude = instagramTopic.getGeoLongitude();
             Double latitude = instagramTopic.getGeoLatitude();
             Double radius = instagramTopic.getGeoRadius();
             Unit unit = instagramTopic.getGeoUnit();
             
-            GeoLocation geoLoc = null;
-            if (longitude != null && latitude != null){
-            	geoLoc = new GeoLocation(latitude.doubleValue(), longitude.doubleValue());
-            }
+            Long maxDate = untilDate;
             
-
             int count = 0;
             do {
-                List<Status> statusList;
-
-                try {
-                    statusList = twitterSearchService.search(keyword, lastId, sinceDate, untilDate, geoLoc, radius, unit );
-                } catch (TwitterException e) {
-                    // TODO Auto-generated catch block
-
-                    apiKeysIndex++;
-                    if (apiKeysIndex >= apiKeysCount) {
+                List<InstagramStatus> statusList = new ArrayList<InstagramStatus>();
+                try{
+                statusList = instagramSearchService.search(instagramTopic.getId(),latitude,longitude, radius,unit, maxDate);
+                }catch(EmptyInstagramResponseException e){
+                	maxDate = maxDate - 60;
+                    instagramTopic.setUpperLimit(maxDate);
+                    instagramTopic = instagramTopicService.save(instagramTopic);
+                    log.error("The query returned no statuses",e);
+                }catch(JSONException e){
+                	log.error("Error in the returned JSON",e);
+                }catch(MalformedURLException e){
+                	log.error("The URL was not correct",e);
+                }catch(IOException e){
+                	log.error("There was an IO error",e);
+                	String errorMsg = e.getLocalizedMessage();
+                	if(errorMsg.contains("response code: 420")){
+                    tokenIndex++;
+                    if (tokenIndex >= tokenCount) {
                         msg = "API Rate exceeded for all keys. Waiting a minute.";
                         log.warn(msg, e);
                         execution.appendLog(msg);
                         executionService.save(execution);
 
-                        apiKeysIndex = 0;
+                        tokenIndex = 0;
                         try {
                             Thread.sleep(60000);
                         } catch (InterruptedException e1) {
-                            // TODO Auto-generated catch block
                             log.error("Error while sleeping.", e);
                         }
-
-                    } else {
-
                     }
-                    msg = "API Rate exceeded. Changing to API Key <" + apiKeys.get(apiKeysIndex).getDescription()
-                            + ">.";
+                    msg = "API Rate exceeded. Changing to API Key <" + instagramAccessTokens.get(tokenIndex) + ">.";
                     log.warn(msg, e);
                     execution.appendLog(msg);
                     executionService.save(execution);
 
                     // Changing to another API Key
-                    twitterSearchService.configure((apiKeys.get(apiKeysIndex)));
+                    instagramSearchService.configure((instagramAccessTokens.get(tokenIndex)));
                     continue;
+                	}
                 }
-                if (statusList != null && statusList.size() > 0) {
 
-                    for (Status status : statusList) {
-                        lastId = status.getId();
-                        log.info("UpperLimit: " + lastId + ", count: " + count + ", maxStatuses: " + maxStatuses);
-                        instagramTopic.setUpperLimit(lastId);
-                        // save
-                        OriginalStatus originalStatus = new OriginalStatus(status, instagramTopic.getId());
-                        if(instagramTopic.getLowerLimit() != null && instagramTopic.getLowerLimit() >= originalStatus.getId()) {
-                            inRange = false;
-                            msg = "Reached the lower limit for this instagramTopic.";
+                if (statusList != null && statusList.size() > 0) {
+                    System.out.println("LIST OF STATUS SIZE = " + statusList.size());
+                    for (InstagramStatus status : statusList) {
+                        maxDate = status.getCreatedTime();
+                        log.info("UpperLimit: " + maxDate + ", count: " + count + ", maxStatuses: " + maxStatuses + ", sinceDate: " + instagramTopic.getSinceDate().getTime()/1000 );
+                        instagramTopic.setUpperLimit(maxDate);
+                        instagramTopic = instagramTopicService.save(instagramTopic);                       
+                        if(instagramTopic.getSinceDate() != null && (instagramTopic.getSinceDate().getTime()/1000) >= maxDate) {
+                            
+                        	inRange = false;
+                            msg = "Reached the minimum date for this Instagram Topic.";
                             log.info(msg);
                             execution.appendLog(msg);
                             executionService.save(execution);
                             break;
                         }
 
-                        datastoreService.insertOriginalStatus(originalStatus);
+                        datastoreService.insertInstagramStatus(status);
                         count++;
                         if (count >= maxStatuses) {
                             break;
@@ -201,21 +207,14 @@ public class InstagramExtractionExecutor implements ExtractorExecutor {
                     }
 
                 }
-                else {
-                    // No statuses extracted, it might be out of availability.
-                    msg = "No statuses available for extraction at this point.";
-                    log.info(msg);
-                    execution.appendLog(msg);
-                    executionService.save(execution);
-                    break;
-                }
+                
+                
                 instagramTopicService.save(instagramTopic);
 
                 msg = "Statuses extracted so far: <" + count + ">";
                 log.info(msg);
                 execution.appendLog(msg);
                 executionService.save(execution);
-
             } while (count < maxStatuses && inRange);
 
             msg = "Extraction of this instagramTopic has finished.";

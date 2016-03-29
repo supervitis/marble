@@ -1,16 +1,20 @@
 package org.marble.commons.dao.model.instagram;
 
-import java.util.Date;
+
+import twitter4j.JSONException;
+import twitter4j.JSONObject;
 
 public class Caption {
 
-	private Integer captionId;
-	private Date createdTime;
+	private String captionId;
+	private Long createdTime;
 	private String text;
 	private InstagramUser user;
 	
-	
-	public Caption(Integer captionId, Date createdTime, String text,
+	public Caption(){
+		
+	}
+	public Caption(String captionId, Long createdTime, String text,
 			InstagramUser user) {
 		super();
 		this.captionId = captionId;
@@ -20,22 +24,31 @@ public class Caption {
 	}
 
 
-	public Integer getCaptionId() {
+	public Caption(JSONObject cap) throws JSONException {
+		this.captionId = cap.getString("id");
+		this.createdTime = new Long(cap.getLong("created_time"));
+		this.text = cap.getString("text");
+		this.user = new InstagramUser(cap.getJSONObject("from"));
+		
+	}
+
+
+	public String getCaptionId() {
 		return captionId;
 	}
 
 
-	public void setCaptionId(Integer captionId) {
+	public void setCaptionId(String captionId) {
 		this.captionId = captionId;
 	}
 
 
-	public Date getCreatedTime() {
+	public Long getCreatedTime() {
 		return createdTime;
 	}
 
 
-	public void setCreatedTime(Date createdTime) {
+	public void setCreatedTime(Long createdTime) {
 		this.createdTime = createdTime;
 	}
 
@@ -58,9 +71,12 @@ public class Caption {
 	public void setUser(InstagramUser user) {
 		this.user = user;
 	}
-	
-	
-	
-	
+
+
+	@Override
+	public String toString() {
+		return "Caption [captionId=" + captionId + ", createdTime="
+				+ createdTime + ", text=" + text + ", user=" + user + "]";
+	}
 	
 }

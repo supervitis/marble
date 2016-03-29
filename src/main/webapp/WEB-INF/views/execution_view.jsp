@@ -92,13 +92,22 @@
 											class="btn btn-default btn-block"> <i class="fa fa-tags"></i>
 											View Topic
 										</a>
-									</c:if> <c:if test="${not empty execution.streamingTopic.id}">
-
+									</c:if> 
+									<c:if test="${not empty execution.streamingTopic.id}">
 										<a href='<c:url value="streaming_topic/${execution.streamingTopic.id}" />'
 											class="btn btn-default btn-block"> <i class="fa fa-tags"></i>
 											View Streaming Topic
 										</a>
-									</c:if></td>
+									</c:if>
+									<c:if test="${not empty execution.instagramTopic.id}">
+
+										<a href='<c:url value="instagram_topic/${execution.instagramTopic.id}" />'
+											class="btn btn-default btn-block"> <i class="fa fa-tags"></i>
+											View Instagram Topic
+										</a>
+									</c:if>
+									
+									</td>
 							</tr>
 							<tr>
 								<td><div data-toggle="tooltip"

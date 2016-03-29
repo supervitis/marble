@@ -86,33 +86,25 @@
 						<tbody>
 							<tr>
 								<td><a
-									href="<c:url value="instagram_topic/${instagram_topicInfo.topicId}/edit"/>"
+									href="<c:url value="instagram_topic/${instagram_topicInfo.instagramTopicId}/edit"/>"
 									class="btn btn-default btn-block"> <i class="fa fa-pencil"></i>
 										<spring:message code="instagram_topic_info.actions.edit" />
 								</a></td>
 							</tr>
-							<c:choose>
-								<c:when test="${not instagram_topicInfo.active}">
-									<tr>
-										<td><a
-											href="<c:url value="instagram_topic/${instagram_topicInfo.topicId}/execution/extract"/>"
-											class="btn btn-default btn-block"> <i
-												class="fa fa-sign-in"></i>
-													<spring:message code="instagram_topics_list.form.extract" />
-										</a></td>
-									</tr>
-								</c:when>
-								<c:otherwise>
-									<tr>
-										<td><a
-											href="<c:url value="instagram_topic/${instagram_topicInfo.topicId}/execution/stop"/>"
-											class="btn btn-default btn-block"> <i
-												class="fa fa-stop"></i>
-													<spring:message code="instagram_topics_list.form.stop" />
-										</a></td>
-									</tr>
-								</c:otherwise>
-							</c:choose>
+							<tr>
+								<td><a
+									href="<c:url value="instagram_topic/${instagram_topicInfo.instagramTopicId}/execution/extract"/>"
+									class="btn btn-default btn-block"> <i
+										class="fa fa-sign-in"></i>
+											<spring:message code="instagram_topics_list.form.extract" />
+								</a></td>
+							</tr>
+							<tr>
+									<td><a href='<c:url value="instagram_topic/${instagram_topicInfo.instagramTopicId}/execution"/>' class="btn btn-default btn-block">
+										<i class="fa fa-rocket"></i>
+										<spring:message code="topic_info.actions.view_executions" />
+									</a></td>
+							</tr>
 						</tbody>
 					</table>
 				</div>

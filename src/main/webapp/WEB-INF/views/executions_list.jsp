@@ -8,7 +8,11 @@
 			<div class="panel-body">
 				<fieldset>
 					<p class="help-block">
+					<c:if test="${not empty topic}">
 						<spring:message code="executions_list.form.informative_message" arguments="${topic.name}" />
+					</c:if> <c:if test="${not empty instagram_topic}">
+						<spring:message code="executions_list.form.informative_message" arguments="${instagram_topic.name}" />
+					</c:if>
 					</p>
 				</fieldset>
 			</div>

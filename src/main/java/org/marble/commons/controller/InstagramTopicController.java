@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.marble.commons.dao.model.InstagramTopic;
+import org.marble.commons.dao.model.StreamingTopic;
 import org.marble.commons.exception.InvalidDatasetException;
 import org.marble.commons.exception.InvalidInstagramTopicException;
 import org.marble.commons.model.ExecutionModuleParameters;
@@ -125,20 +126,19 @@ public class InstagramTopicController {
             modelAndView.addObject("notificationLevel", "danger");
             modelAndView.setViewName("instagram_topic_edit");
             modelAndView.addObject("instagram_topic", instagram_topic);
+            Map<String,String> geoUnits= new LinkedHashMap<String,String>();
+        	geoUnits.put("km", "Kilometers");
+        	geoUnits.put("mi", "Miles");
+        	modelAndView.addObject("geoUnits", geoUnits);
             return modelAndView;
         }
-        InstagramTopic oldInstagramTopic = instagram_topicService.findOne(instagram_topicId);
-        boolean wasActive = oldInstagramTopic.getActive();
-        instagram_topic.setActive(wasActive);
+
         instagram_topic = instagram_topicService.save(instagram_topic);
         
         redirectAttributes.addFlashAttribute("notificationMessage", "InstagramTopicController.instagram_topicModified");
         redirectAttributes.addFlashAttribute("notificationIcon", "fa-check-circle");
         redirectAttributes.addFlashAttribute("notificationLevel", "success");
-        if(wasActive)
-        	modelAndView.setViewName("redirect:"+ basePath + "/execution/instagram_topic/" + instagram_topicId + "/stop");
-        else
-        	modelAndView.setViewName("redirect:" + basePath + "/instagram_topic/"+ instagram_topic.getId());
+       	modelAndView.setViewName("redirect:" + basePath + "/instagram_topic/"+ instagram_topic.getId());
         return modelAndView;
     }
 
@@ -203,6 +203,10 @@ public class InstagramTopicController {
             modelAndView.addObject("notificationLevel", "danger");
             modelAndView.setViewName("instagram_topic_create");
             modelAndView.addObject("instagram_topic", instagram_topic);
+            Map<String,String> geoUnits= new LinkedHashMap<String,String>();
+        	geoUnits.put("km", "Kilometers");
+        	geoUnits.put("mi", "Miles");
+        	modelAndView.addObject("geoUnits", geoUnits);
             return modelAndView;
         }
 
@@ -240,66 +244,6 @@ public class InstagramTopicController {
     public ModelAndView executeExtractor(@PathVariable Integer instagram_topicId) throws InvalidInstagramTopicException {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("forward:/execution/instagram_topic/" + instagram_topicId + "/extract");
-        return modelAndView;
-    }
-    
-    @RequestMapping(value = "/{instagram_topicId:[0-9]+}/execution/stop", method = RequestMethod.GET)
-    public ModelAndView stopExtractor(@PathVariable Integer instagram_topicId) throws InvalidInstagramTopicException {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("forward:/execution/instagram_topic/" + instagram_topicId + "/stop");
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "/{instagram_topicId:[0-9]+}/execution/process", method = RequestMethod.GET)
-    public ModelAndView executeProcessor(@PathVariable Integer instagram_topicId) throws InvalidInstagramTopicException {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("forward:/execution/instagram_topic/" + instagram_topicId + "/process");
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "/{instagram_topicId:[0-9]+}/process/execute", method = RequestMethod.GET)
-    public ModelAndView processExecuteRequest(@PathVariable Integer instagram_topicId) throws InvalidInstagramTopicException {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("forward:/process/instagram_topic/" + instagram_topicId + "/execute");
-        return modelAndView;
-    }
-    
-    @RequestMapping(value = "/{instagram_topicId:[0-9]+}/process/execute", method = RequestMethod.POST)
-    public ModelAndView processExecuteResponse(@PathVariable Integer instagram_topicId,
-            ExecutionModuleParameters moduleParameters) throws InvalidInstagramTopicException {
-        ModelAndView modelAndView = new ModelAndView();
-
-        modelAndView.setViewName("forward:/process/instagram_topic/" + instagram_topicId + "/execute");
-        return modelAndView;
-    }
-    
-    @RequestMapping(value = "/{instagram_topicId:[0-9]+}/execution/plot", method = RequestMethod.GET)
-    public ModelAndView executePlotter(@PathVariable Integer instagram_topicId) throws InvalidInstagramTopicException {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("forward:/execution/instagram_topic/" + instagram_topicId + "/plot");
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "/{instagram_topicId:[0-9]+}/plot", method = RequestMethod.GET)
-    public ModelAndView plot(@PathVariable Integer instagram_topicId) throws InvalidInstagramTopicException {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("forward:/plot/instagram_topic/" + instagram_topicId);
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "/{instagram_topicId:[0-9]+}/plot/create", method = RequestMethod.GET)
-    public ModelAndView createPlot(@PathVariable Integer instagram_topicId) throws InvalidInstagramTopicException {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("forward:/plot/instagram_topic/" + instagram_topicId + "/create");
-        return modelAndView;
-    }
-
-    @RequestMapping(value = "/{instagram_topicId:[0-9]+}/plot/create", method = RequestMethod.POST)
-    public ModelAndView createPlotResponse(@PathVariable Integer instagram_topicId,
-    		 ExecutionModuleParameters moduleParameters) throws InvalidInstagramTopicException {
-        ModelAndView modelAndView = new ModelAndView();
-
-        modelAndView.setViewName("forward:/plot/instagram_topic/" + instagram_topicId + "/create");
         return modelAndView;
     }
 

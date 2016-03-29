@@ -70,13 +70,13 @@ public class InstagramTopicServiceImpl implements InstagramTopicService {
         }
 
         InstagramTopicInfo instagramTopicInfo = new InstagramTopicInfo();
-        instagramTopicInfo.setTopicId(id);
-        instagramTopicInfo.setActive(instagramTopic.getActive());
+        instagramTopicInfo.setInstagramTopicId(id);
+
         try {
             instagramTopicInfo.setTotalStatusesExtracted(datastoreService.countByInstagramTopicId(id, InstagramStatus.class));
 
             if (instagramTopicInfo.getTotalStatusesExtracted() > 0) {
-                InstagramStatus status = datastoreService.findOneByInstagramTopicIdSortBy(id, "createdAt", Sort.Direction.ASC,
+                InstagramStatus status = datastoreService.findOneByInstagramTopicIdSortBy(id, "createdTime", Sort.Direction.ASC,
                         InstagramStatus.class);
                 instagramTopicInfo.setOldestStatusDate(status.getCreatedTime());
                 instagramTopicInfo.setOldestStatusId(status.getId());

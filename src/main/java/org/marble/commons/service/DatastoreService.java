@@ -92,6 +92,8 @@ public interface DatastoreService {
 
 	<T>void remove(Query query, Class<T> entityClass);
 
+	public void insertInstagramStatus(InstagramStatus status);
+
 
 
 

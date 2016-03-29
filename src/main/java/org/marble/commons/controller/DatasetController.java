@@ -16,6 +16,7 @@ import org.marble.commons.dao.model.StreamingTopic;
 import org.marble.commons.dao.model.UploadedStatus;
 import org.marble.commons.exception.InvalidDatasetException;
 import org.marble.commons.service.DatasetService;
+import org.marble.commons.service.InstagramTopicService;
 import org.marble.commons.service.StreamingTopicService;
 import org.marble.commons.service.TopicService;
 import org.marble.commons.util.MarbleUtil;
@@ -54,6 +55,9 @@ public class DatasetController {
 	
 	@Autowired
 	StreamingTopicService streamingTopicService;
+	
+	@Autowired
+	InstagramTopicService instagramTopicService;
 
 	@RequestMapping
 	public ModelAndView home() {
@@ -61,6 +65,7 @@ public class DatasetController {
 		modelAndView.addObject("datasets", datasetService.getDatasets());
 		modelAndView.addObject("topics",topicService.findAll());
 		modelAndView.addObject("streaming_topics",streamingTopicService.findAll());
+		modelAndView.addObject("instagram_topics",instagramTopicService.findAll());
 		return modelAndView;
 	}
 

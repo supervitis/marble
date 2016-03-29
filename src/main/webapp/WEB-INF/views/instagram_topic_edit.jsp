@@ -97,17 +97,9 @@
 						<spring:bind path="upperLimit">
 							<div class="form-group ${status.error ? 'has-error': ''}">
 								<label for="upperLimit"><spring:message code="instagram_topic.form.upperLimit.label" /></label>
-								<form:input id="upperLimit" path="upperLimit" type="text" class="form-control" />
+								<form:input id="upperLimit" path="upperLimit" type="text" readonly="true" class="form-control" />
 								<form:errors path="upperLimit" cssClass="text-danger" />
 								<p class="help-block"><spring:message code="instagram_topic.form.upperLimit.help" /></p>
-							</div>
-						</spring:bind>
-						<spring:bind path="lowerLimit">
-							<div class="form-group ${status.error ? 'has-error': ''}">
-								<label for="lowerLimit"><spring:message code="instagram_topic.form.lowerLimit.label" /></label>
-								<form:input id="lowerLimit" path="lowerLimit" type="text" class="form-control" />
-								<form:errors path="lowerLimit" cssClass="text-danger" />
-								<p class="help-block"><spring:message code="instagram_topic.form.lowerLimit.help" /></p>
 							</div>
 						</spring:bind>
 						
@@ -158,22 +150,6 @@
 								<form:errors path="geoUnit" cssClass="text-danger" />
 								<p class="help-block"><spring:message code="instagram_topic.form.geoUnit.help" /></p>
 							</div> 
-						</spring:bind>
-						<spring:bind path="language">
-							<div class="form-group ${status.error ? 'has-error': ''}">
-								<label for="language"><spring:message code="instagram_topic.form.language.label" /></label>
-								<form:input id="language" path="language" type="text" class="form-control" />
-								<form:errors path="language" cssClass="text-danger" />
-								<p class="help-block"><spring:message code="instagram_topic.form.language.help" /></p>
-							</div>
-						</spring:bind>
-						<spring:bind path="email">
-							<div class="form-group ${status.error ? 'has-error': ''}">
-								<label for="email"><spring:message code="instagram_topic.form.email.label" /></label>
-								<form:input id="email" path="email" type="text" class="form-control" />
-								<form:errors path="email" cssClass="text-danger" />
-								<p class="help-block"><spring:message code="instagram_topic.form.email.help" /></p>
-							</div>
 						</spring:bind>
 						<spring:bind path="statusesPerFullExtraction">
 							<div class="form-group ${status.error ? 'has-error': ''}">

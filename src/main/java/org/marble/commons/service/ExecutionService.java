@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.marble.commons.dao.model.Execution;
 import org.marble.commons.exception.InvalidExecutionException;
+import org.marble.commons.exception.InvalidInstagramTopicException;
 import org.marble.commons.exception.InvalidModuleException;
 import org.marble.commons.exception.InvalidStreamingTopicException;
 import org.marble.commons.exception.InvalidTopicException;
@@ -32,6 +33,9 @@ public interface ExecutionService {
 
     Integer executeProcessor(ExecutionModuleParameters plotParameters) throws InvalidTopicException,
             InvalidExecutionException, InvalidModuleException;
+    
+	Integer executeInstagramExtractor(Integer topicId)
+			throws InvalidExecutionException, InvalidInstagramTopicException;
 
 	Integer executeStreaming(Integer streamingTopicId)
 			throws InvalidTopicException, InvalidExecutionException, InvalidStreamingTopicException;
@@ -42,4 +46,9 @@ public interface ExecutionService {
 	void useNextAPIKey();
 
 	void sendMail(String string, String message, String string2);
+
+	public List<Execution> getExecutionsPerInstagramTopic(Integer instagramTopicId);
+
+
+
 }

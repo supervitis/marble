@@ -57,27 +57,14 @@
 											class="hidden-xs hidden-sm"> <spring:message
 													code="instagram_topics_list.form.info" /></span>
 
-									</a> <c:choose>
-											<c:when test="${not instagram_topic.active}">
-												<a
-													href="<c:url value="instagram_topic/${instagram_topic.id}/execution/extract"/>"
-													class="btn btn-default btn-light-green"> <i
-													class="fa fa-sign-in"></i><span class="hidden-xs hidden-sm">
-														<spring:message code="instagram_topics_list.form.extract" />
-												</span>
-												</a>
-											</c:when>
-											<c:otherwise>
-												<a
-													href="<c:url value="instagram_topic/${instagram_topic.id}/execution/stop"/>"
-													class="btn btn-default btn-light-red"> <i
-													class="fa fa-stop"></i><span class="hidden-xs hidden-sm">
-														<spring:message code="instagram_topics_list.form.stop" />
-												</span>
-												</a>
-											</c:otherwise>
-										</c:choose></td>
-
+									</a> 
+									<a
+										href="<c:url value="instagram_topic/${instagram_topic.id}/execution/extract"/>"
+										class="btn btn-default btn-light-green"> <i
+										class="fa fa-sign-in"></i><span class="hidden-xs hidden-sm">
+											<spring:message code="instagram_topics_list.form.extract" />
+										</span>
+									</a>
 								</tr>
 							</c:forEach>
 						</table>

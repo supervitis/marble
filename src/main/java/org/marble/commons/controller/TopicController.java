@@ -139,6 +139,10 @@ public class TopicController {
             modelAndView.addObject("notificationLevel", "danger");
             modelAndView.setViewName("topic_edit");
             modelAndView.addObject("topic", topic);
+            Map<String,String> geoUnits= new LinkedHashMap<String,String>();
+        	geoUnits.put("km", "Kilometers");
+        	geoUnits.put("mi", "Miles");
+        	modelAndView.addObject("geoUnits", geoUnits);
             return modelAndView;
         }
         
@@ -179,6 +183,10 @@ public class TopicController {
             modelAndView.addObject("notificationLevel", "danger");
             modelAndView.setViewName("topic_create");
             modelAndView.addObject("topic", topic);
+            Map<String,String> geoUnits= new LinkedHashMap<String,String>();
+        	geoUnits.put("km", "Kilometers");
+        	geoUnits.put("mi", "Miles");
+        	modelAndView.addObject("geoUnits", geoUnits);
             return modelAndView;
         }
 

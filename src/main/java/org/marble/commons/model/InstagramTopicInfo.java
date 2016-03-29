@@ -8,9 +8,9 @@ public class InstagramTopicInfo {
     private Boolean active;
     private Long totalStatusesExtracted;
     private Date oldestStatusDate;
-    private Long oldestStatusId;
+    private String oldestStatusId;
     private Date newestStatusDate;
-    private Long newestStatusId;
+    private String newestStatusId;
     private Long totalStatusesProcessed;
 
     public Integer getInstagramTopicId() {
@@ -44,12 +44,16 @@ public class InstagramTopicInfo {
     public void setOldestStatusDate(Date oldestStatusDate) {
         this.oldestStatusDate = oldestStatusDate;
     }
+    
+    public void setOldestStatusDate(Long timestamp) {
+        this.oldestStatusDate = new Date(timestamp*1000);
+    }
 
-    public Long getOldestStatusId() {
+    public String getOldestStatusId() {
         return oldestStatusId;
     }
 
-    public void setOldestStatusId(Long oldestStatusId) {
+    public void setOldestStatusId(String oldestStatusId) {
         this.oldestStatusId = oldestStatusId;
     }
 
@@ -60,12 +64,16 @@ public class InstagramTopicInfo {
     public void setNewestStatusDate(Date newestStatusDate) {
         this.newestStatusDate = newestStatusDate;
     }
+    
+    public void setNewestStatusDate(Long timestamp) {
+        this.newestStatusDate = new Date(timestamp*1000);
+    }
 
-    public Long getNewestStatusId() {
+    public String getNewestStatusId() {
         return newestStatusId;
     }
 
-    public void setNewestStatusId(Long newestStatusId) {
+    public void setNewestStatusId(String newestStatusId) {
         this.newestStatusId = newestStatusId;
     }
 
