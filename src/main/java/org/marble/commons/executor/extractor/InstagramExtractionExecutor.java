@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.marble.commons.dao.model.Execution;
 import org.marble.commons.dao.model.InstagramStatus;
+import org.marble.commons.dao.model.InstagramToken;
 import org.marble.commons.dao.model.OriginalStatus;
 import org.marble.commons.dao.model.InstagramTopic;
 import org.marble.commons.dao.model.TwitterApiKey;
@@ -19,6 +20,7 @@ import org.marble.commons.model.ExecutionStatus;
 import org.marble.commons.service.DatastoreService;
 import org.marble.commons.service.ExecutionService;
 import org.marble.commons.service.InstagramSearchService;
+import org.marble.commons.service.InstagramTokenService;
 import org.marble.commons.service.InstagramTopicService;
 import org.marble.commons.service.TwitterApiKeyService;
 import org.marble.commons.service.TwitterSearchService;
@@ -47,7 +49,7 @@ public class InstagramExtractionExecutor implements ExtractorExecutor {
     InstagramTopicService instagramTopicService;
     
     @Autowired
-    TwitterApiKeyService twitterApiKeyService;
+    InstagramTokenService instagramTokenService;
 
     @Autowired
     DatastoreService datastoreService;
@@ -92,11 +94,10 @@ public class InstagramExtractionExecutor implements ExtractorExecutor {
             InstagramTopic instagramTopic = instagramTopicService.findOne(execution.getInstagramTopic().getId());
             
             //Here we will have a list with all available tokens
-            List<String> instagramAccessTokens = new ArrayList<String>();
-    		String instagramAccessToken = "2205827063.a33b3a4.5ceb14860bc8429886c9551b8e42c048";
-    		instagramAccessTokens.add(instagramAccessToken);
-            for (String token : instagramAccessTokens) {
-                log.info("Key available: " + token);
+            List<InstagramToken> instagramAccessTokens = instagramTokenService.getInstagramTokens();
+    		
+            for (InstagramToken token : instagramAccessTokens) {
+                log.info("Key available: " + token.getAccessToken());
             }
 
             
@@ -115,7 +116,7 @@ public class InstagramExtractionExecutor implements ExtractorExecutor {
             Integer tokenIndex = 0;
             String keyword = instagramTopic.getKeywords();
 
-            instagramSearchService.configure(instagramAccessTokens.get(tokenIndex));
+            instagramSearchService.configure(instagramAccessTokens.get(tokenIndex).getAccessToken());
 
             msg = "Extraction will begin with Api Key <" + instagramAccessTokens.get(tokenIndex) + ">";
             log.info(msg);
@@ -176,7 +177,7 @@ public class InstagramExtractionExecutor implements ExtractorExecutor {
                     executionService.save(execution);
 
                     // Changing to another API Key
-                    instagramSearchService.configure((instagramAccessTokens.get(tokenIndex)));
+                    instagramSearchService.configure((instagramAccessTokens.get(tokenIndex).getAccessToken()));
                     continue;
                 	}
                 }

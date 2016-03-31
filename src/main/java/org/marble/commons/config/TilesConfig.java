@@ -65,6 +65,16 @@ public class TilesConfig extends WebMvcConfigurerAdapter {
                 "<i class='fa fa-file-o fa-fw'></i>", Boolean.FALSE);
         addBaseDefinition("twitter_api_keys_list", "Twitter API Keys", "<i class='fa fa-key fa-fw'></i>", Boolean.FALSE);
 
+        
+     // Instagram Token Views
+        addBaseDefinition("instagram_token_edit", "Edit Instagram Token ", "<i class='fa fa-pencil fa-fw'></i>",
+                Boolean.FALSE);
+        addBaseDefinition("create_instagram_token", "instagram_token_edit", "Create New Instagram Token",
+                "<i class='fa fa-file-o fa-fw'></i>", Boolean.FALSE);
+        addBaseDefinition("instagram_tokens_list", "Instagram Tokens", "<i class='fa fa-key fa-fw'></i>", Boolean.FALSE);
+
+        
+        
         // Executions Views
         addBaseDefinition("execution_view", "Execution Detail", "<i class='fa fa-rocket fa-fw'></i>", Boolean.TRUE);
         addBaseDefinition("executions_list", "Executions", "<i class='fa fa-rocket fa-fw'></i>", Boolean.FALSE);
